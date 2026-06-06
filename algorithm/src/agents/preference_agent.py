@@ -1,6 +1,7 @@
 import os
 import re
 import json
+from typing import Optional
 from openai import AsyncOpenAI
 from ..schemas import Preferences, RawPriorities
 
@@ -110,21 +111,32 @@ SCHEMA_DESC = """
 }"""
 
 
-async def extract_preferences(user_input: str) -> Preferences:
+async def extract_preferences(user_input: str, conversation_history: Optional[list] = None) -> Preferences:
     try:
-        resp = await _get_client().chat.completions.create(
-            model="gpt-4o-mini",
-            response_format={"type": "json_object"},
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a Singapore housing preference analyst. Extract structured info from user input. Return ONLY valid JSON. Use null for any field the user did not mention.",
-                },
+        system_message = {
+            "role": "system",
+            "content": "You are a Singapore housing preference analyst. Extract structured info from user input. Return ONLY valid JSON. Use null for any field the user did not mention.",
+        }
+
+        if conversation_history:
+            final_user_message = {
+                "role": "user",
+                "content": f"Based on our conversation so far, extract updated preferences and return JSON matching this schema:\n{SCHEMA_DESC}\n\nLatest user message: {user_input}",
+            }
+            messages = [system_message] + list(conversation_history) + [final_user_message]
+        else:
+            messages = [
+                system_message,
                 {
                     "role": "user",
                     "content": f"Extract preferences and return JSON matching this schema:\n{SCHEMA_DESC}\n\nUser input: {user_input}",
                 },
-            ],
+            ]
+
+        resp = await _get_client().chat.completions.create(
+            model="gpt-4o-mini",
+            response_format={"type": "json_object"},
+            messages=messages,
         )
         raw = json.loads(resp.choices[0].message.content)
         rp = raw.get("raw_priorities") or {}

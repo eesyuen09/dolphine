@@ -48,9 +48,10 @@ async def health():
 
 @app.post("/recommend", response_model=RecommendResult)
 async def recommend(req: RecommendRequest) -> RecommendResult:
-    neighbourhoods, listings = _load_data()
+    neighbourhoods, static_listings = _load_data()
+    listings = (req.listings or []) + static_listings
 
-    prefs = await extract_preferences(req.user_input)
+    prefs = await extract_preferences(req.user_input, req.conversation_history)
     debiased = apply_debias(prefs, neighbourhoods)
     scored = score_neighbourhoods(debiased, neighbourhoods, debiased.neighbourhood_map)
     rooms, fallback_msg = rank_rooms(scored, listings, debiased)

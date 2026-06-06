@@ -95,5 +95,12 @@ class RecommendResult(BaseModel):
     fallback_message: Optional[str] = None
 
 
+class ChatMessage(BaseModel):
+    role: str  # "user" or "assistant"
+    content: str
+
+
 class RecommendRequest(BaseModel):
     user_input: str
+    conversation_history: Optional[List[ChatMessage]] = None
+    listings: Optional[List[Dict[str, Any]]] = None

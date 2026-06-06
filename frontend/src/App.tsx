@@ -487,8 +487,12 @@ function App() {
   const profileRef = useRef<HTMLElement | null>(null);
   const resultsRef = useRef<HTMLElement | null>(null);
   const timeoutRef = useRef<number[]>([]);
+  const [rooms, setRooms] = useState<RoomListing[]>(demoRooms);
+  const [sessionId] = useState<string>(() => crypto.randomUUID());
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
 
-  const selectedRoom = demoRooms.find((room) => room.id === selectedRoomId) ?? topRoom;
+  const selectedRoom = rooms.find((room) => room.id === selectedRoomId) ?? rooms[0] ?? demoRooms[0];
 
   useEffect(() => {
     return () => {
@@ -500,28 +504,86 @@ function App() {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function analyzeRooms() {
+  function serializeProfileToNL(p: Profile): string {
+    const loc = singaporeLocations.find((l) => l.id === p.selectedLocationId);
+    const location = loc?.label || p.destinationInput || "NUS School of Computing";
+    const parts: string[] = [
+      `I work at ${location}.`,
+      `My budget is S$${p.budgetMax}/month.`,
+      `I work in office ${p.officeDays} day${p.officeDays !== 1 ? "s" : ""} per week.`,
+    ];
+    if (p.preferredRoomType && p.preferredRoomType !== "No preference") {
+      parts.push(`I prefer a ${p.preferredRoomType.toLowerCase()}.`);
+    }
+    if (p.mustHaves.length > 0) parts.push(`Must haves: ${p.mustHaves.join(", ")}.`);
+    if (p.rankedPriorities.length > 0) {
+      parts.push(`My top priorities are: ${p.rankedPriorities.slice(0, 3).join(", ")}.`);
+      if (p.rankedPriorities.includes("Gym access")) parts.push("I go to the gym regularly.");
+      if (p.rankedPriorities.includes("Quiet environment")) parts.push("I prefer a quiet environment.");
+    }
+    return parts.join(" ");
+  }
+
+  async function analyzeRooms() {
     timeoutRef.current.forEach(window.clearTimeout);
     timeoutRef.current = [];
     setStatus("loading");
     setLoadingStep(0);
 
     loadingSteps.forEach((_, index) => {
-      timeoutRef.current.push(
-        window.setTimeout(() => {
-          setLoadingStep(index);
-        }, index * 210)
-      );
+      timeoutRef.current.push(window.setTimeout(() => setLoadingStep(index), index * 210));
     });
 
-    // Replace this delay with listing extraction + recommendation API calls when backend integration resumes.
-    timeoutRef.current.push(
-      window.setTimeout(() => {
-        setSelectedRoomId(topRoom.id);
-        setStatus("results");
-        window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-      }, 1550)
-    );
+    try {
+      const message = serializeProfileToNL(profile);
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          message,
+          profile,
+          listingMode,
+          listingInputs: listingMode !== "demo" ? listingInputs : [],
+        }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.rooms && data.rooms.length > 0) {
+          setRooms(data.rooms);
+          setSelectedRoomId(data.rooms[0].id);
+        }
+      }
+    } catch {
+      // API unavailable — keep demoRooms visible
+    } finally {
+      setStatus("results");
+      window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    }
+  }
+
+  async function handleChatRefinement(msg: string) {
+    if (!msg.trim() || chatLoading) return;
+    setChatLoading(true);
+    setChatInput("");
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, message: msg, profile }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.rooms && data.rooms.length > 0) {
+          setRooms(data.rooms);
+          setSelectedRoomId(data.rooms[0].id);
+        }
+      }
+    } catch {
+      // keep existing results on error
+    } finally {
+      setChatLoading(false);
+    }
   }
 
   function handleTryAnotherProfile() {
@@ -564,11 +626,16 @@ function App() {
             refCallback={(node) => {
               resultsRef.current = node;
             }}
+            chatInput={chatInput}
+            chatLoading={chatLoading}
+            onChatInput={setChatInput}
+            onChatSubmit={handleChatRefinement}
             onOpenLandlordMessage={() => setIsModalOpen(true)}
             onSelectRoom={setSelectedRoomId}
             onTryAnotherProfile={handleTryAnotherProfile}
             profile={profile}
-            selectedRoom={selectedRoom}
+            rooms={rooms}
+            selectedRoom={rooms.find((r) => r.id === selectedRoomId) ?? rooms[0]}
             selectedRoomId={selectedRoomId}
           />
         )}
@@ -1152,29 +1219,39 @@ function LoadingSteps({ activeStep }: { activeStep: number }) {
 }
 
 function ResultsDashboard({
+  chatInput,
+  chatLoading,
+  onChatInput,
+  onChatSubmit,
   onOpenLandlordMessage,
   onSelectRoom,
   onTryAnotherProfile,
   profile,
   refCallback,
+  rooms,
   selectedRoom,
-  selectedRoomId
+  selectedRoomId,
 }: {
+  chatInput: string;
+  chatLoading: boolean;
+  onChatInput: (value: string) => void;
+  onChatSubmit: (msg: string) => void;
   onOpenLandlordMessage: () => void;
   onSelectRoom: (roomId: string) => void;
   onTryAnotherProfile: () => void;
   profile: Profile;
   refCallback: (node: HTMLElement | null) => void;
+  rooms: RoomListing[];
   selectedRoom: RoomListing;
   selectedRoomId: string;
 }) {
   return (
     <section className="scroll-mt-8 py-24 sm:py-32 lg:py-40" ref={refCallback}>
       <div className="grid gap-28 sm:gap-32 lg:gap-40">
-        <ExtractedRoomCards profile={profile} rooms={demoRooms} />
+        <ExtractedRoomCards profile={profile} rooms={rooms} />
         <RankedRoomRecommendations
           onSelectRoom={onSelectRoom}
-          rooms={demoRooms}
+          rooms={rooms}
           selectedRoomId={selectedRoomId}
         />
         <SelectedRoomDeepDive profile={profile} room={selectedRoom} />
@@ -1186,7 +1263,13 @@ function ResultsDashboard({
           onGenerateLandlordMessage={onOpenLandlordMessage}
           onTryAnotherProfile={onTryAnotherProfile}
           profile={profile}
-          room={topRoom}
+          room={rooms[0] ?? selectedRoom}
+        />
+        <DolphineChatRefinement
+          input={chatInput}
+          isLoading={chatLoading}
+          onInput={onChatInput}
+          onSubmit={onChatSubmit}
         />
       </div>
     </section>
@@ -1764,6 +1847,55 @@ function LandlordMessageModal({
         </div>
       </div>
     </div>
+  );
+}
+
+function DolphineChatRefinement({
+  input,
+  isLoading,
+  onInput,
+  onSubmit,
+}: {
+  input: string;
+  isLoading: boolean;
+  onInput: (value: string) => void;
+  onSubmit: (msg: string) => void;
+}) {
+  function handleKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      onSubmit(input);
+    }
+  }
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Refine with Dolphine"
+        title="Tell Dolphine what changed."
+        text="Update any priority — commute, quietness, budget — and Dolphine re-ranks your options instantly."
+      />
+      <div className="mt-10 rounded-[2.5rem] border border-white/75 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:p-8">
+        <textarea
+          className="min-h-24 w-full rounded-[1.5rem] border border-sea-deep/10 bg-sea-mist/50 p-4 text-base leading-8 text-sea-ink shadow-sm focus:outline-none focus:ring-2 focus:ring-sea-teal/40"
+          disabled={isLoading}
+          onChange={(e) => onInput(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder='E.g. "I actually care more about quietness" or "Can you find something closer to the MRT?"'
+          value={input}
+        />
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <p className="text-sm text-slate-500">Press Enter to re-rank · Shift+Enter for new line</p>
+          <button
+            className="rounded-full bg-sea-deep px-8 py-3 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isLoading || !input.trim()}
+            onClick={() => onSubmit(input)}
+            type="button"
+          >
+            {isLoading ? "Re-ranking…" : "Re-rank Rooms"}
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
