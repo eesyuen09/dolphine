@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS rooms (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  area TEXT NOT NULL,
+  rent INTEGER NOT NULL,
+  mrt_walk INTEGER NOT NULL,
+  food_score INTEGER NOT NULL,
+  comfort_score INTEGER NOT NULL,
+  accessibility_score INTEGER NOT NULL,
+  aircon INTEGER NOT NULL DEFAULT 0,
+  wifi INTEGER NOT NULL DEFAULT 0,
+  cooking INTEGER NOT NULL DEFAULT 0,
+  private_bath INTEGER NOT NULL DEFAULT 0,
+  image TEXT NOT NULL,
+  notes TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS room_commutes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  room_id INTEGER NOT NULL,
+  target_area TEXT NOT NULL,
+  minutes INTEGER NOT NULL,
+  FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
+  UNIQUE (room_id, target_area)
+);
