@@ -7,7 +7,9 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "generate:listings": "node tools/generate-listing-research.js",
+    "import:99co-browser": "node tools/import-99co-browser-research.js",
     "merge:listings": "node tools/merge-listing-research.js",
+    "receive:research": "node tools/receive-browser-research.js",
     "validate:listings": "node tools/validate-listing-research.js"
   },
   "dependencies": {

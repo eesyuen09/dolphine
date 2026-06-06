@@ -240,6 +240,19 @@ const destinationOptions = [
   )
 ];
 
+const validPostalCodeOptions = singaporeLocations.reduce<{ postalCode: string; label: string; area: string }[]>(
+  (options, location) => {
+    if (!location.postalCode || options.some((option) => option.postalCode === location.postalCode)) {
+      return options;
+    }
+
+    return [...options, { postalCode: location.postalCode, label: location.label, area: location.area }];
+  },
+  []
+);
+
+const validPostalCodes = new Set(validPostalCodeOptions.map((option) => option.postalCode));
+
 const mustHaveOptions = [
   "Aircon",
   "WiFi included",
@@ -659,7 +672,7 @@ function LandingSection({ onStart }: { onStart: () => void }) {
         <p className="mb-6 inline-flex rounded-full border border-sea-teal/15 bg-white/70 px-4 py-2 text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">
           AI room decision advisor
         </p>
-        <h1 className="font-display text-7xl font-extrabold leading-none tracking-[-0.07em] text-sea-ink sm:text-8xl lg:text-9xl">
+        <h1 className="font-display text-7xl font-extrabold leading-none tracking-[0.035em] text-sea-ink sm:text-8xl lg:text-9xl">
           🐬 DOLPHINE
         </h1>
         <p className="mt-7 font-display text-3xl font-bold tracking-[-0.04em] text-sea-deep sm:text-4xl">
@@ -864,12 +877,38 @@ function LocationCombobox({
   setProfile: Dispatch<SetStateAction<Profile>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHelperOpen, setIsHelperOpen] = useState(false);
   const query = profile.destinationInput.trim().toLowerCase();
+  const helperQuery = profile.customLocationHelper.trim().toLowerCase();
   const filteredLocations = destinationOptions.filter((location) =>
     `${location.label} ${location.area} ${location.nearestMrt}`.toLowerCase().includes(query)
   );
+  const filteredMrtStations = mrtStationOptions.filter((station) =>
+    `${station.label} ${station.area} ${station.nearestMrt}`.toLowerCase().includes(helperQuery)
+  );
+  const helperValue = profile.customLocationHelper.trim();
+  const filteredPostalCodes = validPostalCodeOptions.filter(
+    (option) =>
+      option.postalCode.includes(helperValue) ||
+      option.label.toLowerCase().includes(helperQuery) ||
+      option.area.toLowerCase().includes(helperQuery)
+  );
   const exactMatch = destinationOptions.some((location) => location.label.toLowerCase() === query);
   const isCustomLocation = profile.destinationInput.trim().length > 0 && !profile.selectedLocationId;
+  const isPostalCodeCandidate = /^\d+$/.test(helperValue);
+  const hasPostalCodeFormat = /^\d{6}$/.test(helperValue);
+  const isValidPostalCode = hasPostalCodeFormat && validPostalCodes.has(helperValue);
+  const isValidHelperMrt = mrtStationOptions.some(
+    (station) =>
+      station.label.toLowerCase() === helperQuery ||
+      station.nearestMrt.toLowerCase() === helperQuery ||
+      station.area.toLowerCase() === helperQuery
+  );
+  const shouldValidateHelper = isCustomLocation && helperValue.length > 0;
+  const isHelperInvalid =
+    shouldValidateHelper && (isPostalCodeCandidate ? !isValidPostalCode : !isValidHelperMrt);
+  const helperMrtSuggestions = (helperQuery ? filteredMrtStations : mrtStationOptions).slice(0, 8);
+  const helperPostalSuggestions = isPostalCodeCandidate ? filteredPostalCodes.slice(0, 6) : [];
 
   function selectLocation(location: LocationOption) {
     setProfile((current) => ({
@@ -879,6 +918,16 @@ function LocationCombobox({
       customLocationHelper: ""
     }));
     setIsOpen(false);
+  }
+
+  function selectHelperMrt(station: LocationOption) {
+    setProfile((current) => ({ ...current, customLocationHelper: station.nearestMrt }));
+    setIsHelperOpen(false);
+  }
+
+  function selectHelperPostalCode(postalCode: string) {
+    setProfile((current) => ({ ...current, customLocationHelper: postalCode }));
+    setIsHelperOpen(false);
   }
 
   return (
@@ -950,19 +999,87 @@ function LocationCombobox({
       )}
 
       {isCustomLocation && (
-        <label className="mt-4 grid gap-2 rounded-3xl bg-sea-mist p-4">
-          <span className="text-sm font-extrabold text-sea-ink">Nearest MRT or postal code?</span>
+        <div className="relative mt-4 grid gap-2 rounded-3xl bg-sea-mist p-4">
+          <label className="text-sm font-extrabold text-sea-ink" htmlFor="custom-location-helper">
+            Nearest MRT or postal code?
+          </label>
           <input
-            className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
-            onChange={(event) => setProfile((current) => ({ ...current, customLocationHelper: event.target.value }))}
+            aria-autocomplete="list"
+            aria-controls="helper-mrt-options"
+            aria-describedby="custom-location-helper-message"
+            aria-expanded={isHelperOpen}
+            aria-invalid={isHelperInvalid}
+            className={`rounded-2xl border bg-white px-4 py-3 text-base text-sea-ink shadow-sm ${
+              isHelperInvalid ? "border-coral ring-4 ring-coral/10" : "border-sea-deep/10"
+            }`}
+            id="custom-location-helper"
+            onBlur={() => window.setTimeout(() => setIsHelperOpen(false), 120)}
+            onChange={(event) => {
+              setProfile((current) => ({ ...current, customLocationHelper: event.target.value }));
+              setIsHelperOpen(true);
+            }}
+            onFocus={() => setIsHelperOpen(true)}
             placeholder="e.g. Kent Ridge MRT, 119077, or nearest station"
+            role="combobox"
             type="text"
             value={profile.customLocationHelper}
           />
+          {isHelperOpen && (!helperQuery || helperMrtSuggestions.length > 0 || helperPostalSuggestions.length > 0) && (
+            <div
+              className="absolute left-4 right-4 top-[6.9rem] z-20 max-h-72 overflow-auto rounded-3xl border border-sea-deep/10 bg-white p-2 shadow-soft"
+              id="helper-mrt-options"
+              role="listbox"
+            >
+              {helperMrtSuggestions.map((station) => (
+                <button
+                  className="w-full rounded-2xl px-4 py-3 text-left transition hover:bg-sea-mist"
+                  key={station.id}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => selectHelperMrt(station)}
+                  role="option"
+                  type="button"
+                >
+                  <span className="block font-extrabold text-sea-ink">{station.label}</span>
+                  <span className="text-sm font-bold text-slate-500">Use as nearest MRT</span>
+                </button>
+              ))}
+              {helperPostalSuggestions.map((option) => (
+                <button
+                  className="w-full rounded-2xl px-4 py-3 text-left transition hover:bg-sea-mist"
+                  key={option.postalCode}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => selectHelperPostalCode(option.postalCode)}
+                  role="option"
+                  type="button"
+                >
+                  <span className="block font-extrabold text-sea-ink">{option.postalCode}</span>
+                  <span className="text-sm font-bold text-slate-500">
+                    {option.label} · {option.area}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
           <span className="text-sm leading-6 text-slate-500">
             This keeps broad inputs like “NUS” or “Shopee” clear enough for a commute estimate in the demo.
           </span>
-        </label>
+          {shouldValidateHelper && (
+            <span
+              className={`text-sm font-bold leading-6 ${isHelperInvalid ? "text-coral" : "text-sea-teal"}`}
+              id="custom-location-helper-message"
+            >
+              {isHelperInvalid
+                ? isPostalCodeCandidate
+                  ? hasPostalCodeFormat
+                    ? "Invalid Singapore postal code."
+                    : "Postal code must be exactly 6 digits."
+                  : "Choose an MRT station from the suggestions or enter a recognized Singapore postcode."
+                : isValidPostalCode
+                  ? "Postal code recognized."
+                  : "MRT station recognized."}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

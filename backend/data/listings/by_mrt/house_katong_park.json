@@ -15,8 +15,9 @@
     "search_radius_km": 1,
     "sources_used": [],
     "known_limitations": [
-      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
-      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+      "99.co browser research found 0 usable room listings for this station page; continue with other portals if 10 are required.",
+      "99.co browser extraction error: page.waitForFunction: Timeout 30000ms exceeded.",
+      "Primary source page researched: https://www.99.co/singapore/rent/rooms/katong-park"
     ],
     "fallback_search_areas": [
       "Katong Park estate",

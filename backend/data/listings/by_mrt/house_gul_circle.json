@@ -11,12 +11,14 @@
     "agent_name": "listing-agent-gul_circle",
     "researched_at": "2026-06-06T00:00:00+08:00",
     "target_listing_count": 20,
-    "actual_listing_count": 0,
-    "search_radius_km": 1,
-    "sources_used": [],
+    "actual_listing_count": 2,
+    "search_radius_km": 2,
+    "sources_used": [
+      "99.co"
+    ],
     "known_limitations": [
-      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
-      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+      "99.co browser research found 2 usable room listings for this station page; continue with other portals if 10 are required.",
+      "Primary source page researched: https://www.99.co/singapore/rent/rooms/gul-circle"
     ],
     "fallback_search_areas": [
       "Gul Circle estate",
@@ -26,5 +28,214 @@
       "adjacent MRT stations near Gul Circle"
     ]
   },
-  "listings": []
+  "listings": [
+    {
+      "source_platform": "99.co",
+      "source_listing_id": "cpohdsZmuxz95qNPRGErry",
+      "listing_url": "https://www.99.co/singapore/rooms/property/902-jurong-west-street-91-hdb-cpohdsZmuxz95qNPRGErry",
+      "title": "Room for Rent in 902 Jurong West Street 91",
+      "description": "99.co room-rental search result for 902 Jurong West Street 91, 640902: Room, 120 sqft, HDB 4 Rooms, Peng Kang Hill MRT · 12 mins (931m).",
+      "property_type": "hdb",
+      "room_type": "single_room",
+      "area": "Gul Circle",
+      "nearest_mrt": "Peng Kang Hill",
+      "district": null,
+      "postal_code": "640902",
+      "address_text": "902 Jurong West Street 91, 640902",
+      "latitude": 1.33911645731896,
+      "longitude": 103.686609779665,
+      "rental_monthly": 1100,
+      "currency": "SGD",
+      "deposit_months": null,
+      "available_from": null,
+      "lease_term_months": null,
+      "floor_area_sqft": 120,
+      "bedrooms": null,
+      "bathrooms": 1,
+      "floor_level": "high",
+      "furnishing": "fully_furnished",
+      "tenant_type_allowed": "Working Professional Preferred",
+      "has_aircon": true,
+      "has_private_bathroom": null,
+      "cooking_allowed": true,
+      "wifi_included": null,
+      "utilities_included": null,
+      "landlord_verified": false,
+      "agent_name": null,
+      "is_direct_landlord": true,
+      "listing_posted_at": null,
+      "scraped_at": "2026-06-06T00:00:00+08:00",
+      "image_url": null,
+      "location_metrics": {
+        "walking_to_mrt_minutes": 12,
+        "distance_to_mrt_km": 0.931,
+        "bus_stop_walk_minutes": null,
+        "supermarket_walk_minutes": null,
+        "hawker_walk_minutes": null,
+        "gym_walk_minutes": null,
+        "clinic_walk_minutes": null,
+        "park_walk_minutes": null,
+        "gym_count_nearby": null,
+        "food_options_nearby": null,
+        "supermarket_nearby": null,
+        "clinic_nearby": null,
+        "park_nearby": null,
+        "quietness_level": 8,
+        "safety_level": null,
+        "convenience_level": null
+      },
+      "commute_options": [],
+      "note_tags": [
+        "99co-browser-extract",
+        "peng-kang-hill-mrt-12-mins-931m",
+        "fully-furnished",
+        "cooking-allowed",
+        "aircon-installed",
+        "move-in-ready",
+        "quiet-neighbourhood",
+        "no-pets-allowed",
+        "peng-kang-hill-mrt-12-mins-931m",
+        "high-floor",
+        "move-in-ready",
+        "quiet-neighbourhood"
+      ],
+      "source_evidence": [
+        {
+          "field": "listing_url",
+          "value": "https://www.99.co/singapore/rooms/property/902-jurong-west-street-91-hdb-cpohdsZmuxz95qNPRGErry",
+          "evidence": "99.co JSON-LD RealEstateListing item URL on public room-rental search page.",
+          "confidence": "high"
+        },
+        {
+          "field": "rental_monthly",
+          "value": 1100,
+          "evidence": "Rendered 99.co listing card near position 1 shows S$ 1,100/mo.",
+          "confidence": "high"
+        },
+        {
+          "field": "address_text",
+          "value": "902 Jurong West Street 91, 640902",
+          "evidence": "99.co JSON-LD PostalAddress and rendered listing card address.",
+          "confidence": "high"
+        }
+      ],
+      "missing_fields": [
+        "district",
+        "deposit_months",
+        "available_from",
+        "lease_term_months",
+        "bedrooms",
+        "has_private_bathroom",
+        "wifi_included",
+        "utilities_included",
+        "agent_name",
+        "listing_posted_at",
+        "image_url"
+      ],
+      "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/gul-circle. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
+      "confidence": 0.86
+    },
+    {
+      "source_platform": "99.co",
+      "source_listing_id": "FVcaaC364c487LjtnXcksG",
+      "listing_url": "https://www.99.co/singapore/rooms/property/902-jurong-west-street-91-hdb-FVcaaC364c487LjtnXcksG",
+      "title": "Room for Rent in 902 Jurong West Street 91",
+      "description": "99.co room-rental search result for 902 Jurong West Street 91, 640902: Room, 200 sqft, HDB 4 Rooms, Peng Kang Hill MRT · 12 mins (931m).",
+      "property_type": "hdb",
+      "room_type": "single_room",
+      "area": "Gul Circle",
+      "nearest_mrt": "Peng Kang Hill",
+      "district": null,
+      "postal_code": "640902",
+      "address_text": "902 Jurong West Street 91, 640902",
+      "latitude": 1.33911645731896,
+      "longitude": 103.686609779665,
+      "rental_monthly": 850,
+      "currency": "SGD",
+      "deposit_months": null,
+      "available_from": null,
+      "lease_term_months": null,
+      "floor_area_sqft": 200,
+      "bedrooms": null,
+      "bathrooms": 1,
+      "floor_level": "high",
+      "furnishing": "fully_furnished",
+      "tenant_type_allowed": "Working Professional Preferred",
+      "has_aircon": true,
+      "has_private_bathroom": null,
+      "cooking_allowed": true,
+      "wifi_included": null,
+      "utilities_included": null,
+      "landlord_verified": false,
+      "agent_name": null,
+      "is_direct_landlord": true,
+      "listing_posted_at": null,
+      "scraped_at": "2026-06-06T00:00:00+08:00",
+      "image_url": null,
+      "location_metrics": {
+        "walking_to_mrt_minutes": 12,
+        "distance_to_mrt_km": 0.931,
+        "bus_stop_walk_minutes": null,
+        "supermarket_walk_minutes": null,
+        "hawker_walk_minutes": null,
+        "gym_walk_minutes": null,
+        "clinic_walk_minutes": null,
+        "park_walk_minutes": null,
+        "gym_count_nearby": null,
+        "food_options_nearby": null,
+        "supermarket_nearby": null,
+        "clinic_nearby": null,
+        "park_nearby": null,
+        "quietness_level": 8,
+        "safety_level": null,
+        "convenience_level": null
+      },
+      "commute_options": [],
+      "note_tags": [
+        "99co-browser-extract",
+        "peng-kang-hill-mrt-12-mins-931m",
+        "high-floor",
+        "move-in-ready",
+        "quiet-neighbourhood",
+        "working-professional-preferred",
+        "student-friendly",
+        "master-bedrooms-these-larger-rooms-typically-have-an-en-suite-bathroom"
+      ],
+      "source_evidence": [
+        {
+          "field": "listing_url",
+          "value": "https://www.99.co/singapore/rooms/property/902-jurong-west-street-91-hdb-FVcaaC364c487LjtnXcksG",
+          "evidence": "99.co JSON-LD RealEstateListing item URL on public room-rental search page.",
+          "confidence": "high"
+        },
+        {
+          "field": "rental_monthly",
+          "value": 850,
+          "evidence": "Rendered 99.co listing card near position 2 shows S$ 850/mo.",
+          "confidence": "high"
+        },
+        {
+          "field": "address_text",
+          "value": "902 Jurong West Street 91, 640902",
+          "evidence": "99.co JSON-LD PostalAddress and rendered listing card address.",
+          "confidence": "high"
+        }
+      ],
+      "missing_fields": [
+        "district",
+        "deposit_months",
+        "available_from",
+        "lease_term_months",
+        "bedrooms",
+        "has_private_bathroom",
+        "wifi_included",
+        "utilities_included",
+        "agent_name",
+        "listing_posted_at",
+        "image_url"
+      ],
+      "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/gul-circle. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
+      "confidence": 0.86
+    }
+  ]
 }

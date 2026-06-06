@@ -1,0 +1,8 @@
+{
+  "station_slug": "tanah_merah",
+  "station_name": "Tanah Merah",
+  "source_url": "https://www.99.co/singapore/rent/rooms/tanah-merah",
+  "extracted_at": "2026-06-06T00:00:00+08:00",
+  "listings": [],
+  "error": "page.waitForFunction: Timeout 30000ms exceeded."
+}

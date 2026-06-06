@@ -1,5 +1,1078 @@
 {
-  "generated_at": "2026-06-06T05:45:54.703Z",
-  "rejected_count": 0,
-  "rejected": []
+  "generated_at": "2026-06-06T06:48:07.183Z",
+  "rejected_count": 134,
+  "rejected": [
+    {
+      "reason": "duplicate",
+      "station_slug": "bedok_north",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/417-bedok-north-avenue-2-hdb-5xMC5ZH6Lk5wSATSXp5tWS",
+      "source_platform": "99.co",
+      "source_listing_id": "5xMC5ZH6Lk5wSATSXp5tWS"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bedok_north",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/425-bedok-north-road-hdb-mcQLwiwBjaGAYMh3Z25uZW",
+      "source_platform": "99.co",
+      "source_listing_id": "mcQLwiwBjaGAYMh3Z25uZW"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bedok_north",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/casa-merah-condo-WXLmfeivUCDrXnbYfBcZbb",
+      "source_platform": "99.co",
+      "source_listing_id": "WXLmfeivUCDrXnbYfBcZbb"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bedok_reservoir",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/aquarius-by-the-park-condo-9VNa93XqkSdEdFgUPjkFaM",
+      "source_platform": "99.co",
+      "source_listing_id": "9VNa93XqkSdEdFgUPjkFaM"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/burlington-square-condo-PxTrDBpmAhnhuTJgQqLbBN",
+      "source_platform": "99.co",
+      "source_listing_id": "PxTrDBpmAhnhuTJgQqLbBN"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/burlington-square-condo-juEd9MjCGqoSeaU7ogFur6",
+      "source_platform": "99.co",
+      "source_listing_id": "juEd9MjCGqoSeaU7ogFur6"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/burlington-square-condo-7sv3ZN2usb6t7XVH8pzC6Z",
+      "source_platform": "99.co",
+      "source_listing_id": "7sv3ZN2usb6t7XVH8pzC6Z"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/sunshine-plaza-condo-cDdrxGoqMKnuTiC8rcYRdy",
+      "source_platform": "99.co",
+      "source_listing_id": "cDdrxGoqMKnuTiC8rcYRdy"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/bencoolen-house-condo-L3px2jdrS9BDfEduWhqqLr",
+      "source_platform": "99.co",
+      "source_listing_id": "L3px2jdrS9BDfEduWhqqLr"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/burlington-square-condo-VsethxFXHmoyrxwWFoVjR6",
+      "source_platform": "99.co",
+      "source_listing_id": "VsethxFXHmoyrxwWFoVjR6"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/burlington-square-condo-SYKso35tcHdpQX5RJzGbZP",
+      "source_platform": "99.co",
+      "source_listing_id": "SYKso35tcHdpQX5RJzGbZP"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "bugis",
+      "duplicate_of_station_slug": "bencoolen",
+      "listing_url": "https://www.99.co/singapore/rooms/property/10-selegie-road-hdb-RQD8PfBkGJSPGnqLB2fsDE",
+      "source_platform": "99.co",
+      "source_listing_id": "RQD8PfBkGJSPGnqLB2fsDE"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "city_hall",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-knVcj9v8nw8aeTpmwk7MeD",
+      "source_platform": "99.co",
+      "source_listing_id": "knVcj9v8nw8aeTpmwk7MeD"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "city_hall",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-sail-marina-bay-condo-EShQXnyTXmhQ2djDuwAk6o",
+      "source_platform": "99.co",
+      "source_listing_id": "EShQXnyTXmhQ2djDuwAk6o"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "city_hall",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/aspen-heights-condo-GBqa9roTkvLUJY5jugLTvH",
+      "source_platform": "99.co",
+      "source_listing_id": "GBqa9roTkvLUJY5jugLTvH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "city_hall",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-6JsufNZk3BzNGdbb6rBmHY",
+      "source_platform": "99.co",
+      "source_listing_id": "6JsufNZk3BzNGdbb6rBmHY"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "clarke_quay",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/nutmeg-court-condo-NxomoCis3TuCejTwtkYJq4",
+      "source_platform": "99.co",
+      "source_listing_id": "NxomoCis3TuCejTwtkYJq4"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "clarke_quay",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kellock-lodge-condo-5trK7yLTR8t8YzWBDqBffs",
+      "source_platform": "99.co",
+      "source_listing_id": "5trK7yLTR8t8YzWBDqBffs"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "clarke_quay",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-sail-marina-bay-condo-EShQXnyTXmhQ2djDuwAk6o",
+      "source_platform": "99.co",
+      "source_listing_id": "EShQXnyTXmhQ2djDuwAk6o"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "clarke_quay",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/aspen-heights-condo-GBqa9roTkvLUJY5jugLTvH",
+      "source_platform": "99.co",
+      "source_listing_id": "GBqa9roTkvLUJY5jugLTvH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "clarke_quay",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/4-everton-park-hdb-JEQoREvUV3svppug8Nuumk",
+      "source_platform": "99.co",
+      "source_listing_id": "JEQoREvUV3svppug8Nuumk"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/heritage-view-condo-TPLkt3pziuU3QBmcS96saF",
+      "source_platform": "99.co",
+      "source_listing_id": "TPLkt3pziuU3QBmcS96saF"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/heritage-view-condo-PEhdKSUDHFEk4987Gc5riy",
+      "source_platform": "99.co",
+      "source_listing_id": "PEhdKSUDHFEk4987Gc5riy"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/heritage-view-condo-A7aJrPvgbKbJYG9WJ46Rfo",
+      "source_platform": "99.co",
+      "source_listing_id": "A7aJrPvgbKbJYG9WJ46Rfo"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/heritage-view-condo-ZtVZb7QAX3eX9YyJgvboyr",
+      "source_platform": "99.co",
+      "source_listing_id": "ZtVZb7QAX3eX9YyJgvboyr"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/heritage-view-condo-MrGffNjdL2W5A2ruBsC6jr",
+      "source_platform": "99.co",
+      "source_listing_id": "MrGffNjdL2W5A2ruBsC6jr"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/dover-parkview-condo-L9jDBQnvu4e9EgGM9QXLtD",
+      "source_platform": "99.co",
+      "source_listing_id": "L9jDBQnvu4e9EgGM9QXLtD"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/dover-parkview-condo-7CmbVJyQGXMqnY7jK24RPq",
+      "source_platform": "99.co",
+      "source_listing_id": "7CmbVJyQGXMqnY7jK24RPq"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/dover-parkview-condo-aeD6enTRxB9KYgZrtQKxeo",
+      "source_platform": "99.co",
+      "source_listing_id": "aeD6enTRxB9KYgZrtQKxeo"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "dover",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/dover-parkview-condo-6KAdxAb7Z7sincpM4VNez4",
+      "source_platform": "99.co",
+      "source_listing_id": "6KAdxAb7Z7sincpM4VNez4"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "farrer_park",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/672b-klang-lane-hdb-gZvYxcEUhDstaYzjBNhdoT",
+      "source_platform": "99.co",
+      "source_listing_id": "gZvYxcEUhDstaYzjBNhdoT"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/nutmeg-court-condo-NxomoCis3TuCejTwtkYJq4",
+      "source_platform": "99.co",
+      "source_listing_id": "NxomoCis3TuCejTwtkYJq4"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kellock-lodge-condo-5trK7yLTR8t8YzWBDqBffs",
+      "source_platform": "99.co",
+      "source_listing_id": "5trK7yLTR8t8YzWBDqBffs"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-sail-marina-bay-condo-EShQXnyTXmhQ2djDuwAk6o",
+      "source_platform": "99.co",
+      "source_listing_id": "EShQXnyTXmhQ2djDuwAk6o"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/aspen-heights-condo-GBqa9roTkvLUJY5jugLTvH",
+      "source_platform": "99.co",
+      "source_listing_id": "GBqa9roTkvLUJY5jugLTvH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/4-everton-park-hdb-JEQoREvUV3svppug8Nuumk",
+      "source_platform": "99.co",
+      "source_listing_id": "JEQoREvUV3svppug8Nuumk"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-linc-condo-Q4rzr8bnVTTSGTiGNybLah",
+      "source_platform": "99.co",
+      "source_listing_id": "Q4rzr8bnVTTSGTiGNybLah"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/2c-boon-tiong-road-hdb-DzAXz9SRUyur9EPP7fen7T",
+      "source_platform": "99.co",
+      "source_listing_id": "DzAXz9SRUyur9EPP7fen7T"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/ue-square-condo-EBBS2TTFx3A3Ma8fsx3ZB3",
+      "source_platform": "99.co",
+      "source_listing_id": "EBBS2TTFx3A3Ma8fsx3ZB3"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "fort_canning",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/emerald-park-condo-DcX6EHV4q9mCK3ta4czBx6",
+      "source_platform": "99.co",
+      "source_listing_id": "DcX6EHV4q9mCK3ta4czBx6"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "hillview",
+      "duplicate_of_station_slug": "bukit_batok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/hillbrooks-condo-JEfqKu2ctiuoLfg5R2VpQU",
+      "source_platform": "99.co",
+      "source_listing_id": "JEfqKu2ctiuoLfg5R2VpQU"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "joo_koon",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/653c-jurong-west-street-61-hdb-nBcuVXSBqPMsXtwmccQ5Zo",
+      "source_platform": "99.co",
+      "source_listing_id": "nBcuVXSBqPMsXtwmccQ5Zo"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "joo_koon",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/723-jurong-west-avenue-5-hdb-cHTHxTrYogJaXTSVnNtXft",
+      "source_platform": "99.co",
+      "source_listing_id": "cHTHxTrYogJaXTSVnNtXft"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "joo_koon",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/713-jurong-west-street-71-hdb-5nNdf8PFiJcuK7LeghFjGG",
+      "source_platform": "99.co",
+      "source_listing_id": "5nNdf8PFiJcuK7LeghFjGG"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "joo_koon",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/631-jurong-west-street-65-hdb-kt2EjjGaFDmKcfPwL5PzQn",
+      "source_platform": "99.co",
+      "source_listing_id": "kt2EjjGaFDmKcfPwL5PzQn"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "joo_koon",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/705-jurong-west-street-71-hdb-Roh2pPRPjTReE6DJEJFxnY",
+      "source_platform": "99.co",
+      "source_listing_id": "Roh2pPRPjTReE6DJEJFxnY"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "jurong_east",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/parc-oasis-condo-2GFNMw3LDawXGtBt4pJE6E",
+      "source_platform": "99.co",
+      "source_listing_id": "2GFNMw3LDawXGtBt4pJE6E"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kaki_bukit",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/671-jalan-damai-hdb-QrYSpH9PYGtmC2LhezCCJg",
+      "source_platform": "99.co",
+      "source_listing_id": "QrYSpH9PYGtmC2LhezCCJg"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kaki_bukit",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/110-bedok-reservoir-road-hdb-dRfA8vLrwakqnacPcYfoBJ",
+      "source_platform": "99.co",
+      "source_listing_id": "dRfA8vLrwakqnacPcYfoBJ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kaki_bukit",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/jalan-singa-landed-EAk2ib5vF2QU3vVJdqbxsH",
+      "source_platform": "99.co",
+      "source_listing_id": "EAk2ib5vF2QU3vVJdqbxsH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kaki_bukit",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/124-bedok-reservoir-road-hdb-TCay9aq6ysCup22Yf86dBc",
+      "source_platform": "99.co",
+      "source_listing_id": "TCay9aq6ysCup22Yf86dBc"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kallang",
+      "duplicate_of_station_slug": "bendemeer",
+      "listing_url": "https://www.99.co/singapore/rooms/property/105-towner-road-hdb-NU5bxciyDr4ucZNyMYCive",
+      "source_platform": "99.co",
+      "source_listing_id": "NU5bxciyDr4ucZNyMYCive"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kallang",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-6JsufNZk3BzNGdbb6rBmHY",
+      "source_platform": "99.co",
+      "source_listing_id": "6JsufNZk3BzNGdbb6rBmHY"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kallang",
+      "duplicate_of_station_slug": "bendemeer",
+      "listing_url": "https://www.99.co/singapore/rooms/property/moonstone-view-condo-VMzfmfJk9vtKmAftbJrXvy",
+      "source_platform": "99.co",
+      "source_listing_id": "VMzfmfJk9vtKmAftbJrXvy"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kallang",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-knVcj9v8nw8aeTpmwk7MeD",
+      "source_platform": "99.co",
+      "source_listing_id": "knVcj9v8nw8aeTpmwk7MeD"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/807c-chai-chee-road-hdb-2o8sPFyV4KZwVvoMye7GAx",
+      "source_platform": "99.co",
+      "source_listing_id": "2o8sPFyV4KZwVvoMye7GAx"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/111-lengkong-tiga-hdb-jGhrDth7L6TnfETovPnZVN",
+      "source_platform": "99.co",
+      "source_listing_id": "jGhrDth7L6TnfETovPnZVN"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/changi-road-landed-PPqQbA9JipChpXiY3kspQS",
+      "source_platform": "99.co",
+      "source_listing_id": "PPqQbA9JipChpXiY3kspQS"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/windy-heights-condo-CTq3zMdViRafWjkeFUCZoN",
+      "source_platform": "99.co",
+      "source_listing_id": "CTq3zMdViRafWjkeFUCZoN"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/807c-chai-chee-road-hdb-kNomxhmhdDd3vgyACqANXi",
+      "source_platform": "99.co",
+      "source_listing_id": "kNomxhmhdDd3vgyACqANXi"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/lorong-marican-landed-nD7nibjqzHg7gPSFhn2L34",
+      "source_platform": "99.co",
+      "source_listing_id": "nD7nibjqzHg7gPSFhn2L34"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/116-lengkong-tiga-hdb-oYHsj7LkRnfBgr6fGriaAa",
+      "source_platform": "99.co",
+      "source_listing_id": "oYHsj7LkRnfBgr6fGriaAa"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/55-chai-chee-drive-hdb-ecVZuBjyXrA94mryEWVpi7",
+      "source_platform": "99.co",
+      "source_listing_id": "ecVZuBjyXrA94mryEWVpi7"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/11-chai-chee-road-hdb-5wUjxRtaNsWGQa9BpAfS6a",
+      "source_platform": "99.co",
+      "source_listing_id": "5wUjxRtaNsWGQa9BpAfS6a"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kembangan",
+      "duplicate_of_station_slug": "bright_hill",
+      "listing_url": "https://www.99.co/singapore/rooms/property/astoria-park-condo-8kttibRoZPyZp8W6NpCxAM",
+      "source_platform": "99.co",
+      "source_listing_id": "8kttibRoZPyZp8W6NpCxAM"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kovan",
+      "duplicate_of_station_slug": "hougang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kovan-melody-condo-SCxYBiGyHR7S7Fqnapweni",
+      "source_platform": "99.co",
+      "source_listing_id": "SCxYBiGyHR7S7Fqnapweni"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "kranji",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/634-choa-chu-kang-north-6-hdb-Dvc3HJd3XZBGEU3nrLGQnA",
+      "source_platform": "99.co",
+      "source_listing_id": "Dvc3HJd3XZBGEU3nrLGQnA"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "lavender",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-6JsufNZk3BzNGdbb6rBmHY",
+      "source_platform": "99.co",
+      "source_listing_id": "6JsufNZk3BzNGdbb6rBmHY"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "lavender",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kerrisdale-condo-knVcj9v8nw8aeTpmwk7MeD",
+      "source_platform": "99.co",
+      "source_listing_id": "knVcj9v8nw8aeTpmwk7MeD"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "lavender",
+      "duplicate_of_station_slug": "kallang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/citylights-condo-hWHJiSUSygDE67sQ7mhRh8",
+      "source_platform": "99.co",
+      "source_listing_id": "hWHJiSUSygDE67sQ7mhRh8"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "little_india",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/672b-klang-lane-hdb-gZvYxcEUhDstaYzjBNhdoT",
+      "source_platform": "99.co",
+      "source_listing_id": "gZvYxcEUhDstaYzjBNhdoT"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "little_india",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/632-veerasamy-road-hdb-d4EbMKzXus42C39eKU2wrL",
+      "source_platform": "99.co",
+      "source_listing_id": "d4EbMKzXus42C39eKU2wrL"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "little_india",
+      "duplicate_of_station_slug": "farrer_park",
+      "listing_url": "https://www.99.co/singapore/rooms/property/672a-klang-lane-hdb-YJupweYdDMfEEhZni2Rt8r",
+      "source_platform": "99.co",
+      "source_listing_id": "YJupweYdDMfEEhZni2Rt8r"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "little_india",
+      "duplicate_of_station_slug": "farrer_park",
+      "listing_url": "https://www.99.co/singapore/rooms/property/663-buffalo-road-hdb-UFSJN7KbNhkWKViyNYXSoe",
+      "source_platform": "99.co",
+      "source_listing_id": "UFSJN7KbNhkWKViyNYXSoe"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "little_india",
+      "duplicate_of_station_slug": "farrer_park",
+      "listing_url": "https://www.99.co/singapore/rooms/property/672b-klang-lane-hdb-JPYPkXeqiWPrTsRAQjXBqa",
+      "source_platform": "99.co",
+      "source_listing_id": "JPYPkXeqiWPrTsRAQjXBqa"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marsiling",
+      "duplicate_of_station_slug": "kranji",
+      "listing_url": "https://www.99.co/singapore/rooms/property/148-woodlands-street-13-hdb-Wxh6ByjMP9b9PYZhnGRpKU",
+      "source_platform": "99.co",
+      "source_listing_id": "Wxh6ByjMP9b9PYZhnGRpKU"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marsiling",
+      "duplicate_of_station_slug": "kranji",
+      "listing_url": "https://www.99.co/singapore/rooms/property/168-woodlands-street-11-hdb-2fzcNAS5YKqsxdZMJe73eb",
+      "source_platform": "99.co",
+      "source_listing_id": "2fzcNAS5YKqsxdZMJe73eb"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marsiling",
+      "duplicate_of_station_slug": "kranji",
+      "listing_url": "https://www.99.co/singapore/rooms/property/405-woodlands-street-41-hdb-RddPLMiPy7CgE8htJvcNK6",
+      "source_platform": "99.co",
+      "source_listing_id": "RddPLMiPy7CgE8htJvcNK6"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marsiling",
+      "duplicate_of_station_slug": "kranji",
+      "listing_url": "https://www.99.co/singapore/rooms/property/315-woodlands-street-31-hdb-fFp9mdmvLjkrDh6jtLwzvQ",
+      "source_platform": "99.co",
+      "source_listing_id": "fFp9mdmvLjkrDh6jtLwzvQ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marymount",
+      "duplicate_of_station_slug": "bishan",
+      "listing_url": "https://www.99.co/singapore/rooms/property/boonview-condo-L4bWfTks3jtj4AquSXGBay",
+      "source_platform": "99.co",
+      "source_listing_id": "L4bWfTks3jtj4AquSXGBay"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marymount",
+      "duplicate_of_station_slug": "bishan",
+      "listing_url": "https://www.99.co/singapore/rooms/property/boonview-condo-m3mG833DMbvANYjmtZUBV3",
+      "source_platform": "99.co",
+      "source_listing_id": "m3mG833DMbvANYjmtZUBV3"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marymount",
+      "duplicate_of_station_slug": "bishan",
+      "listing_url": "https://www.99.co/singapore/rooms/property/275a-bishan-street-24-hdb-daanPHZGeHLodMf8NqmvJJ",
+      "source_platform": "99.co",
+      "source_listing_id": "daanPHZGeHLodMf8NqmvJJ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marymount",
+      "duplicate_of_station_slug": "bishan",
+      "listing_url": "https://www.99.co/singapore/rooms/property/bishan-8-condo-FnBxRFJejWR9Ca9yGK6X74",
+      "source_platform": "99.co",
+      "source_listing_id": "FnBxRFJejWR9Ca9yGK6X74"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "marymount",
+      "duplicate_of_station_slug": "bishan",
+      "listing_url": "https://www.99.co/singapore/rooms/property/230-bishan-street-23-hdb-m42tJ7ijFaEjhQqWWJScx7",
+      "source_platform": "99.co",
+      "source_listing_id": "m42tJ7ijFaEjhQqWWJScx7"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-sail-marina-bay-condo-EShQXnyTXmhQ2djDuwAk6o",
+      "source_platform": "99.co",
+      "source_listing_id": "EShQXnyTXmhQ2djDuwAk6o"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/aspen-heights-condo-GBqa9roTkvLUJY5jugLTvH",
+      "source_platform": "99.co",
+      "source_listing_id": "GBqa9roTkvLUJY5jugLTvH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "city_hall",
+      "listing_url": "https://www.99.co/singapore/rooms/property/4-everton-park-hdb-JEQoREvUV3svppug8Nuumk",
+      "source_platform": "99.co",
+      "source_listing_id": "JEQoREvUV3svppug8Nuumk"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "clarke_quay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/104-spottiswoode-park-road-hdb-ZSB7wtZU7JpMFwmWzKtH42",
+      "source_platform": "99.co",
+      "source_listing_id": "ZSB7wtZU7JpMFwmWzKtH42"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "chinatown",
+      "listing_url": "https://www.99.co/singapore/rooms/property/emerald-garden-condo-2awxhLaqri4PYvMzFJjzYz",
+      "source_platform": "99.co",
+      "source_listing_id": "2awxhLaqri4PYvMzFJjzYz"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/2c-boon-tiong-road-hdb-DzAXz9SRUyur9EPP7fen7T",
+      "source_platform": "99.co",
+      "source_listing_id": "DzAXz9SRUyur9EPP7fen7T"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/ue-square-condo-EBBS2TTFx3A3Ma8fsx3ZB3",
+      "source_platform": "99.co",
+      "source_listing_id": "EBBS2TTFx3A3Ma8fsx3ZB3"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "maxwell",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/emerald-park-condo-DcX6EHV4q9mCK3ta4czBx6",
+      "source_platform": "99.co",
+      "source_listing_id": "DcX6EHV4q9mCK3ta4czBx6"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "mountbatten",
+      "duplicate_of_station_slug": "marine_parade",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-makena-condo-m53Uq2XrzjL6ziQfoLEvsE",
+      "source_platform": "99.co",
+      "source_listing_id": "m53Uq2XrzjL6ziQfoLEvsE"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "mountbatten",
+      "duplicate_of_station_slug": "marine_parade",
+      "listing_url": "https://www.99.co/singapore/rooms/property/364-tanjong-katong-road-condo-cpbe3mPFbC73XadRNqM8gv",
+      "source_platform": "99.co",
+      "source_listing_id": "cpbe3mPFbC73XadRNqM8gv"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "mountbatten",
+      "duplicate_of_station_slug": "marine_parade",
+      "listing_url": "https://www.99.co/singapore/rooms/property/tanjong-katong-road-landed-JeJcGwP7gnisRFzmMvMUpW",
+      "source_platform": "99.co",
+      "source_listing_id": "JeJcGwP7gnisRFzmMvMUpW"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "newton",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/nutmeg-court-condo-NxomoCis3TuCejTwtkYJq4",
+      "source_platform": "99.co",
+      "source_listing_id": "NxomoCis3TuCejTwtkYJq4"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "newton",
+      "duplicate_of_station_slug": "fort_canning",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kim-sia-court-condo-wUkZ58hC4uAJ5oJZTnzev7",
+      "source_platform": "99.co",
+      "source_listing_id": "wUkZ58hC4uAJ5oJZTnzev7"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "novena",
+      "duplicate_of_station_slug": "bras_basah",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-linc-condo-Q4rzr8bnVTTSGTiGNybLah",
+      "source_platform": "99.co",
+      "source_listing_id": "Q4rzr8bnVTTSGTiGNybLah"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "one_north",
+      "duplicate_of_station_slug": "buona_vista",
+      "listing_url": "https://www.99.co/singapore/rooms/property/100-north-buona-vista-road-condo-Cfmj28C39AxAv53FVsCTUJ",
+      "source_platform": "99.co",
+      "source_listing_id": "Cfmj28C39AxAv53FVsCTUJ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/671-jalan-damai-hdb-QrYSpH9PYGtmC2LhezCCJg",
+      "source_platform": "99.co",
+      "source_listing_id": "QrYSpH9PYGtmC2LhezCCJg"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "hougang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/kovan-melody-condo-SCxYBiGyHR7S7Fqnapweni",
+      "source_platform": "99.co",
+      "source_listing_id": "SCxYBiGyHR7S7Fqnapweni"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "hougang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/115-hougang-avenue-1-hdb-b24g6E6be8jGxrgj78diAU",
+      "source_platform": "99.co",
+      "source_listing_id": "b24g6E6be8jGxrgj78diAU"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "hougang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/133-lorong-ah-soo-hdb-fgp6mabApLRzDDJUcKt72w",
+      "source_platform": "99.co",
+      "source_listing_id": "fgp6mabApLRzDDJUcKt72w"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/110-bedok-reservoir-road-hdb-dRfA8vLrwakqnacPcYfoBJ",
+      "source_platform": "99.co",
+      "source_listing_id": "dRfA8vLrwakqnacPcYfoBJ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "hougang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/166-hougang-avenue-1-hdb-LbrVonNqtnX43JXvtkDQ9d",
+      "source_platform": "99.co",
+      "source_listing_id": "LbrVonNqtnX43JXvtkDQ9d"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "pasir_ris",
+      "listing_url": "https://www.99.co/singapore/rooms/property/755-pasir-ris-street-71-hdb-jdjMk53tGyXqQzSbd5LEi9",
+      "source_platform": "99.co",
+      "source_listing_id": "jdjMk53tGyXqQzSbd5LEi9"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "paya_lebar",
+      "duplicate_of_station_slug": "bedok",
+      "listing_url": "https://www.99.co/singapore/rooms/property/jalan-singa-landed-EAk2ib5vF2QU3vVJdqbxsH",
+      "source_platform": "99.co",
+      "source_listing_id": "EAk2ib5vF2QU3vVJdqbxsH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/723-jurong-west-avenue-5-hdb-cHTHxTrYogJaXTSVnNtXft",
+      "source_platform": "99.co",
+      "source_listing_id": "cHTHxTrYogJaXTSVnNtXft"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "boon_lay",
+      "listing_url": "https://www.99.co/singapore/rooms/property/653c-jurong-west-street-61-hdb-nBcuVXSBqPMsXtwmccQ5Zo",
+      "source_platform": "99.co",
+      "source_listing_id": "nBcuVXSBqPMsXtwmccQ5Zo"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "joo_koon",
+      "listing_url": "https://www.99.co/singapore/rooms/property/658d-jurong-west-street-65-hdb-43UhaqRoLqjvJ7DmcQuncQ",
+      "source_platform": "99.co",
+      "source_listing_id": "43UhaqRoLqjvJ7DmcQuncQ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "joo_koon",
+      "listing_url": "https://www.99.co/singapore/rooms/property/648c-jurong-west-street-61-hdb-jhS4VrSEh4ZoX6t8ZixrFN",
+      "source_platform": "99.co",
+      "source_listing_id": "jhS4VrSEh4ZoX6t8ZixrFN"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "joo_koon",
+      "listing_url": "https://www.99.co/singapore/rooms/property/686a-jurong-west-central-1-hdb-QVA47wHpmfXNbos3uiha6Y",
+      "source_platform": "99.co",
+      "source_listing_id": "QVA47wHpmfXNbos3uiha6Y"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "joo_koon",
+      "listing_url": "https://www.99.co/singapore/rooms/property/the-centris-condo-9UpSwSpBEyRohiYh7n6YYp",
+      "source_platform": "99.co",
+      "source_listing_id": "9UpSwSpBEyRohiYh7n6YYp"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "pioneer",
+      "duplicate_of_station_slug": "joo_koon",
+      "listing_url": "https://www.99.co/singapore/rooms/property/665a-jurong-west-street-64-hdb-DcpdtTGXWFghuD6iRG2xwX",
+      "source_platform": "99.co",
+      "source_listing_id": "DcpdtTGXWFghuD6iRG2xwX"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "simei",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-Xhgs9zzsJCXgjNznAxWaVk",
+      "source_platform": "99.co",
+      "source_listing_id": "Xhgs9zzsJCXgjNznAxWaVk"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "simei",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/sunhaven-condo-7iw2GYEE7w3mQsdwHZEsbM",
+      "source_platform": "99.co",
+      "source_listing_id": "7iw2GYEE7w3mQsdwHZEsbM"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "simei",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-g3aXifdLT3Ag9iCLHZWE7M",
+      "source_platform": "99.co",
+      "source_listing_id": "g3aXifdLT3Ag9iCLHZWE7M"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "simei",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-8QRSjfVUjSc44GNS7u8mxs",
+      "source_platform": "99.co",
+      "source_listing_id": "8QRSjfVUjSc44GNS7u8mxs"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/314-tampines-street-33-hdb-PAwtcqa9rzJmwT4N6Y2x6T",
+      "source_platform": "99.co",
+      "source_listing_id": "PAwtcqa9rzJmwT4N6Y2x6T"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/sunhaven-condo-7iw2GYEE7w3mQsdwHZEsbM",
+      "source_platform": "99.co",
+      "source_listing_id": "7iw2GYEE7w3mQsdwHZEsbM"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-Xhgs9zzsJCXgjNznAxWaVk",
+      "source_platform": "99.co",
+      "source_listing_id": "Xhgs9zzsJCXgjNznAxWaVk"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/357-tampines-street-33-hdb-WQ22WfFxGqMs599c97rviQ",
+      "source_platform": "99.co",
+      "source_listing_id": "WQ22WfFxGqMs599c97rviQ"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/357-tampines-street-33-hdb-ikp62jbG7u7geZ3ZKn5VKn",
+      "source_platform": "99.co",
+      "source_listing_id": "ikp62jbG7u7geZ3ZKn5VKn"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-g3aXifdLT3Ag9iCLHZWE7M",
+      "source_platform": "99.co",
+      "source_listing_id": "g3aXifdLT3Ag9iCLHZWE7M"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/simei-green-condominium-condo-8QRSjfVUjSc44GNS7u8mxs",
+      "source_platform": "99.co",
+      "source_listing_id": "8QRSjfVUjSc44GNS7u8mxs"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines_east",
+      "duplicate_of_station_slug": "tampines",
+      "listing_url": "https://www.99.co/singapore/rooms/property/265-tampines-street-21-hdb-YDtcS4H2M2DLN8xAXoH9EH",
+      "source_platform": "99.co",
+      "source_listing_id": "YDtcS4H2M2DLN8xAXoH9EH"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines_east",
+      "duplicate_of_station_slug": "changi_airport",
+      "listing_url": "https://www.99.co/singapore/rooms/property/314-tampines-street-33-hdb-PAwtcqa9rzJmwT4N6Y2x6T",
+      "source_platform": "99.co",
+      "source_listing_id": "PAwtcqa9rzJmwT4N6Y2x6T"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines_east",
+      "duplicate_of_station_slug": "tampines",
+      "listing_url": "https://www.99.co/singapore/rooms/property/citylife-tampines-condo-EntEqxoaHQ56QNU9GxzVYM",
+      "source_platform": "99.co",
+      "source_listing_id": "EntEqxoaHQ56QNU9GxzVYM"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "tampines_east",
+      "duplicate_of_station_slug": "tampines",
+      "listing_url": "https://www.99.co/singapore/rooms/property/164-tampines-street-12-hdb-jvzjXG4kjRUHNUmkAQ5df8",
+      "source_platform": "99.co",
+      "source_listing_id": "jvzjXG4kjRUHNUmkAQ5df8"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "yew_tee",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/634-choa-chu-kang-north-6-hdb-Dvc3HJd3XZBGEU3nrLGQnA",
+      "source_platform": "99.co",
+      "source_listing_id": "Dvc3HJd3XZBGEU3nrLGQnA"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "yew_tee",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/686c-choa-chu-kang-crescent-hdb-jNGbQGomUFoPPGtdsapJJ9",
+      "source_platform": "99.co",
+      "source_listing_id": "jNGbQGomUFoPPGtdsapJJ9"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "yew_tee",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/818a-choa-chu-kang-avenue-1-hdb-XsZVjbDATUUMZvRnLmnsX7",
+      "source_platform": "99.co",
+      "source_listing_id": "XsZVjbDATUUMZvRnLmnsX7"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "yew_tee",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/verde-view-landed-7Rr6soJHXMJfUQhmYMQR7f",
+      "source_platform": "99.co",
+      "source_listing_id": "7Rr6soJHXMJfUQhmYMQR7f"
+    },
+    {
+      "reason": "duplicate",
+      "station_slug": "yew_tee",
+      "duplicate_of_station_slug": "choa_chu_kang",
+      "listing_url": "https://www.99.co/singapore/rooms/property/815a-choa-chu-kang-avenue-7-hdb-7QsHL4vEvdXWgBrSX5a3Ck",
+      "source_platform": "99.co",
+      "source_listing_id": "7QsHL4vEvdXWgBrSX5a3Ck"
+    }
+  ]
 }

@@ -13,7 +13,9 @@
     "start:algo": "cd algorithm && python3 -m uvicorn src.main:app --port 8000 --reload",
     "dev:backend": "npm --prefix backend run dev",
     "generate:listings": "npm --prefix backend run generate:listings",
+    "import:99co-browser": "npm --prefix backend run import:99co-browser",
     "merge:listings": "npm --prefix backend run merge:listings",
+    "receive:research": "npm --prefix backend run receive:research",
     "validate:listings": "npm --prefix backend run validate:listings"
   }
 }
