@@ -10,6 +10,12 @@ import { AgentReasoningBubble } from "./dolphine/AgentReasoningBubble";
 import { CorrectnessPanel } from "./dolphine/CorrectnessPanel";
 import type { DolphineInsights, RoomExtras } from "./dolphine/types";
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+
+function apiUrl(path: string) {
+  return `${API_BASE_URL}${path}`;
+}
+
 type TransportMode = "MRT/Bus" | "Walk/Cycle" | "Drive";
 type AppStatus = "idle" | "loading" | "results";
 type ListingInputMode = "demo" | "text" | "urls";
@@ -570,7 +576,7 @@ function App() {
 
     try {
       const message = serializeProfileToNL(profile);
-      const resp = await fetch("/api/chat", {
+      const resp = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -602,7 +608,7 @@ function App() {
     setChatLoading(true);
     setChatInput("");
     try {
-      const resp = await fetch("/api/chat", {
+      const resp = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, message: msg, profile }),

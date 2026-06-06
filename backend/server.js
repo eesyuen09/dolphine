@@ -22,6 +22,7 @@ const dbDir = path.join(__dirname, "data");
 const dbPath = path.join(dbDir, "roommatch.sqlite");
 const db = await openDatabase(dbPath);
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
+const ALGORITHM_API_URL = (process.env.ALGORITHM_API_URL || "http://localhost:8000").replace(/\/$/, "");
 
 // ── Market price index (loaded from algorithm data at startup) ────────────
 const LISTINGS_PATH = path.join(__dirname, "..", "algorithm", "data", "listings.json");
@@ -57,6 +58,21 @@ function marketAudit(nbId, roomType, rent) {
 }
 
 app.use(express.json());
+app.use((request, response, next) => {
+  const allowedOrigins = parseAllowedOrigins(process.env.CORS_ORIGIN);
+  const origin = request.headers.origin;
+  if (allowedOrigins.includes("*") || (origin && allowedOrigins.includes(origin))) {
+    response.setHeader("Access-Control-Allow-Origin", allowedOrigins.includes("*") ? "*" : origin);
+    response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    response.setHeader("Vary", "Origin");
+  }
+  if (request.method === "OPTIONS") {
+    response.sendStatus(204);
+    return;
+  }
+  next();
+});
 app.use(express.static(frontendDir));
 
 // ── Database helpers ──────────────────────────────────────────────────────
@@ -114,6 +130,13 @@ function parseRetryCount(value, fallback) {
     throw new Error(`PORT_RETRIES must be a non-negative integer. Received: ${value}`);
   }
   return parsedRetryCount;
+}
+
+function parseAllowedOrigins(value) {
+  return (value || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 }
 
 function startServer(startPort, retriesLeft) {
@@ -1147,7 +1170,7 @@ app.post("/api/chat", async (request, response, next) => {
       listings = await parseListings(listingInputs, listingMode);
     }
 
-    const algoResponse = await fetch("http://localhost:8000/recommend", {
+    const algoResponse = await fetch(`${ALGORITHM_API_URL}/recommend`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
