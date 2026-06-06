@@ -5,11 +5,14 @@
   "scripts": {
     "install:frontend": "npm --prefix frontend install",
     "install:backend": "npm --prefix backend install",
-    "start": "npm --prefix frontend run dev",
-    "dev": "npm --prefix frontend run dev",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "start": "node scripts/dev.mjs",
+    "dev": "node scripts/dev.mjs",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
+    "start:frontend": "npm --prefix frontend run dev",
     "start:backend": "npm --prefix backend start",
-    "dev:backend": "npm --prefix backend run dev"
+    "dev:backend": "npm --prefix backend run dev",
+    "start:prod": "npm run build && npm --prefix backend start"
   }
 }

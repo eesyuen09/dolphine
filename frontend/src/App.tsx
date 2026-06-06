@@ -1,8 +1,7 @@
-import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type TransportMode = "MRT/Bus" | "Walk/Cycle" | "Drive";
 type AppStatus = "idle" | "loading" | "results";
-type ListingInputMode = "demo" | "text" | "urls";
 type RoomTypePreference = "Common room" | "Master room" | "Studio" | "Whole unit" | "No preference";
 
 type LocationOption = {
@@ -59,6 +58,13 @@ type RoomListing = {
   shortReason: string;
   likelyRegret: string;
   photoTone: "aqua" | "sand" | "coral";
+};
+
+type ListingExtractionResponse = {
+  rooms?: RoomListing[];
+  extractedRooms?: RoomListing[];
+  warnings?: string[];
+  summary?: string;
 };
 
 const singaporeLocations: LocationOption[] = [
@@ -283,12 +289,6 @@ const loadingSteps = [
   "Ranking rooms"
 ];
 
-const demoListingText = `Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.
-Jurong East common room, S$1100/month, 10 min walk to MRT, 5B2B, aircon, no cooking, utilities not included.
-Dover master room, S$1550/month, 7 min walk to Dover MRT, 3B2B, private bathroom, aircon, furnished, quiet block.
-Clementi common room, S$1300/month, 5 min walk to Clementi MRT, 4B2B, wifi included, cooking allowed, strong food access.
-Punggol co-living room, S$950/month, 9 min walk to Punggol MRT, co-living, furnished, washing machine, longer commute.`;
-
 const demoRooms: RoomListing[] = [
   {
     id: "queenstown-common",
@@ -491,8 +491,8 @@ function App() {
     mustHaves: ["Aircon", "WiFi included", "Cooking allowed", "No owner staying"],
     rankedPriorities: ["Short commute", "Near MRT", "Gym access", "Quiet environment"]
   });
-  const [listingMode, setListingMode] = useState<ListingInputMode>("demo");
-  const [listingInputs, setListingInputs] = useState<string[]>([""]);
+  const [rooms, setRooms] = useState<RoomListing[]>(demoRooms);
+  const [analysisWarnings, setAnalysisWarnings] = useState<string[]>([]);
   const [status, setStatus] = useState<AppStatus>("idle");
   const [loadingStep, setLoadingStep] = useState(0);
   const [selectedRoomId, setSelectedRoomId] = useState(topRoom.id);
@@ -501,7 +501,7 @@ function App() {
   const resultsRef = useRef<HTMLElement | null>(null);
   const timeoutRef = useRef<number[]>([]);
 
-  const selectedRoom = demoRooms.find((room) => room.id === selectedRoomId) ?? topRoom;
+  const selectedRoom = rooms.find((room) => room.id === selectedRoomId) ?? rooms[0] ?? topRoom;
 
   useEffect(() => {
     return () => {
@@ -513,11 +513,12 @@ function App() {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function analyzeRooms() {
+  async function analyzeRooms() {
     timeoutRef.current.forEach(window.clearTimeout);
     timeoutRef.current = [];
     setStatus("loading");
     setLoadingStep(0);
+    setAnalysisWarnings([]);
 
     loadingSteps.forEach((_, index) => {
       timeoutRef.current.push(
@@ -527,14 +528,25 @@ function App() {
       );
     });
 
-    // Replace this delay with listing extraction + recommendation API calls when backend integration resumes.
-    timeoutRef.current.push(
-      window.setTimeout(() => {
-        setSelectedRoomId(topRoom.id);
-        setStatus("results");
-        window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-      }, 1550)
-    );
+    try {
+      const response = await extractListingsFromBackend(profile);
+      const nextRooms = getResponseRooms(response);
+
+      setRooms(nextRooms);
+      setAnalysisWarnings(getVisibleAnalysisWarnings(response.warnings ?? []));
+      setSelectedRoomId(nextRooms[0]?.id ?? topRoom.id);
+    } catch (error) {
+      setRooms(demoRooms);
+      setAnalysisWarnings([
+        error instanceof Error
+          ? `Backend extraction failed: ${error.message}. Showing local sample room recommendations.`
+          : "Backend extraction failed. Showing local sample room recommendations."
+      ]);
+      setSelectedRoomId(topRoom.id);
+    } finally {
+      setStatus("results");
+      window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    }
   }
 
   function handleTryAnotherProfile() {
@@ -559,15 +571,8 @@ function App() {
           }}
           profile={profile}
           setProfile={setProfile}
-        />
-
-        <RoomListingInput
           isLoading={status === "loading"}
-          listingInputs={listingInputs}
-          listingMode={listingMode}
           onAnalyze={analyzeRooms}
-          setListingInputs={setListingInputs}
-          setListingMode={setListingMode}
         />
 
         {status === "loading" && <LoadingSteps activeStep={loadingStep} />}
@@ -580,7 +585,9 @@ function App() {
             onOpenLandlordMessage={() => setIsModalOpen(true)}
             onSelectRoom={setSelectedRoomId}
             onTryAnotherProfile={handleTryAnotherProfile}
+            analysisWarnings={analysisWarnings}
             profile={profile}
+            rooms={rooms}
             selectedRoom={selectedRoom}
             selectedRoomId={selectedRoomId}
           />
@@ -591,10 +598,52 @@ function App() {
         destination={getDestinationLabel(profile)}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        room={topRoom}
+        room={selectedRoom}
       />
     </main>
   );
+}
+
+async function extractListingsFromBackend(profile: Profile): Promise<ListingExtractionResponse> {
+  const response = await fetch("/api/listings/extract", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      profile,
+      listings: [],
+      useSampleListings: true
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
+function getResponseRooms(response: ListingExtractionResponse) {
+  const rooms = response.rooms?.length ? response.rooms : response.extractedRooms;
+  return rooms?.length ? rooms : demoRooms;
+}
+
+function getVisibleAnalysisWarnings(warnings: string[]) {
+  return warnings.filter(
+    (warning) =>
+      !warning.includes("OneMap credentials are not configured") &&
+      !warning.includes("No listing text or URL was provided") &&
+      !warning.includes("is not in the local demo directory")
+  );
+}
+
+function getBudgetAlternative(rooms: RoomListing[], recommendedRoom: RoomListing) {
+  const alternatives = rooms.filter((room) => room.id !== recommendedRoom.id);
+  const jurongRoom = alternatives.find((room) => /jurong east/i.test(`${room.area} ${room.title}`));
+  if (jurongRoom) return jurongRoom;
+
+  return alternatives.sort((roomA, roomB) => roomA.rent - roomB.rent)[0] ?? budgetRoom;
 }
 
 function LandingSection({ onStart }: { onStart: () => void }) {
@@ -612,7 +661,7 @@ function LandingSection({ onStart }: { onStart: () => void }) {
           Find a life, not just a room.
         </p>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">
-          Paste any room listing. Dolphine predicts how that room will fit your daily life before you sign the lease.
+          Dolphine predicts how different rooms will fit your daily life before you sign the lease.
         </p>
         <button
           className="mt-10 rounded-full bg-sea-deep px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink"
@@ -627,10 +676,14 @@ function LandingSection({ onStart }: { onStart: () => void }) {
 }
 
 function ProfileForm({
+  isLoading,
+  onAnalyze,
   profile,
   refCallback,
   setProfile
 }: {
+  isLoading: boolean;
+  onAnalyze: () => void;
   profile: Profile;
   refCallback: (node: HTMLElement | null) => void;
   setProfile: Dispatch<SetStateAction<Profile>>;
@@ -791,11 +844,21 @@ function ProfileForm({
             </div>
           </fieldset>
 
-          <p className="mt-9 border-t border-sea-deep/10 pt-7 text-sm leading-6 text-slate-500">
-            Based on: {getDestinationLabel(profile)} · {formatMoney(profile.budgetMin)}–
-            {formatMoney(profile.budgetMax)} · {profile.transportMode} · {profile.peopleCount} person ·{" "}
-            {profile.rankedPriorities.slice(0, 3).join(" · ")}
-          </p>
+          <div className="mt-9 flex flex-col gap-5 border-t border-sea-deep/10 pt-7 lg:flex-row lg:items-center lg:justify-between">
+            <p className="text-sm leading-6 text-slate-500">
+              Based on: {getDestinationLabel(profile)} · {formatMoney(profile.budgetMin)}–
+              {formatMoney(profile.budgetMax)} · {profile.transportMode} · {profile.peopleCount} person ·{" "}
+              {profile.rankedPriorities.slice(0, 3).join(" · ")}
+            </p>
+            <button
+              className="rounded-full bg-coral px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isLoading}
+              onClick={onAnalyze}
+              type="button"
+            >
+              {isLoading ? "Analyzing rooms..." : "Find My Best Room"}
+            </button>
+          </div>
         </form>
       </div>
     </section>
@@ -1091,141 +1154,6 @@ function ChipGroup({
   );
 }
 
-function RoomListingInput({
-  isLoading,
-  listingInputs,
-  listingMode,
-  onAnalyze,
-  setListingInputs,
-  setListingMode
-}: {
-  isLoading: boolean;
-  listingInputs: string[];
-  listingMode: ListingInputMode;
-  onAnalyze: () => void;
-  setListingInputs: Dispatch<SetStateAction<string[]>>;
-  setListingMode: (mode: ListingInputMode) => void;
-}) {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    onAnalyze();
-  }
-
-  const placeholderText =
-    listingMode === "urls"
-      ? "Paste one listing URL or copied agent message here. PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, and agent messages all work for the demo."
-      : "Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.";
-
-  function updateListing(index: number, value: string) {
-    setListingInputs((current) => current.map((listing, listingIndex) => (listingIndex === index ? value : listing)));
-  }
-
-  function addListing() {
-    setListingInputs((current) => [...current, ""]);
-  }
-
-  function removeListing(index: number) {
-    setListingInputs((current) => (current.length === 1 ? [""] : current.filter((_, listingIndex) => listingIndex !== index)));
-  }
-
-  return (
-    <section className="py-28 sm:py-32 lg:py-40">
-      <div className="mx-auto max-w-5xl">
-        <SectionHeading
-          eyebrow="Room listing input"
-          text="Paste messy listings, agent messages, or links. Add one room per box so Dolphine can compare them clearly."
-          title="Paste rooms you are considering."
-        />
-
-        <form className="mt-10 rounded-[2.5rem] border border-white/75 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:p-8 lg:p-10" onSubmit={handleSubmit}>
-          <div className="grid gap-3 md:grid-cols-3">
-            <ModeButton
-              isActive={listingMode === "demo"}
-              label="I don't have listings yet"
-              onClick={() => {
-                setListingMode("demo");
-                setListingInputs([""]);
-              }}
-            />
-            <ModeButton isActive={listingMode === "text"} label="Paste listing text" onClick={() => setListingMode("text")} />
-            <ModeButton isActive={listingMode === "urls"} label="Paste listing links" onClick={() => setListingMode("urls")} />
-          </div>
-
-          {listingMode === "demo" ? (
-            <div className="mt-6 rounded-[2rem] bg-sea-mist p-5 text-sm leading-7 text-slate-600">
-              No room links yet. Dolphine will start with a realistic sample shortlist so you can see how the advisor works.
-            </div>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {listingInputs.map((listing, index) => (
-                <div className="rounded-[2rem] border border-sea-deep/10 bg-white p-4 shadow-sm" key={index}>
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <label className="text-sm font-extrabold text-sea-ink" htmlFor={`listing-${index}`}>
-                      Listing {index + 1}
-                    </label>
-                    <button
-                      className="rounded-full bg-sea-mist px-3 py-1.5 text-xs font-extrabold text-slate-500 transition hover:bg-coral/10 hover:text-coral"
-                      onClick={() => removeListing(index)}
-                      type="button"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  <textarea
-                    className="min-h-40 w-full rounded-[1.5rem] border border-sea-deep/10 bg-sea-mist/50 p-4 text-base leading-8 text-sea-ink shadow-sm"
-                    id={`listing-${index}`}
-                    onChange={(event) => updateListing(index, event.target.value)}
-                    placeholder={index === 0 ? placeholderText : "Paste another room listing or URL here."}
-                    value={listing}
-                  />
-                </div>
-              ))}
-
-              <button
-                className="rounded-full border border-sea-deep/15 bg-white px-5 py-3 text-sm font-extrabold text-sea-deep shadow-card transition hover:border-sea-teal"
-                onClick={addListing}
-                type="button"
-              >
-                Add another listing
-              </button>
-            </div>
-          )}
-
-          <div className="mt-8 flex flex-col gap-4 border-t border-sea-deep/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm leading-6 text-slate-500">
-              Sources can be PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, or agent messages.
-            </p>
-            <button
-              className="rounded-full bg-coral px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isLoading}
-              type="submit"
-            >
-              {isLoading ? "Analyzing rooms..." : "Analyze Rooms"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-  );
-}
-
-function ModeButton({ isActive, label, onClick }: { isActive: boolean; label: string; onClick: () => void }) {
-  return (
-    <button
-      aria-pressed={isActive}
-      className={`rounded-2xl border px-4 py-4 text-sm font-extrabold transition ${
-        isActive
-          ? "border-sea-deep bg-sea-deep text-white shadow-card"
-          : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
-      }`}
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
-  );
-}
-
 function LoadingSteps({ activeStep }: { activeStep: number }) {
   return (
     <section className="mx-auto my-28 w-full max-w-3xl animate-rise-in rounded-[2.5rem] border border-white/80 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:my-32 sm:p-8">
@@ -1269,81 +1197,61 @@ function LoadingSteps({ activeStep }: { activeStep: number }) {
 }
 
 function ResultsDashboard({
+  analysisWarnings,
   onOpenLandlordMessage,
   onSelectRoom,
   onTryAnotherProfile,
   profile,
   refCallback,
+  rooms,
   selectedRoom,
   selectedRoomId
 }: {
+  analysisWarnings: string[];
   onOpenLandlordMessage: () => void;
   onSelectRoom: (roomId: string) => void;
   onTryAnotherProfile: () => void;
   profile: Profile;
   refCallback: (node: HTMLElement | null) => void;
+  rooms: RoomListing[];
   selectedRoom: RoomListing;
   selectedRoomId: string;
 }) {
   return (
     <section className="scroll-mt-8 py-24 sm:py-32 lg:py-40" ref={refCallback}>
       <div className="grid gap-28 sm:gap-32 lg:gap-40">
-        <ExtractedRoomCards profile={profile} rooms={demoRooms} />
+        {analysisWarnings.length > 0 && <AnalysisNotice warnings={analysisWarnings} />}
         <RankedRoomRecommendations
           onSelectRoom={onSelectRoom}
-          rooms={demoRooms}
+          rooms={rooms}
           selectedRoomId={selectedRoomId}
         />
         <SelectedRoomDeepDive profile={profile} room={selectedRoom} />
-        <TradeoffSection />
+        <TradeoffSection rooms={rooms} />
         <FutureLifeSimulator profile={profile} room={selectedRoom} />
-        <AlternativePicks />
+        <AlternativePicks rooms={rooms} />
         <LandlordQuestions room={selectedRoom} />
         <DolphineReport
           onGenerateLandlordMessage={onOpenLandlordMessage}
           onTryAnotherProfile={onTryAnotherProfile}
           profile={profile}
-          room={topRoom}
+          room={rooms[0] ?? selectedRoom}
+          rooms={rooms}
         />
       </div>
     </section>
   );
 }
 
-function ExtractedRoomCards({ profile, rooms }: { profile: Profile; rooms: RoomListing[] }) {
+function AnalysisNotice({ warnings }: { warnings: string[] }) {
   return (
-    <section>
-      <SectionHeading
-        eyebrow="Extracted room cards"
-        text={`Dolphine found structured room details from messy listing text and estimated commute to ${getDestinationLabel(profile)}.`}
-        title="Here is what Dolphine understood."
-      />
-      <div className="mt-10 grid gap-5 lg:grid-cols-2">
-        {rooms.map((room) => (
-          <article className="rounded-[2rem] border border-white/75 bg-white/76 p-4 shadow-card backdrop-blur" key={room.id}>
-            <div className="grid gap-5 sm:grid-cols-[180px_1fr]">
-              <RoomPhotoPlaceholder tone={room.photoTone} />
-              <div>
-                <h3 className="text-xl font-extrabold text-sea-ink">{room.title}</h3>
-                <p className="mt-2 text-sm font-bold text-slate-500">
-                  {formatMoney(room.rent)}/month · {room.roomType} · {room.unitType}
-                </p>
-                <p className="mt-4 text-sm leading-6 text-slate-600">
-                  {room.mrtWalkMinutes} min walk to {room.nearestMrt}
-                  <br />
-                  {room.commuteMinutes} min to {getDestinationLabel(profile)}
-                </p>
-                <p className="mt-4 text-sm font-bold leading-6 text-sea-deep">
-                  Extracted: {room.amenities.slice(0, 5).join(" · ")}
-                </p>
-                <p className="mt-3 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
-                  Confidence: {room.confidence}%
-                </p>
-              </div>
-            </div>
-          </article>
+    <section className="rounded-[2rem] border border-sand bg-white/72 p-5 text-sm font-bold leading-7 text-slate-500 shadow-card backdrop-blur">
+      <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-coral">Backend notes</p>
+      <ul className="mt-3 grid gap-1">
+        {warnings.slice(0, 3).map((warning) => (
+          <li key={warning}>{warning}</li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
@@ -1524,20 +1432,26 @@ function DetailAccordion({
   );
 }
 
-function TradeoffSection() {
-  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
-  const rentDelta = topRoom.rent - budgetRoom.rent;
+function TradeoffSection({ rooms }: { rooms: RoomListing[] }) {
+  const recommendedRoom = rooms[0] ?? topRoom;
+  const budgetAlternative = getBudgetAlternative(rooms, recommendedRoom);
+  const hoursSaved = Math.max(0, budgetAlternative.annualCommuteHours - recommendedRoom.annualCommuteHours);
+  const rentDelta = recommendedRoom.rent - budgetAlternative.rent;
+  const rentTradeoff =
+    rentDelta > 0
+      ? `-${formatMoney(rentDelta)}/month higher rent`
+      : `+${formatMoney(Math.abs(rentDelta))}/month rent headroom`;
 
   return (
     <section className="overflow-hidden rounded-[2.75rem] bg-sea-ink p-7 text-white shadow-soft sm:p-10 lg:p-12">
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-glass/70">Tradeoff analysis</p>
         <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] sm:text-6xl">
-          Queenstown Common Room vs Jurong East Common Room
+          {recommendedRoom.title} vs {budgetAlternative.title}
         </h2>
         <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/68">
-          If your time and routine stability matter more than saving {formatMoney(rentDelta)}/month, Queenstown is the
-          stronger choice. If your priority is minimizing rent, Jurong East is still acceptable.
+          If your time and routine stability matter more than the lowest rent, {recommendedRoom.area} is the stronger
+          choice. If your priority is minimizing rent, {budgetAlternative.area} is still acceptable.
         </p>
       </div>
 
@@ -1546,8 +1460,8 @@ function TradeoffSection() {
           <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-sea-glass/80">What you gain</h3>
           <div className="mt-5 grid gap-3">
             <TradeoffLine text={`+${hoursSaved} hours/year saved from shorter commute`} />
-            <TradeoffLine text="+Cooking allowed" />
-            <TradeoffLine text="+No owner staying" />
+            <TradeoffLine text={recommendedRoom.amenities.includes("Cooking allowed") ? "+Cooking allowed" : "+More stable routine"} />
+            <TradeoffLine text={recommendedRoom.amenities.includes("No owner staying") ? "+No owner staying" : "+Clearer daily fit"} />
             <TradeoffLine text="+Better gym/food access" />
           </div>
         </div>
@@ -1555,9 +1469,9 @@ function TradeoffSection() {
         <div className="rounded-[2rem] border border-coral/30 bg-coral/15 p-6">
           <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-coral">What you give up</h3>
           <div className="mt-5 grid gap-3">
-            <TradeoffLine text={`-${formatMoney(rentDelta)}/month higher rent`} />
-            <TradeoffLine text="-Shared bathroom" />
-            <TradeoffLine text="-Less budget headroom" />
+            <TradeoffLine text={rentTradeoff} />
+            <TradeoffLine text={recommendedRoom.cons.includes("Shared bathroom") ? "-Shared bathroom" : "-Some listing details still need checking"} />
+            <TradeoffLine text={rentDelta > 0 ? "-Less budget headroom" : "+Keeps more budget headroom"} />
           </div>
         </div>
       </div>
@@ -1655,26 +1569,33 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function AlternativePicks() {
+function AlternativePicks({ rooms }: { rooms: RoomListing[] }) {
+  const sortedByRent = [...rooms].sort((roomA, roomB) => roomA.rent - roomB.rent);
+  const sortedByConvenience = [...rooms].sort(
+    (roomA, roomB) => roomA.commuteMinutes + roomA.mrtWalkMinutes - (roomB.commuteMinutes + roomB.mrtWalkMinutes)
+  );
+  const comfortRoom = rooms.find((room) => room.amenities.includes("Private bathroom")) ?? rooms.find((room) => room.roomType === "Master room") ?? rooms[0] ?? topRoom;
+  const quietRoom = rooms.find((room) => /quiet|calmer/i.test(room.quietness)) ?? rooms[0] ?? topRoom;
+
   const alternatives = [
     {
       title: "Best Budget Pick",
-      room: demoRooms.find((listing) => listing.id === "jurong-east-common")!,
+      room: sortedByRent[0] ?? budgetRoom,
       text: "Lower rent, but much longer commute."
     },
     {
       title: "Best Comfort Pick",
-      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      room: comfortRoom,
       text: "Private bathroom, but higher rent."
     },
     {
       title: "Best Convenience Pick",
-      room: demoRooms.find((listing) => listing.id === "clementi-common")!,
+      room: sortedByConvenience[0] ?? topRoom,
       text: "Strong food access and student-friendly area."
     },
     {
       title: "Best Quiet Pick",
-      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      room: quietRoom,
       text: "Calmer surroundings, fewer late-night food options."
     }
   ];
@@ -1683,7 +1604,7 @@ function AlternativePicks() {
     <section>
       <SectionHeading
         eyebrow="Alternative picks"
-        text="Different priorities lead to different rooms. Each card opens the mocked listing URL."
+        text="Different priorities lead to different rooms. Each card opens the listing URL."
         title="Other rooms worth considering"
       />
       <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -1741,15 +1662,22 @@ function DolphineReport({
   onGenerateLandlordMessage,
   onTryAnotherProfile,
   profile,
-  room
+  room,
+  rooms
 }: {
   onGenerateLandlordMessage: () => void;
   onTryAnotherProfile: () => void;
   profile: Profile;
   room: RoomListing;
+  rooms: RoomListing[];
 }) {
-  const rentDelta = topRoom.rent - budgetRoom.rent;
-  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+  const budgetAlternative = getBudgetAlternative(rooms, room);
+  const rentDelta = room.rent - budgetAlternative.rent;
+  const hoursSaved = Math.max(0, budgetAlternative.annualCommuteHours - room.annualCommuteHours);
+  const rentTradeoff =
+    rentDelta > 0
+      ? `costs ${formatMoney(rentDelta)}/month more than ${budgetAlternative.title}`
+      : `keeps ${formatMoney(Math.abs(rentDelta))}/month more budget headroom than ${budgetAlternative.title}`;
 
   return (
     <section className="mb-10 rounded-[2.75rem] border border-sea-teal/20 bg-gradient-to-br from-white via-sea-mist to-sand p-7 shadow-soft sm:p-10 lg:p-12">
@@ -1760,9 +1688,9 @@ function DolphineReport({
           <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
             Dolphine recommends {room.title} as your best overall fit. It is within your{" "}
             {formatMoney(profile.budgetMax)} budget, has a short {room.commuteMinutes}-minute commute to{" "}
-            {getDestinationLabel(profile)}, allows cooking, and avoids owner-staying constraints. The main tradeoff is
-            that it costs {formatMoney(rentDelta)}/month more than the Jurong East room, but it saves around {hoursSaved}
-            hours of commuting per year.
+            {getDestinationLabel(profile)}, and best matches the routine signals from your life profile. The main
+            tradeoff is that it {rentTradeoff}
+            {hoursSaved > 0 ? `, but saves around ${hoursSaved} hours of commuting per year.` : "."}
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">

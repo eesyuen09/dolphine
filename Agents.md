@@ -1,41 +1,39 @@
-# AGENTS.md
+# Agents.md
 
 ## Project Shape
 
-RoomMatch AI is a 1-day hackathon demo with a deliberately simple full-stack split:
+Dolphine is a hackathon demo for an AI room decision advisor with a deliberately simple full-stack split:
 
-- `frontend/`: plain HTML, CSS, and JavaScript. No build step.
-- `backend/`: Node.js + Express API backed by SQLite.
-- `backend/db/schema.sql`: database tables.
-- `backend/db/seed.sql`: demo room data and commute data.
+- `frontend/`: React + TypeScript + Vite + Tailwind CSS.
+- `backend/`: Node.js + Express API.
+- `backend/listingExtractor.js`: room extraction, mock shortlist, ranking, commute estimates, and optional external API integrations.
+- `backend/loadEnv.js`: loads local env files without printing secrets.
+- `scripts/dev.mjs`: starts frontend and backend together.
 
 ## How To Run
 
 From the repo root:
 
 ```bash
-npm run install:backend
+npm run install:all
 npm start
 ```
 
-Then open `http://localhost:3000`.
+Then open `http://127.0.0.1:3000`.
 
 ## Frontend Notes
 
-- `frontend/index.html` is the mode chooser.
-- `frontend/chat.html` is the interactive chatbot-style flow.
-- `frontend/metric.html` is the structured metric-based flow.
-- `frontend/app.js` powers metric mode.
-- `frontend/chat.js` powers interactive mode.
-- Both frontend scripts call `POST /api/recommendations` for ranked room results.
+- `frontend/src/App.tsx` contains the current single-page UI.
+- The UI uses the life profile form and built-in room shortlist for the guided demo.
+- The frontend calls `POST /api/listings/extract` through Vite's `/api` proxy.
 
 ## Backend Notes
 
 - `GET /api/health` checks the API.
-- `GET /api/rooms` returns raw room data from SQLite.
-- `POST /api/recommendations` accepts tenant preferences and returns ranked rooms.
-- Keep scoring logic in `backend/server.js` unless the project grows enough to justify splitting modules.
+- `POST /api/listings/extract` accepts a profile and optional listing inputs, then returns room-shaped recommendations.
+- Keep route wiring in `backend/server.js`.
+- Keep extraction/ranking logic in `backend/listingExtractor.js`.
 
 ## Hackathon Bias
 
-Prefer obvious, fast changes over framework complexity. If adding features, use the existing API response shape and static frontend pages before introducing a frontend framework, auth, migrations, or external services.
+Prefer obvious, fast changes over framework complexity. Avoid auth, migrations, databases, or new services unless they clearly improve the demo.

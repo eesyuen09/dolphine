@@ -3,6 +3,10 @@ frontend/dist/
 *.tsbuildinfo
 frontend/vite.config.d.ts
 frontend/vite.config.js
-backend/data/*.sqlite
-backend/data/*.sqlite-*
+.env
+.env.local
+backend/.env
+backend/.env.local
+frontend/.env
+frontend/.env.local
 .DS_Store
