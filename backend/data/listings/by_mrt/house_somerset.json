@@ -1,0 +1,30 @@
+{
+  "station": {
+    "name": "Somerset",
+    "slug": "somerset",
+    "mrt_lines": [
+      "North-South Line"
+    ],
+    "is_interchange": false
+  },
+  "research_metadata": {
+    "agent_name": "listing-agent-somerset",
+    "researched_at": "2026-06-06T00:00:00+08:00",
+    "target_listing_count": 20,
+    "actual_listing_count": 0,
+    "search_radius_km": 1,
+    "sources_used": [],
+    "known_limitations": [
+      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
+      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+    ],
+    "fallback_search_areas": [
+      "Somerset estate",
+      "Somerset room rental",
+      "Somerset HDB blocks",
+      "Somerset condo rooms",
+      "adjacent MRT stations near Somerset"
+    ]
+  },
+  "listings": []
+}

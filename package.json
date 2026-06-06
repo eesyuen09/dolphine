@@ -10,6 +10,9 @@
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
     "start:backend": "npm --prefix backend start",
-    "dev:backend": "npm --prefix backend run dev"
+    "dev:backend": "npm --prefix backend run dev",
+    "generate:listings": "npm --prefix backend run generate:listings",
+    "merge:listings": "npm --prefix backend run merge:listings",
+    "validate:listings": "npm --prefix backend run validate:listings"
   }
 }
