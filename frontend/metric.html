@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoomMatch AI | Metric Mode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <nav class="top-nav" aria-label="RoomMatch navigation">
+      <a href="index.html">RoomMatch AI</a>
+      <div>
+        <a href="chat.html">Interactive mode</a>
+        <a class="active" href="metric.html">Metric mode</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Metric-based room search</p>
+        <h1>Find rooms faster without rewriting your requirements every time.</h1>
+        <p class="hero-text">Pick the metrics that matter, then RoomMatch ranks available rooms with clear tradeoffs, commute notes, and recommendation reasons.</p>
+      </div>
+      <div class="hero-panel" aria-label="Recommendation summary">
+        <div class="metric-card">
+          <span>Average shortlist time</span>
+          <strong>8 min</strong>
+        </div>
+        <div class="metric-card">
+          <span>Compared signals</span>
+          <strong>12</strong>
+        </div>
+        <div class="metric-card">
+          <span>Best-fit rooms</span>
+          <strong id="match-count">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Room recommendation workspace">
+      <aside class="filters-panel">
+        <div class="panel-heading">
+          <p class="eyebrow">Tenant preferences</p>
+          <h2>Choose once. Rank instantly.</h2>
+        </div>
+
+        <form id="preference-form" class="preference-form">
+          <label class="field">
+            <span>Monthly budget</span>
+            <select id="budget">
+              <option value="900">Up to $900</option>
+              <option value="1200" selected>Up to $1,200</option>
+              <option value="1500">Up to $1,500</option>
+              <option value="1800">Up to $1,800</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Work / study area</span>
+            <select id="target-area">
+              <option value="Raffles Place">Raffles Place</option>
+              <option value="Buona Vista" selected>Buona Vista</option>
+              <option value="Tanjong Pagar">Tanjong Pagar</option>
+              <option value="Paya Lebar">Paya Lebar</option>
+            </select>
+          </label>
+
+          <div class="field">
+            <span>Required features</span>
+            <div class="toggle-grid">
+              <label><input type="checkbox" id="need-aircon" checked> Aircon</label>
+              <label><input type="checkbox" id="need-wifi" checked> Fast Wi-Fi</label>
+              <label><input type="checkbox" id="allow-cooking"> Cooking allowed</label>
+              <label><input type="checkbox" id="private-bath"> Private bath</label>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Priority</span>
+            <select id="priority">
+              <option value="balanced" selected>Balanced recommendation</option>
+              <option value="comfort">Prioritise comfort</option>
+              <option value="mrt">Prioritise distance to MRT</option>
+              <option value="food">Prioritise food court access</option>
+              <option value="budget">Prioritise lower rent</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Maximum MRT walk</span>
+            <select id="max-walk">
+              <option value="5">5 minutes</option>
+              <option value="8" selected>8 minutes</option>
+              <option value="12">12 minutes</option>
+              <option value="20">Flexible</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Food access</span>
+            <select id="food-access">
+              <option value="must">Must be near hawker / food court</option>
+              <option value="good" selected>Good nearby options</option>
+              <option value="flexible">Flexible</option>
+            </select>
+          </label>
+        </form>
+      </aside>
+
+      <section class="results-panel">
+        <div class="results-toolbar">
+          <div>
+            <p class="eyebrow">AI shortlist</p>
+            <h2>Best rooms for your selected metrics</h2>
+          </div>
+          <button id="reset-button" type="button">Reset</button>
+        </div>
+
+        <div id="insight-box" class="insight-box"></div>
+        <div id="room-list" class="room-list" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
