@@ -2,3 +2,11 @@ node_modules/
 backend/data/*.sqlite
 backend/data/*.sqlite-*
 .DS_Store
+reference_repo/
+.env
+.env.local
+Screenshot*
+CS3263*
+__pycache__/
+*.pyc
+*.pyo

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "install:all": "npm --prefix backend install",
     "install:backend": "npm --prefix backend install",
+    "start:algo": "cd algorithm && python3 -m uvicorn src.main:app --port 8000 --reload",
+    "start:backend": "npm --prefix backend start",
     "start": "npm --prefix backend start",
     "dev": "npm --prefix backend run dev"
   }

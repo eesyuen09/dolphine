@@ -1,0 +1,82 @@
+[
+  {
+    "id": "lst_qtn_001",
+    "source": "sample",
+    "location": { "neighbourhood_id": "queenstown", "address": "Blk 48 Commonwealth Drive, Queenstown" },
+    "listing": { "room_type": "common_room", "rent": 1150, "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": true, "private_bath": false, "furnished": true },
+    "property": { "type": "HDB" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": true }
+  },
+  {
+    "id": "lst_qtn_002",
+    "source": "sample",
+    "location": { "neighbourhood_id": "queenstown", "address": "Blk 9 Mei Chin Road, Queenstown" },
+    "listing": { "room_type": "master_room", "rent": 1750, "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": true, "private_bath": true, "furnished": true },
+    "property": { "type": "HDB" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": true }
+  },
+  {
+    "id": "lst_clem_001",
+    "source": "sample",
+    "location": { "neighbourhood_id": "clementi", "address": "Blk 338 Clementi Ave 2, Clementi" },
+    "listing": { "room_type": "common_room", "rent": 1050, "available_from": "2026-07-01" },
+    "amenities": { "aircon": false, "wifi": true, "cooking": true, "private_bath": false, "furnished": true },
+    "property": { "type": "HDB" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": true }
+  },
+  {
+    "id": "lst_clem_002",
+    "source": "sample",
+    "location": { "neighbourhood_id": "clementi", "address": "The Clement Canopy, Clementi Ave 1" },
+    "listing": { "room_type": "master_room", "rent": 1600, "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": false, "private_bath": true, "furnished": true },
+    "property": { "type": "Condo" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": false }
+  },
+  {
+    "id": "lst_tb_001",
+    "source": "sample",
+    "location": { "neighbourhood_id": "tiong_bahru", "address": "Blk 3 Seng Poh Road, Tiong Bahru" },
+    "listing": { "room_type": "common_room", "rent": 1600, "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": true, "private_bath": false, "furnished": true },
+    "property": { "type": "HDB" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": true }
+  },
+  {
+    "id": "lst_tb_002",
+    "source": "sample",
+    "location": { "neighbourhood_id": "tiong_bahru", "address": "Tiong Bahru Plaza area, Kim Pong Road" },
+    "listing": { "room_type": "master_room", "rent": 2500, "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": true, "private_bath": true, "furnished": true },
+    "property": { "type": "Condo" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": false }
+  },
+  {
+    "id": "lst_je_001",
+    "source": "sample",
+    "location": { "neighbourhood_id": "jurong_east", "address": "Blk 134 Jurong East St 13, Jurong East" },
+    "listing": { "room_type": "common_room", "rent": 880, "available_from": "2026-07-01" },
+    "amenities": { "aircon": false, "wifi": true, "cooking": true, "private_bath": false, "furnished": false },
+    "property": { "type": "HDB" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": true }
+  },
+  {
+    "id": "lst_pl_001",
+    "source": "sample",
+    "location": { "neighbourhood_id": "paya_lebar", "address": "Paya Lebar Square area, Paya Lebar Road" },
+    "listing": { "room_type": "master_room", "rent": 1800,  "available_from": "2026-07-01" },
+    "amenities": { "aircon": true, "wifi": true, "cooking": false, "private_bath": true, "furnished": true },
+    "property": { "type": "Condo" },
+    "media": { "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
+    "metadata": { "is_direct_landlord": false }
+  }
+]

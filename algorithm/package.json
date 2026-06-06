@@ -1,0 +1,10 @@
+{
+  "name": "dolphine-algorithm",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "openai": "^4.68.0",
+    "dotenv": "^16.4.5"
+  }
+}

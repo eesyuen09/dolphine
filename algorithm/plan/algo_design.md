@@ -86,6 +86,18 @@
 ### 降级策略
 如果 LLM 调用失败（超时/API 故障），降级到正则提取保证服务可用。
 
+### TODO
+- [ ] 配置 OpenAI API key（环境变量 `OPENAI_API_KEY`）
+- [ ] 写 system prompt，强制输出 JSON schema（用 `response_format: { type: "json_object" }`）
+- [ ] 实现正则降级 parser（预算、workplace、gym 频率、hybrid 天数）
+- [ ] 处理 workplace 名称对齐：用户可能说 "NUS"，需映射为 "Kent Ridge"（维护一个别名表）
+
+### 验证
+- 用 5 条测试输入覆盖：中文、英文、中英混合、极简输入（"1500 kent ridge"）、只说预算没说 workplace
+- 检查未提及的字段是否返回 `null`（不猜测）
+- 检查 workplace 别名映射：输入 "NUS" → 输出 `"workplace": "Kent Ridge"`
+- 模拟 API 失败，验证降级 parser 正常触发且输出格式一致
+
 ---
 
 ## Agent 2 — 认知偏差纠正 Agent（Debias Layer）
@@ -238,6 +250,28 @@ budget_comfort_level = "tight"   if budget_headroom < 100
 }
 ```
 
+### TODO
+- [ ] 每种偏差写成独立函数：`detectRentAnchoring()`、`detectGymFriction()`、`detectHybridOverweight()`、`detectPopularityPremium()`、`detectBudgetComfortIllusion()`、`detectTimeValueBlindness()`
+- [ ] `true_monthly_cost` 计算：需要从 neighbourhoods 数据里提前查 `commute[workplace].cost_sgd`（Agent 2 需要拿到社区数据作为输入）
+- [ ] Hybrid 权重调整后做归一化，确保 5 个维度权重之和仍为 1.0
+- [ ] 为每条 bias_warning 定义触发阈值常量（便于后期调参）：
+  ```
+  RENT_ANCHORING_MIN_DIFF = 50       // 实际月成本差 > $50 才触发
+  TIME_VALUE_MIN_HOURS = 50          // 年通勤时差 > 50 小时才触发
+  GYM_FRICTION_WALK_LIMIT = 15       // 步行 > 15 分钟触发摩擦惩罚
+  BUDGET_TIGHT_THRESHOLD = 100       // 余量 < $100 触发提示
+  PREMIUM_RENT_RATIO = 0.95          // 租金 > 预算 95% 触发溢价检测
+  ```
+
+### 验证
+- 关键 spot check（用 Project-ideas.md 的示例）：Kent Ridge 上班、预算 $1500、hybrid 3天
+  - Jurong East 裸租 $1,100 → true_monthly_cost 应 ≈ $1,280（加交通费）
+  - Queenstown true_monthly_cost 应 ≈ $1,250 → 两者差 $30，触发 rent_anchoring 警告
+  - hybrid 模式触发，commute 权重从 0.30 → 0.20
+- 验证权重调整后仍然 sum = 1.0（写一个 assertion）
+- 验证 gym 摩擦：步行 22 分钟 → friction_penalty = (22-15)/15 * 2 = 0.93，gym_score 下降
+- 验证 bias_warnings 在阈值以下时不触发（不要误报）
+
 ---
 
 ## Agent 3 — 社区评分 Agent
@@ -308,6 +342,19 @@ total = (
 ) * 10   → 结果 0–100，降序排列
 ```
 
+### TODO
+- [ ] 加载 `neighbourhoods.json`，做一次 schema 校验（必须字段是否存在、是否为 null）
+- [ ] 实现 workplace 不在 commute 表时的降级：commute_score = 5（中位数），并在 warnings 里提示"未找到该 workplace 的通勤数据"
+- [ ] 权重推导写成纯函数 `deriveWeights(preferences, debiasAdjustments)` → 返回归一化权重对象
+- [ ] 每个维度评分函数独立：`scoreBudget()`、`scoreCommute()`、`scoreGym()`、`scoreFood()`、`scoreQuietness()`
+
+### 验证
+- **黄金测试用例**（每次改动后必跑）：Kent Ridge 上班、预算 $1500、gym 4次/周 → Queenstown 综合分应高于 Jurong East
+- 验证所有社区分数在 0–100 范围内（不能出现负数或超 100）
+- 验证社区排序是降序（最高分在前）
+- 边界测试：预算极低（$600）→ 所有社区 budget_score 应接近 0，但其他维度正常打分
+- 边界测试：workplace 输入 "NUS"（别名）→ 确认映射为 "Kent Ridge" 后正常评分
+
 ---
 
 ## Agent 4 — 房源筛选 & 排序 Agent
@@ -343,6 +390,20 @@ feature_match_score = Σ(matched_nice_to_have) / total_nice_to_haves * 10
 - 房源月租 + true_monthly_cost
 - 功能匹配情况（aircon、wifi、cooking、private_bath）
 - room_score（0–100）
+
+### TODO
+- [ ] 加载 `listings.json`，按 `neighbourhood_id` 建索引（Map 结构），避免每次全量遍历
+- [ ] 硬过滤顺序：先按 neighbourhood_id（最快过滤），再按 rent，再按 room_type，最后 must_haves
+- [ ] 处理"0 个房源通过过滤"的情况：返回空数组 + 提示 "当前预算或条件在该社区暂无匹配房源，建议放宽预算 $X"
+- [ ] `feature_match_score` 只基于 nice_to_haves（非 must_haves），must_haves 已在硬过滤阶段处理
+- [ ] 将 `true_monthly_cost` 挂到每个房源对象上（用房源实际租金重新算，而非社区典型值）
+
+### 验证
+- 验证硬过滤：插入一条租金 $2000 的房源，预算 $1500 → 该房源不应出现在结果中
+- 验证 room_type 过滤：查 common_room → master_room 不出现
+- 验证"0 结果"降级提示正常触发
+- 验证 neighbourhood_score 在 room_score 中权重 0.60（同等配套的房源，社区更好的排前面）
+- 验证最多返回 5 条（即使有 50 条通过过滤）
 
 ---
 
@@ -385,6 +446,18 @@ feature_match_score = Σ(matched_nice_to_have) / total_nice_to_haves * 10
 }
 ```
 
+### TODO
+- [ ] 每个得失条件写成独立判断函数，返回 `{ type, direction, message }` 对象
+- [ ] `annual_commute_hours_saved` 统一用公式 `(minutes * 2 * work_days * 52) / 60` 计算，确保与 Agent 2 一致（抽成共享工具函数）
+- [ ] Tie 机制实现：score 差 ≤ 5 时设 `verdict = "too_close_to_call"`，`confidence = "low"`
+- [ ] gains/losses 各自至少要有 1 条（即使两者非常接近），保证报告不空
+
+### 验证
+- 手算验证：Queenstown 10 分钟 vs Jurong East 35 分钟，5天/周 → 年差 = (35-10)*2*5*52/60 = **216.7 小时**（≈ 217 小时，确认代码输出匹配）
+- Tie 测试：两个社区综合分差 3 分 → verdict 应为 "too_close_to_call"
+- 验证 true_cost_difference 正负方向正确（winner 贵时为正，便宜时为负）
+- 验证 gains 和 losses 都不能同时为空
+
 ---
 
 ## Agent 6 — 未来生活模拟 Agent
@@ -407,6 +480,19 @@ feature_match_score = Σ(matched_nice_to_have) / total_nice_to_haves * 10
 今日通勤：XX 分钟
 vs 次选方案每天节省 XX 分钟 → 全年节省 XXX 小时
 ```
+
+### TODO
+- [ ] 实现时间推算函数：`departureTime = "09:00" - commute_minutes`（注意分钟跨小时处理）
+- [ ] 健身日程表：3次/周 → `["Monday", "Wednesday", "Friday"]`，4次/周 → 加 `"Saturday"`
+- [ ] 午饭事件：`hawker_centres > 0` → "在附近熟食中心吃午饭（步行 X 分钟）"，否则 → "在附近餐厅吃午饭"
+- [ ] 结尾 summary 行：调用共享工具函数 `calcAnnualHours()` 保持与 Agent 5 数字一致
+
+### 验证
+- 通勤 10 分钟 → 出发时间应为 08:50
+- 通勤 45 分钟 → 出发时间应为 08:15
+- gym_per_week = 4 → 健身出现在 Mon/Wed/Fri/Sat，不出现在 Tue/Thu
+- gym_per_week = 0 → 没有健身事件，晚饭直接在下班后
+- 验证结尾 summary 的小时数与 Agent 5 的 `annual_commute_hours_saved` 完全一致（同一个函数算出来）
 
 ---
 
@@ -443,6 +529,116 @@ vs 次选方案每天节省 XX 分钟 → 全年节省 XXX 小时
 3. gym_friction 被纠正 → 标题中提健身配套
 4. 默认 → "X 是你在通勤、预算和生活方式上的最佳选择。"
 
+### TODO
+- [ ] 实现 `buildHeadline(recommendation, tradeoffs, biasWarnings)` 按优先级返回标题字符串
+- [ ] `why` 列表从各 Agent 输出中提取最显著的 3 条，优先级：通勤节省 > 健身配套 > 饮食 > 预算余量
+- [ ] 确保 `bias_warnings` 从 Agent 2 直接透传，不重复生成
+- [ ] 确保 `all_rooms` 包含所有通过 Agent 4 硬过滤的房源（不只是 Top 1），让前端展示完整列表
+
+### 验证
+- 端到端 golden test：输入 `"我在 Kent Ridge 上班，预算 1500，每周健身 4 次，hybrid 3 天"` → 输出 JSON 必须包含：
+  - `recommendation.neighbourhood` = "Queenstown"（或 Clementi，取决于数据）
+  - `bias_warnings` 至少含 `rent_anchoring` 和 `hybrid_commute_overweight`
+  - `lifestyle_simulation` 包含 08:xx 出发时间
+  - `tradeoffs.annual_commute_hours_saved` > 0
+- 验证 `weights_used` 字段与实际计算权重完全一致（对外展示和内部计算同一套）
+
+---
+
+## Next Step — Adaptive What-if Agent（冠军版改造）
+
+**目标**：把当前 `recommend()` 从一次性推荐升级成可持续对话的 relocation decision agent。评委需要看到 Dolphine 不是 property filter，而是在模拟用户未来生活，并能根据用户反馈即时重新推理。
+
+这个 Agent 不替代前面的 6 个 Agent，而是包在外层做 orchestration：
+
+```text
+用户输入
+  ↓
+检查信息完整度
+  ↓
+缺关键字段 → 主动追问
+  ↓
+信息足够 → 调用现有 6-Agent pipeline
+  ↓
+输出推荐报告
+  ↓
+用户提出 what-if / 反驳 / 新偏好
+  ↓
+更新约束或权重
+  ↓
+重新执行评分、排序、tradeoff、生活模拟
+  ↓
+解释排名为什么改变
+```
+
+### 必须支持的互动场景
+
+| 用户输入 | 系统行为 |
+|---|---|
+| "我更想省钱" | 提高 budget 权重，必要时把 budget 变成硬约束，重新排序 |
+| "我不想每天 MRT 太久" | 提高 commute 权重，重新计算年度通勤负担 |
+| "这个推荐太贵了" | 找更低 true_monthly_cost 的次优方案，并解释牺牲项 |
+| "我每周健身 5 次" | 提高 gym 权重，更新 gym friction 和生活模拟 |
+| "我其实一周只去公司 2 天" | 降低 commute 权重，重新计算 annual_hours |
+| "为什么不是 Jurong East?" | 生成 winner vs Jurong East 的针对性 tradeoff |
+
+### 缺失信息追问规则
+
+| 缺失字段 | 追问方式 |
+|---|---|
+| workplace | "你主要去哪里上班/上课？可以填 Kent Ridge、Raffles Place、One-North 等。" |
+| budget | "你的月租预算大概是多少？例如 S$1,200–S$1,800。" |
+| room_type | 默认 `common_room`，同时在报告中标注假设 |
+| work_days_per_week | 默认 5 天，但提示 hybrid 会显著影响通勤权重 |
+| lifestyle_signals | 使用默认权重，并提示可补充健身、安静、饮食、自然等偏好 |
+
+### What-if Reranking 输出 Schema
+
+```json
+{
+  "mode": "what_if_rerank",
+  "user_message": "我更想省钱",
+  "updated_constraints": {
+    "budget_is_hard_limit": true
+  },
+  "changed_weights": {
+    "budget": { "from": 0.20, "to": 0.35 },
+    "commute": { "from": 0.30, "to": 0.25 }
+  },
+  "ranking_change": [
+    {
+      "room_id": "cle_002",
+      "previous_rank": 2,
+      "new_rank": 1,
+      "reason": "实际月成本更低，且通勤仍在可接受范围内"
+    },
+    {
+      "room_id": "qst_001",
+      "previous_rank": 1,
+      "new_rank": 2,
+      "reason": "通勤更短，但预算压力更高"
+    }
+  ],
+  "updated_report": { "...": "同最终输出 Schema" }
+}
+```
+
+### 冠军 Demo 必须呈现
+
+1. 自然语言输入 → 结构化偏好与权重
+2. Debias Agent 揭示隐藏生活成本
+3. 首次推荐展示年度通勤小时、真实月成本、生活模拟
+4. 用户一句 what-if → 即时重新排序
+5. 系统解释"为什么排名变了"
+
+### 对应比赛方向
+
+| Build Direction | Dolphine 的冠军表达 |
+|---|---|
+| Autonomous & Adaptive AI | 主动追问缺失信息，并根据用户反馈自适应重算 |
+| AI-Native Products & Operations | 不只是查房，而是生成未来生活模拟和决策解释 |
+| Deep Domain AI | 内建新加坡租房、MRT、hawker、ActiveSG、hybrid 通勤等本地知识 |
+
 ---
 
 ## API 接口约定
@@ -462,13 +658,52 @@ POST /api/recommend
 
 ---
 
+## OpenAI API Key 配置
+
+**绝对不要把 API key 写进任何代码文件或文档。** key 一旦进入 git 历史就永远泄露。
+
+### 正确做法：.env 文件
+
+在项目根目录创建 `.env`（已在 `.gitignore` 中，不会被提交）：
+
+```
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxx
+```
+
+代码中读取：
+```js
+// backend/algorithm/preferenceAgent.js
+import OpenAI from "openai";
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+```
+
+启动时加载（在 `backend/server.js` 顶部）：
+```js
+import "dotenv/config";
+```
+
+安装 dotenv：
+```bash
+cd backend && npm install dotenv openai
+```
+
+### 验证 key 有效
+```bash
+curl https://api.openai.com/v1/models \
+  -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+返回 model 列表说明 key 有效。
+
+---
+
 ## 文件结构
 
 ```
 backend/
   data/
     neighbourhoods.json       ← 队友提供（社区数据）
-    rooms.json                ← 队友提供（房源列表）
+    listings.json             ← 市场房源数据
   algorithm/
     preferenceAgent.js        ← Agent 1：LLM 解析偏好
     debiasAgent.js            ← Agent 2：认知偏差纠正（核心差异化）
@@ -477,7 +712,9 @@ backend/
     tradeoffAnalyser.js       ← Agent 5：权衡分析
     lifeSimulator.js          ← Agent 6：生活模拟
     reportBuilder.js          ← 报告组装
+    utils.js                  ← 共享工具函数（calcAnnualHours 等）
     index.js                  ← 串联所有 Agent，导出 recommend()
+.env                          ← OPENAI_API_KEY=sk-... （不进 git）
 ```
 
 ---
