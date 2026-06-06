@@ -1,0 +1,32 @@
+{
+  "station": {
+    "name": "Marina Bay",
+    "slug": "marina_bay",
+    "mrt_lines": [
+      "North-South Line",
+      "Circle Line",
+      "Thomson-East Coast Line"
+    ],
+    "is_interchange": true
+  },
+  "research_metadata": {
+    "agent_name": "listing-agent-marina_bay",
+    "researched_at": "2026-06-06T00:00:00+08:00",
+    "target_listing_count": 20,
+    "actual_listing_count": 0,
+    "search_radius_km": 1,
+    "sources_used": [],
+    "known_limitations": [
+      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
+      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+    ],
+    "fallback_search_areas": [
+      "Marina Bay estate",
+      "Marina Bay room rental",
+      "Marina Bay HDB blocks",
+      "Marina Bay condo rooms",
+      "adjacent MRT stations near Marina Bay"
+    ]
+  },
+  "listings": []
+}

@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "generate:listings": "node tools/generate-listing-research.js",
+    "merge:listings": "node tools/merge-listing-research.js",
+    "validate:listings": "node tools/validate-listing-research.js"
   },
   "dependencies": {
     "express": "^4.19.2",

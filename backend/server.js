@@ -4,16 +4,34 @@ import path from "node:path";
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from "node:url";
 
+const DEFAULT_PORT = 3000;
+const DEFAULT_PORT_RETRIES = 10;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = parsePort(process.env.PORT, DEFAULT_PORT);
+const host = process.env.HOST || undefined;
+const maxPortRetries = parseRetryCount(process.env.PORT_RETRIES, process.env.PORT ? 0 : DEFAULT_PORT_RETRIES);
 const frontendDir = path.join(__dirname, "..", "frontend");
-const dbPath = path.join(__dirname, "data", "roommatch.sqlite");
-const db = new sqlite3.Database(dbPath);
+const dbDir = path.join(__dirname, "data");
+const dbPath = path.join(dbDir, "roommatch.sqlite");
+const db = await openDatabase(dbPath);
 
 app.use(express.json());
 app.use(express.static(frontendDir));
+
+async function openDatabase(filePath) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+
+  return new Promise((resolve, reject) => {
+    let database;
+    database = new sqlite3.Database(filePath, (error) => {
+      if (error) reject(error);
+      else resolve(database);
+    });
+  });
+}
 
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
@@ -42,6 +60,48 @@ function all(sql, params = []) {
   });
 }
 
+function parsePort(value, fallback) {
+  if (!value) return fallback;
+  const parsedPort = Number(value);
+  if (!Number.isInteger(parsedPort) || parsedPort < 0 || parsedPort > 65535) {
+    throw new Error(`PORT must be an integer from 0 to 65535. Received: ${value}`);
+  }
+  return parsedPort;
+}
+
+function parseRetryCount(value, fallback) {
+  if (!value) return fallback;
+  const parsedRetryCount = Number(value);
+  if (!Number.isInteger(parsedRetryCount) || parsedRetryCount < 0) {
+    throw new Error(`PORT_RETRIES must be a non-negative integer. Received: ${value}`);
+  }
+  return parsedRetryCount;
+}
+
+function startServer(startPort, retriesLeft) {
+  return new Promise((resolve, reject) => {
+    const listenOptions = host ? { port: startPort, host } : { port: startPort };
+    const server = app.listen(listenOptions, () => {
+      const address = server.address();
+      const resolvedPort = typeof address === "object" && address ? address.port : startPort;
+      const hostname = host || "localhost";
+      console.log(`RoomMatch AI running at http://${hostname}:${resolvedPort}`);
+      resolve(server);
+    });
+
+    server.on("error", (error) => {
+      if (error.code === "EADDRINUSE" && retriesLeft > 0 && startPort < 65535) {
+        const nextPort = startPort + 1;
+        console.warn(`Port ${startPort} is busy. Trying ${nextPort}...`);
+        startServer(nextPort, retriesLeft - 1).then(resolve, reject);
+        return;
+      }
+
+      reject(error);
+    });
+  });
+}
+
 async function initializeDatabase() {
   const schema = await fs.readFile(path.join(__dirname, "db", "schema.sql"), "utf8");
   const seed = await fs.readFile(path.join(__dirname, "db", "seed.sql"), "utf8");
@@ -53,7 +113,7 @@ async function initializeDatabase() {
     });
   });
 
-  const row = await get("SELECT COUNT(*) AS count FROM rooms");
+  const row = await get("SELECT COUNT(*) AS count FROM listings");
   if (row.count === 0) {
     await new Promise((resolve, reject) => {
       db.exec(seed, (error) => {
@@ -217,6 +277,4 @@ app.use((error, _request, response, _next) => {
 });
 
 await initializeDatabase();
-app.listen(port, () => {
-  console.log(`RoomMatch AI running at http://localhost:${port}`);
-});
+await startServer(port, maxPortRetries);

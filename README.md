@@ -1,21 +1,36 @@
-# RoomMatch AI
+# Dolphine
 
-A quick hackathon demo for helping tenants find suitable rooms faster than browsing property portals or repeatedly prompting a chatbot.
+An AI relocation agent demo that helps users choose where to live by simulating future lifestyle outcomes instead of only browsing rental listings.
 
-The demo lets a tenant choose structured room metrics such as budget, MRT walking distance, aircon, cooking access, food court access, comfort, and commute area. It then ranks sample rooms with a recommendation score, AI-style explanation, and practical tradeoffs.
+Tagline: **Find a life, not just a room.**
+
+The current app is a polished frontend-only skeleton for a hackathon demo. It uses local mock data to simulate commute burden, lifestyle fit, neighbourhood tradeoffs, future-week routines, and a generated landlord message.
 
 ## Stack
 
-- `frontend/`: plain HTML, CSS, and JavaScript for fastest hackathon iteration.
-- `backend/`: Node.js, Express, and SQLite.
+- `frontend/`: React, TypeScript, Vite, and Tailwind CSS.
+- `backend/`: Node.js, Express, and SQLite kept for later API integration.
 - `backend/db/schema.sql`: SQL database definition.
 - `backend/db/seed.sql`: demo room and commute data.
 
 ## Run Locally
 
 ```bash
-npm run install:backend
+npm run install:frontend
 npm start
 ```
 
-Open `http://localhost:3000`. From there, users can choose interactive mode or metric mode.
+Open `http://localhost:3000`.
+
+Build the frontend:
+
+```bash
+npm run build
+```
+
+The legacy backend can still be run separately when API integration resumes:
+
+```bash
+npm run install:backend
+npm run start:backend
+```

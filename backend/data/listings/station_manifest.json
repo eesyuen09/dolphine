@@ -1,0 +1,1464 @@
+{
+  "generated_at": "2026-06-06T00:00:00+08:00",
+  "station_count": 143,
+  "stations": [
+    {
+      "name": "Admiralty",
+      "slug": "admiralty",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-admiralty",
+      "output_file": "backend/data/listings/by_mrt/house_admiralty.json"
+    },
+    {
+      "name": "Aljunied",
+      "slug": "aljunied",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-aljunied",
+      "output_file": "backend/data/listings/by_mrt/house_aljunied.json"
+    },
+    {
+      "name": "Ang Mo Kio",
+      "slug": "ang_mo_kio",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-ang_mo_kio",
+      "output_file": "backend/data/listings/by_mrt/house_ang_mo_kio.json"
+    },
+    {
+      "name": "Bartley",
+      "slug": "bartley",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bartley",
+      "output_file": "backend/data/listings/by_mrt/house_bartley.json"
+    },
+    {
+      "name": "Bayfront",
+      "slug": "bayfront",
+      "mrt_lines": [
+        "Circle Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-bayfront",
+      "output_file": "backend/data/listings/by_mrt/house_bayfront.json"
+    },
+    {
+      "name": "Bayshore",
+      "slug": "bayshore",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bayshore",
+      "output_file": "backend/data/listings/by_mrt/house_bayshore.json"
+    },
+    {
+      "name": "Beauty World",
+      "slug": "beauty_world",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-beauty_world",
+      "output_file": "backend/data/listings/by_mrt/house_beauty_world.json"
+    },
+    {
+      "name": "Bedok",
+      "slug": "bedok",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bedok",
+      "output_file": "backend/data/listings/by_mrt/house_bedok.json"
+    },
+    {
+      "name": "Bedok North",
+      "slug": "bedok_north",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bedok_north",
+      "output_file": "backend/data/listings/by_mrt/house_bedok_north.json"
+    },
+    {
+      "name": "Bedok Reservoir",
+      "slug": "bedok_reservoir",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bedok_reservoir",
+      "output_file": "backend/data/listings/by_mrt/house_bedok_reservoir.json"
+    },
+    {
+      "name": "Bencoolen",
+      "slug": "bencoolen",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bencoolen",
+      "output_file": "backend/data/listings/by_mrt/house_bencoolen.json"
+    },
+    {
+      "name": "Bendemeer",
+      "slug": "bendemeer",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bendemeer",
+      "output_file": "backend/data/listings/by_mrt/house_bendemeer.json"
+    },
+    {
+      "name": "Bishan",
+      "slug": "bishan",
+      "mrt_lines": [
+        "North-South Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-bishan",
+      "output_file": "backend/data/listings/by_mrt/house_bishan.json"
+    },
+    {
+      "name": "Boon Keng",
+      "slug": "boon_keng",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-boon_keng",
+      "output_file": "backend/data/listings/by_mrt/house_boon_keng.json"
+    },
+    {
+      "name": "Boon Lay",
+      "slug": "boon_lay",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-boon_lay",
+      "output_file": "backend/data/listings/by_mrt/house_boon_lay.json"
+    },
+    {
+      "name": "Botanic Gardens",
+      "slug": "botanic_gardens",
+      "mrt_lines": [
+        "Circle Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-botanic_gardens",
+      "output_file": "backend/data/listings/by_mrt/house_botanic_gardens.json"
+    },
+    {
+      "name": "Braddell",
+      "slug": "braddell",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-braddell",
+      "output_file": "backend/data/listings/by_mrt/house_braddell.json"
+    },
+    {
+      "name": "Bras Basah",
+      "slug": "bras_basah",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bras_basah",
+      "output_file": "backend/data/listings/by_mrt/house_bras_basah.json"
+    },
+    {
+      "name": "Bright Hill",
+      "slug": "bright_hill",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bright_hill",
+      "output_file": "backend/data/listings/by_mrt/house_bright_hill.json"
+    },
+    {
+      "name": "Buangkok",
+      "slug": "buangkok",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-buangkok",
+      "output_file": "backend/data/listings/by_mrt/house_buangkok.json"
+    },
+    {
+      "name": "Bugis",
+      "slug": "bugis",
+      "mrt_lines": [
+        "East-West Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-bugis",
+      "output_file": "backend/data/listings/by_mrt/house_bugis.json"
+    },
+    {
+      "name": "Bukit Batok",
+      "slug": "bukit_batok",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bukit_batok",
+      "output_file": "backend/data/listings/by_mrt/house_bukit_batok.json"
+    },
+    {
+      "name": "Bukit Gombak",
+      "slug": "bukit_gombak",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bukit_gombak",
+      "output_file": "backend/data/listings/by_mrt/house_bukit_gombak.json"
+    },
+    {
+      "name": "Bukit Panjang",
+      "slug": "bukit_panjang",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-bukit_panjang",
+      "output_file": "backend/data/listings/by_mrt/house_bukit_panjang.json"
+    },
+    {
+      "name": "Buona Vista",
+      "slug": "buona_vista",
+      "mrt_lines": [
+        "East-West Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-buona_vista",
+      "output_file": "backend/data/listings/by_mrt/house_buona_vista.json"
+    },
+    {
+      "name": "Caldecott",
+      "slug": "caldecott",
+      "mrt_lines": [
+        "Circle Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-caldecott",
+      "output_file": "backend/data/listings/by_mrt/house_caldecott.json"
+    },
+    {
+      "name": "Canberra",
+      "slug": "canberra",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-canberra",
+      "output_file": "backend/data/listings/by_mrt/house_canberra.json"
+    },
+    {
+      "name": "Cashew",
+      "slug": "cashew",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-cashew",
+      "output_file": "backend/data/listings/by_mrt/house_cashew.json"
+    },
+    {
+      "name": "Changi Airport",
+      "slug": "changi_airport",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-changi_airport",
+      "output_file": "backend/data/listings/by_mrt/house_changi_airport.json"
+    },
+    {
+      "name": "Chinatown",
+      "slug": "chinatown",
+      "mrt_lines": [
+        "North East Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-chinatown",
+      "output_file": "backend/data/listings/by_mrt/house_chinatown.json"
+    },
+    {
+      "name": "Chinese Garden",
+      "slug": "chinese_garden",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-chinese_garden",
+      "output_file": "backend/data/listings/by_mrt/house_chinese_garden.json"
+    },
+    {
+      "name": "Choa Chu Kang",
+      "slug": "choa_chu_kang",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-choa_chu_kang",
+      "output_file": "backend/data/listings/by_mrt/house_choa_chu_kang.json"
+    },
+    {
+      "name": "City Hall",
+      "slug": "city_hall",
+      "mrt_lines": [
+        "North-South Line",
+        "East-West Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-city_hall",
+      "output_file": "backend/data/listings/by_mrt/house_city_hall.json"
+    },
+    {
+      "name": "Clarke Quay",
+      "slug": "clarke_quay",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-clarke_quay",
+      "output_file": "backend/data/listings/by_mrt/house_clarke_quay.json"
+    },
+    {
+      "name": "Clementi",
+      "slug": "clementi",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-clementi",
+      "output_file": "backend/data/listings/by_mrt/house_clementi.json"
+    },
+    {
+      "name": "Commonwealth",
+      "slug": "commonwealth",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-commonwealth",
+      "output_file": "backend/data/listings/by_mrt/house_commonwealth.json"
+    },
+    {
+      "name": "Dakota",
+      "slug": "dakota",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-dakota",
+      "output_file": "backend/data/listings/by_mrt/house_dakota.json"
+    },
+    {
+      "name": "Dhoby Ghaut",
+      "slug": "dhoby_ghaut",
+      "mrt_lines": [
+        "North-South Line",
+        "North East Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-dhoby_ghaut",
+      "output_file": "backend/data/listings/by_mrt/house_dhoby_ghaut.json"
+    },
+    {
+      "name": "Dover",
+      "slug": "dover",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-dover",
+      "output_file": "backend/data/listings/by_mrt/house_dover.json"
+    },
+    {
+      "name": "Downtown",
+      "slug": "downtown",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-downtown",
+      "output_file": "backend/data/listings/by_mrt/house_downtown.json"
+    },
+    {
+      "name": "Esplanade",
+      "slug": "esplanade",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-esplanade",
+      "output_file": "backend/data/listings/by_mrt/house_esplanade.json"
+    },
+    {
+      "name": "Eunos",
+      "slug": "eunos",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-eunos",
+      "output_file": "backend/data/listings/by_mrt/house_eunos.json"
+    },
+    {
+      "name": "Expo",
+      "slug": "expo",
+      "mrt_lines": [
+        "East-West Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-expo",
+      "output_file": "backend/data/listings/by_mrt/house_expo.json"
+    },
+    {
+      "name": "Farrer Park",
+      "slug": "farrer_park",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-farrer_park",
+      "output_file": "backend/data/listings/by_mrt/house_farrer_park.json"
+    },
+    {
+      "name": "Farrer Road",
+      "slug": "farrer_road",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-farrer_road",
+      "output_file": "backend/data/listings/by_mrt/house_farrer_road.json"
+    },
+    {
+      "name": "Fort Canning",
+      "slug": "fort_canning",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-fort_canning",
+      "output_file": "backend/data/listings/by_mrt/house_fort_canning.json"
+    },
+    {
+      "name": "Gardens by the Bay",
+      "slug": "gardens_by_the_bay",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-gardens_by_the_bay",
+      "output_file": "backend/data/listings/by_mrt/house_gardens_by_the_bay.json"
+    },
+    {
+      "name": "Geylang Bahru",
+      "slug": "geylang_bahru",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-geylang_bahru",
+      "output_file": "backend/data/listings/by_mrt/house_geylang_bahru.json"
+    },
+    {
+      "name": "Great World",
+      "slug": "great_world",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-great_world",
+      "output_file": "backend/data/listings/by_mrt/house_great_world.json"
+    },
+    {
+      "name": "Gul Circle",
+      "slug": "gul_circle",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-gul_circle",
+      "output_file": "backend/data/listings/by_mrt/house_gul_circle.json"
+    },
+    {
+      "name": "HarbourFront",
+      "slug": "harbourfront",
+      "mrt_lines": [
+        "North East Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-harbourfront",
+      "output_file": "backend/data/listings/by_mrt/house_harbourfront.json"
+    },
+    {
+      "name": "Havelock",
+      "slug": "havelock",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-havelock",
+      "output_file": "backend/data/listings/by_mrt/house_havelock.json"
+    },
+    {
+      "name": "Haw Par Villa",
+      "slug": "haw_par_villa",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-haw_par_villa",
+      "output_file": "backend/data/listings/by_mrt/house_haw_par_villa.json"
+    },
+    {
+      "name": "Hillview",
+      "slug": "hillview",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-hillview",
+      "output_file": "backend/data/listings/by_mrt/house_hillview.json"
+    },
+    {
+      "name": "Holland Village",
+      "slug": "holland_village",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-holland_village",
+      "output_file": "backend/data/listings/by_mrt/house_holland_village.json"
+    },
+    {
+      "name": "Hougang",
+      "slug": "hougang",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-hougang",
+      "output_file": "backend/data/listings/by_mrt/house_hougang.json"
+    },
+    {
+      "name": "Hume",
+      "slug": "hume",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-hume",
+      "output_file": "backend/data/listings/by_mrt/house_hume.json"
+    },
+    {
+      "name": "Jalan Besar",
+      "slug": "jalan_besar",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-jalan_besar",
+      "output_file": "backend/data/listings/by_mrt/house_jalan_besar.json"
+    },
+    {
+      "name": "Joo Koon",
+      "slug": "joo_koon",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-joo_koon",
+      "output_file": "backend/data/listings/by_mrt/house_joo_koon.json"
+    },
+    {
+      "name": "Jurong East",
+      "slug": "jurong_east",
+      "mrt_lines": [
+        "North-South Line",
+        "East-West Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-jurong_east",
+      "output_file": "backend/data/listings/by_mrt/house_jurong_east.json"
+    },
+    {
+      "name": "Kaki Bukit",
+      "slug": "kaki_bukit",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kaki_bukit",
+      "output_file": "backend/data/listings/by_mrt/house_kaki_bukit.json"
+    },
+    {
+      "name": "Kallang",
+      "slug": "kallang",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kallang",
+      "output_file": "backend/data/listings/by_mrt/house_kallang.json"
+    },
+    {
+      "name": "Katong Park",
+      "slug": "katong_park",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-katong_park",
+      "output_file": "backend/data/listings/by_mrt/house_katong_park.json"
+    },
+    {
+      "name": "Kembangan",
+      "slug": "kembangan",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kembangan",
+      "output_file": "backend/data/listings/by_mrt/house_kembangan.json"
+    },
+    {
+      "name": "Kent Ridge",
+      "slug": "kent_ridge",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kent_ridge",
+      "output_file": "backend/data/listings/by_mrt/house_kent_ridge.json"
+    },
+    {
+      "name": "Khatib",
+      "slug": "khatib",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-khatib",
+      "output_file": "backend/data/listings/by_mrt/house_khatib.json"
+    },
+    {
+      "name": "King Albert Park",
+      "slug": "king_albert_park",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-king_albert_park",
+      "output_file": "backend/data/listings/by_mrt/house_king_albert_park.json"
+    },
+    {
+      "name": "Kovan",
+      "slug": "kovan",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kovan",
+      "output_file": "backend/data/listings/by_mrt/house_kovan.json"
+    },
+    {
+      "name": "Kranji",
+      "slug": "kranji",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-kranji",
+      "output_file": "backend/data/listings/by_mrt/house_kranji.json"
+    },
+    {
+      "name": "Labrador Park",
+      "slug": "labrador_park",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-labrador_park",
+      "output_file": "backend/data/listings/by_mrt/house_labrador_park.json"
+    },
+    {
+      "name": "Lakeside",
+      "slug": "lakeside",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-lakeside",
+      "output_file": "backend/data/listings/by_mrt/house_lakeside.json"
+    },
+    {
+      "name": "Lavender",
+      "slug": "lavender",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-lavender",
+      "output_file": "backend/data/listings/by_mrt/house_lavender.json"
+    },
+    {
+      "name": "Lentor",
+      "slug": "lentor",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-lentor",
+      "output_file": "backend/data/listings/by_mrt/house_lentor.json"
+    },
+    {
+      "name": "Little India",
+      "slug": "little_india",
+      "mrt_lines": [
+        "North East Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-little_india",
+      "output_file": "backend/data/listings/by_mrt/house_little_india.json"
+    },
+    {
+      "name": "Lorong Chuan",
+      "slug": "lorong_chuan",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-lorong_chuan",
+      "output_file": "backend/data/listings/by_mrt/house_lorong_chuan.json"
+    },
+    {
+      "name": "MacPherson",
+      "slug": "macpherson",
+      "mrt_lines": [
+        "Circle Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-macpherson",
+      "output_file": "backend/data/listings/by_mrt/house_macpherson.json"
+    },
+    {
+      "name": "Marina Bay",
+      "slug": "marina_bay",
+      "mrt_lines": [
+        "North-South Line",
+        "Circle Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-marina_bay",
+      "output_file": "backend/data/listings/by_mrt/house_marina_bay.json"
+    },
+    {
+      "name": "Marina South Pier",
+      "slug": "marina_south_pier",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-marina_south_pier",
+      "output_file": "backend/data/listings/by_mrt/house_marina_south_pier.json"
+    },
+    {
+      "name": "Marine Parade",
+      "slug": "marine_parade",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-marine_parade",
+      "output_file": "backend/data/listings/by_mrt/house_marine_parade.json"
+    },
+    {
+      "name": "Marine Terrace",
+      "slug": "marine_terrace",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-marine_terrace",
+      "output_file": "backend/data/listings/by_mrt/house_marine_terrace.json"
+    },
+    {
+      "name": "Marsiling",
+      "slug": "marsiling",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-marsiling",
+      "output_file": "backend/data/listings/by_mrt/house_marsiling.json"
+    },
+    {
+      "name": "Marymount",
+      "slug": "marymount",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-marymount",
+      "output_file": "backend/data/listings/by_mrt/house_marymount.json"
+    },
+    {
+      "name": "Mattar",
+      "slug": "mattar",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-mattar",
+      "output_file": "backend/data/listings/by_mrt/house_mattar.json"
+    },
+    {
+      "name": "Maxwell",
+      "slug": "maxwell",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-maxwell",
+      "output_file": "backend/data/listings/by_mrt/house_maxwell.json"
+    },
+    {
+      "name": "Mayflower",
+      "slug": "mayflower",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-mayflower",
+      "output_file": "backend/data/listings/by_mrt/house_mayflower.json"
+    },
+    {
+      "name": "Mountbatten",
+      "slug": "mountbatten",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-mountbatten",
+      "output_file": "backend/data/listings/by_mrt/house_mountbatten.json"
+    },
+    {
+      "name": "Napier",
+      "slug": "napier",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-napier",
+      "output_file": "backend/data/listings/by_mrt/house_napier.json"
+    },
+    {
+      "name": "Newton",
+      "slug": "newton",
+      "mrt_lines": [
+        "North-South Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-newton",
+      "output_file": "backend/data/listings/by_mrt/house_newton.json"
+    },
+    {
+      "name": "Nicoll Highway",
+      "slug": "nicoll_highway",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-nicoll_highway",
+      "output_file": "backend/data/listings/by_mrt/house_nicoll_highway.json"
+    },
+    {
+      "name": "Novena",
+      "slug": "novena",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-novena",
+      "output_file": "backend/data/listings/by_mrt/house_novena.json"
+    },
+    {
+      "name": "One-North",
+      "slug": "one_north",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-one_north",
+      "output_file": "backend/data/listings/by_mrt/house_one_north.json"
+    },
+    {
+      "name": "Orchard",
+      "slug": "orchard",
+      "mrt_lines": [
+        "North-South Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-orchard",
+      "output_file": "backend/data/listings/by_mrt/house_orchard.json"
+    },
+    {
+      "name": "Orchard Boulevard",
+      "slug": "orchard_boulevard",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-orchard_boulevard",
+      "output_file": "backend/data/listings/by_mrt/house_orchard_boulevard.json"
+    },
+    {
+      "name": "Outram Park",
+      "slug": "outram_park",
+      "mrt_lines": [
+        "East-West Line",
+        "North East Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-outram_park",
+      "output_file": "backend/data/listings/by_mrt/house_outram_park.json"
+    },
+    {
+      "name": "Pasir Panjang",
+      "slug": "pasir_panjang",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-pasir_panjang",
+      "output_file": "backend/data/listings/by_mrt/house_pasir_panjang.json"
+    },
+    {
+      "name": "Pasir Ris",
+      "slug": "pasir_ris",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-pasir_ris",
+      "output_file": "backend/data/listings/by_mrt/house_pasir_ris.json"
+    },
+    {
+      "name": "Paya Lebar",
+      "slug": "paya_lebar",
+      "mrt_lines": [
+        "East-West Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-paya_lebar",
+      "output_file": "backend/data/listings/by_mrt/house_paya_lebar.json"
+    },
+    {
+      "name": "Pioneer",
+      "slug": "pioneer",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-pioneer",
+      "output_file": "backend/data/listings/by_mrt/house_pioneer.json"
+    },
+    {
+      "name": "Potong Pasir",
+      "slug": "potong_pasir",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-potong_pasir",
+      "output_file": "backend/data/listings/by_mrt/house_potong_pasir.json"
+    },
+    {
+      "name": "Promenade",
+      "slug": "promenade",
+      "mrt_lines": [
+        "Circle Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-promenade",
+      "output_file": "backend/data/listings/by_mrt/house_promenade.json"
+    },
+    {
+      "name": "Punggol",
+      "slug": "punggol",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-punggol",
+      "output_file": "backend/data/listings/by_mrt/house_punggol.json"
+    },
+    {
+      "name": "Punggol Coast",
+      "slug": "punggol_coast",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-punggol_coast",
+      "output_file": "backend/data/listings/by_mrt/house_punggol_coast.json"
+    },
+    {
+      "name": "Queenstown",
+      "slug": "queenstown",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-queenstown",
+      "output_file": "backend/data/listings/by_mrt/house_queenstown.json"
+    },
+    {
+      "name": "Raffles Place",
+      "slug": "raffles_place",
+      "mrt_lines": [
+        "North-South Line",
+        "East-West Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-raffles_place",
+      "output_file": "backend/data/listings/by_mrt/house_raffles_place.json"
+    },
+    {
+      "name": "Redhill",
+      "slug": "redhill",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-redhill",
+      "output_file": "backend/data/listings/by_mrt/house_redhill.json"
+    },
+    {
+      "name": "Rochor",
+      "slug": "rochor",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-rochor",
+      "output_file": "backend/data/listings/by_mrt/house_rochor.json"
+    },
+    {
+      "name": "Sembawang",
+      "slug": "sembawang",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-sembawang",
+      "output_file": "backend/data/listings/by_mrt/house_sembawang.json"
+    },
+    {
+      "name": "Sengkang",
+      "slug": "sengkang",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-sengkang",
+      "output_file": "backend/data/listings/by_mrt/house_sengkang.json"
+    },
+    {
+      "name": "Serangoon",
+      "slug": "serangoon",
+      "mrt_lines": [
+        "North East Line",
+        "Circle Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-serangoon",
+      "output_file": "backend/data/listings/by_mrt/house_serangoon.json"
+    },
+    {
+      "name": "Shenton Way",
+      "slug": "shenton_way",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-shenton_way",
+      "output_file": "backend/data/listings/by_mrt/house_shenton_way.json"
+    },
+    {
+      "name": "Siglap",
+      "slug": "siglap",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-siglap",
+      "output_file": "backend/data/listings/by_mrt/house_siglap.json"
+    },
+    {
+      "name": "Simei",
+      "slug": "simei",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-simei",
+      "output_file": "backend/data/listings/by_mrt/house_simei.json"
+    },
+    {
+      "name": "Sixth Avenue",
+      "slug": "sixth_avenue",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-sixth_avenue",
+      "output_file": "backend/data/listings/by_mrt/house_sixth_avenue.json"
+    },
+    {
+      "name": "Somerset",
+      "slug": "somerset",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-somerset",
+      "output_file": "backend/data/listings/by_mrt/house_somerset.json"
+    },
+    {
+      "name": "Springleaf",
+      "slug": "springleaf",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-springleaf",
+      "output_file": "backend/data/listings/by_mrt/house_springleaf.json"
+    },
+    {
+      "name": "Stadium",
+      "slug": "stadium",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-stadium",
+      "output_file": "backend/data/listings/by_mrt/house_stadium.json"
+    },
+    {
+      "name": "Stevens",
+      "slug": "stevens",
+      "mrt_lines": [
+        "Downtown Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-stevens",
+      "output_file": "backend/data/listings/by_mrt/house_stevens.json"
+    },
+    {
+      "name": "Tai Seng",
+      "slug": "tai_seng",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tai_seng",
+      "output_file": "backend/data/listings/by_mrt/house_tai_seng.json"
+    },
+    {
+      "name": "Tampines",
+      "slug": "tampines",
+      "mrt_lines": [
+        "East-West Line",
+        "Downtown Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-tampines",
+      "output_file": "backend/data/listings/by_mrt/house_tampines.json"
+    },
+    {
+      "name": "Tampines East",
+      "slug": "tampines_east",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tampines_east",
+      "output_file": "backend/data/listings/by_mrt/house_tampines_east.json"
+    },
+    {
+      "name": "Tampines West",
+      "slug": "tampines_west",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tampines_west",
+      "output_file": "backend/data/listings/by_mrt/house_tampines_west.json"
+    },
+    {
+      "name": "Tan Kah Kee",
+      "slug": "tan_kah_kee",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tan_kah_kee",
+      "output_file": "backend/data/listings/by_mrt/house_tan_kah_kee.json"
+    },
+    {
+      "name": "Tanah Merah",
+      "slug": "tanah_merah",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tanah_merah",
+      "output_file": "backend/data/listings/by_mrt/house_tanah_merah.json"
+    },
+    {
+      "name": "Tanjong Katong",
+      "slug": "tanjong_katong",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tanjong_katong",
+      "output_file": "backend/data/listings/by_mrt/house_tanjong_katong.json"
+    },
+    {
+      "name": "Tanjong Pagar",
+      "slug": "tanjong_pagar",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tanjong_pagar",
+      "output_file": "backend/data/listings/by_mrt/house_tanjong_pagar.json"
+    },
+    {
+      "name": "Tanjong Rhu",
+      "slug": "tanjong_rhu",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tanjong_rhu",
+      "output_file": "backend/data/listings/by_mrt/house_tanjong_rhu.json"
+    },
+    {
+      "name": "Telok Ayer",
+      "slug": "telok_ayer",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-telok_ayer",
+      "output_file": "backend/data/listings/by_mrt/house_telok_ayer.json"
+    },
+    {
+      "name": "Telok Blangah",
+      "slug": "telok_blangah",
+      "mrt_lines": [
+        "Circle Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-telok_blangah",
+      "output_file": "backend/data/listings/by_mrt/house_telok_blangah.json"
+    },
+    {
+      "name": "Tiong Bahru",
+      "slug": "tiong_bahru",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tiong_bahru",
+      "output_file": "backend/data/listings/by_mrt/house_tiong_bahru.json"
+    },
+    {
+      "name": "Toa Payoh",
+      "slug": "toa_payoh",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-toa_payoh",
+      "output_file": "backend/data/listings/by_mrt/house_toa_payoh.json"
+    },
+    {
+      "name": "Tuas Crescent",
+      "slug": "tuas_crescent",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tuas_crescent",
+      "output_file": "backend/data/listings/by_mrt/house_tuas_crescent.json"
+    },
+    {
+      "name": "Tuas Link",
+      "slug": "tuas_link",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tuas_link",
+      "output_file": "backend/data/listings/by_mrt/house_tuas_link.json"
+    },
+    {
+      "name": "Tuas West Road",
+      "slug": "tuas_west_road",
+      "mrt_lines": [
+        "East-West Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-tuas_west_road",
+      "output_file": "backend/data/listings/by_mrt/house_tuas_west_road.json"
+    },
+    {
+      "name": "Ubi",
+      "slug": "ubi",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-ubi",
+      "output_file": "backend/data/listings/by_mrt/house_ubi.json"
+    },
+    {
+      "name": "Upper Changi",
+      "slug": "upper_changi",
+      "mrt_lines": [
+        "Downtown Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-upper_changi",
+      "output_file": "backend/data/listings/by_mrt/house_upper_changi.json"
+    },
+    {
+      "name": "Upper Thomson",
+      "slug": "upper_thomson",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-upper_thomson",
+      "output_file": "backend/data/listings/by_mrt/house_upper_thomson.json"
+    },
+    {
+      "name": "Woodlands",
+      "slug": "woodlands",
+      "mrt_lines": [
+        "North-South Line",
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": true,
+      "agent_name": "listing-agent-woodlands",
+      "output_file": "backend/data/listings/by_mrt/house_woodlands.json"
+    },
+    {
+      "name": "Woodlands North",
+      "slug": "woodlands_north",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-woodlands_north",
+      "output_file": "backend/data/listings/by_mrt/house_woodlands_north.json"
+    },
+    {
+      "name": "Woodlands South",
+      "slug": "woodlands_south",
+      "mrt_lines": [
+        "Thomson-East Coast Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-woodlands_south",
+      "output_file": "backend/data/listings/by_mrt/house_woodlands_south.json"
+    },
+    {
+      "name": "Woodleigh",
+      "slug": "woodleigh",
+      "mrt_lines": [
+        "North East Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-woodleigh",
+      "output_file": "backend/data/listings/by_mrt/house_woodleigh.json"
+    },
+    {
+      "name": "Yew Tee",
+      "slug": "yew_tee",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-yew_tee",
+      "output_file": "backend/data/listings/by_mrt/house_yew_tee.json"
+    },
+    {
+      "name": "Yio Chu Kang",
+      "slug": "yio_chu_kang",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-yio_chu_kang",
+      "output_file": "backend/data/listings/by_mrt/house_yio_chu_kang.json"
+    },
+    {
+      "name": "Yishun",
+      "slug": "yishun",
+      "mrt_lines": [
+        "North-South Line"
+      ],
+      "is_interchange": false,
+      "agent_name": "listing-agent-yishun",
+      "output_file": "backend/data/listings/by_mrt/house_yishun.json"
+    }
+  ]
+}

@@ -1,0 +1,1770 @@
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+
+type TransportMode = "MRT/Bus" | "Walk/Cycle" | "Drive";
+type AppStatus = "idle" | "loading" | "results";
+type ListingInputMode = "demo" | "text" | "urls";
+type RoomTypePreference = "Common room" | "Master room" | "Studio" | "Whole unit" | "No preference";
+
+type LocationOption = {
+  id: string;
+  label: string;
+  area: string;
+  nearestMrt: string;
+  postalCode?: string;
+  latLng: {
+    lat: number;
+    lng: number;
+  };
+};
+
+type Profile = {
+  destinationInput: string;
+  selectedLocationId: string | null;
+  customLocationHelper: string;
+  budgetMin: number;
+  budgetMax: number;
+  officeDays: number;
+  transportMode: TransportMode;
+  preferredRoomType: RoomTypePreference;
+  peopleCount: number;
+  mustHaves: string[];
+  rankedPriorities: string[];
+};
+
+type RoomListing = {
+  id: string;
+  rankLabel: string;
+  title: string;
+  area: string;
+  rent: number;
+  roomType: string;
+  unitType: string;
+  nearestMrt: string;
+  mrtWalkMinutes: number;
+  commuteMinutes: number;
+  annualCommuteHours: number;
+  monthlyTransport: number;
+  foodAccess: string;
+  gymAccess: string;
+  quietness: string;
+  amenities: string[];
+  missingFields: string[];
+  pros: string[];
+  cons: string[];
+  hiddenRisks: string[];
+  whyHigh: string[];
+  tradeoffs: string[];
+  confidence: number;
+  listedUrl: string;
+  shortReason: string;
+  likelyRegret: string;
+  photoTone: "aqua" | "sand" | "coral";
+};
+
+const singaporeLocations: LocationOption[] = [
+  { id: "nus-kent-ridge", label: "NUS Kent Ridge", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119077", latLng: { lat: 1.2966, lng: 103.7764 } },
+  { id: "nus-utown", label: "NUS UTown", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "138607", latLng: { lat: 1.3039, lng: 103.7742 } },
+  { id: "nus-soc", label: "NUS School of Computing", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "117417", latLng: { lat: 1.2949, lng: 103.7738 } },
+  { id: "nus-business", label: "NUS Business School", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119245", latLng: { lat: 1.293, lng: 103.7758 } },
+  { id: "kent-ridge-mrt", label: "Kent Ridge MRT", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119074", latLng: { lat: 1.2935, lng: 103.7845 } },
+  { id: "one-north", label: "One-North", area: "One-North", nearestMrt: "one-north MRT", postalCode: "138632", latLng: { lat: 1.2997, lng: 103.7871 } },
+  { id: "buona-vista", label: "Buona Vista", area: "Buona Vista", nearestMrt: "Buona Vista MRT", postalCode: "138617", latLng: { lat: 1.3072, lng: 103.7902 } },
+  { id: "raffles-place", label: "Raffles Place", area: "CBD", nearestMrt: "Raffles Place MRT", postalCode: "048621", latLng: { lat: 1.284, lng: 103.8513 } },
+  { id: "tanjong-pagar", label: "Tanjong Pagar", area: "CBD", nearestMrt: "Tanjong Pagar MRT", postalCode: "079903", latLng: { lat: 1.2764, lng: 103.8458 } },
+  { id: "marina-bay", label: "Marina Bay", area: "Marina Bay", nearestMrt: "Marina Bay MRT", postalCode: "018984", latLng: { lat: 1.2763, lng: 103.8547 } },
+  { id: "changi-business-park", label: "Changi Business Park", area: "Changi", nearestMrt: "Expo MRT", postalCode: "486066", latLng: { lat: 1.3346, lng: 103.9628 } },
+  { id: "ntu", label: "NTU", area: "Jurong West", nearestMrt: "Pioneer MRT", postalCode: "639798", latLng: { lat: 1.3483, lng: 103.6831 } },
+  { id: "smu", label: "SMU", area: "Bras Basah", nearestMrt: "Bencoolen MRT", postalCode: "178899", latLng: { lat: 1.2966, lng: 103.8501 } },
+  { id: "sutd", label: "SUTD", area: "Changi", nearestMrt: "Upper Changi MRT", postalCode: "487372", latLng: { lat: 1.3414, lng: 103.9639 } },
+  { id: "singapore-management-university", label: "Singapore Management University", area: "Bras Basah", nearestMrt: "Bencoolen MRT", postalCode: "178899", latLng: { lat: 1.2966, lng: 103.8501 } },
+  { id: "nuh", label: "National University Hospital", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119074", latLng: { lat: 1.2945, lng: 103.7832 } }
+];
+
+const mrtStationNames = [
+  "Admiralty",
+  "Aljunied",
+  "Ang Mo Kio",
+  "Bartley",
+  "Bayfront",
+  "Bayshore",
+  "Beauty World",
+  "Bedok",
+  "Bedok North",
+  "Bedok Reservoir",
+  "Bencoolen",
+  "Bendemeer",
+  "Bishan",
+  "Boon Keng",
+  "Boon Lay",
+  "Botanic Gardens",
+  "Braddell",
+  "Bras Basah",
+  "Bright Hill",
+  "Buangkok",
+  "Bugis",
+  "Bukit Batok",
+  "Bukit Gombak",
+  "Bukit Panjang",
+  "Buona Vista",
+  "Caldecott",
+  "Canberra",
+  "Cashew",
+  "Changi Airport",
+  "Chinatown",
+  "Chinese Garden",
+  "Choa Chu Kang",
+  "City Hall",
+  "Clarke Quay",
+  "Clementi",
+  "Commonwealth",
+  "Dakota",
+  "Dhoby Ghaut",
+  "Dover",
+  "Downtown",
+  "Esplanade",
+  "Eunos",
+  "Expo",
+  "Farrer Park",
+  "Farrer Road",
+  "Fort Canning",
+  "Gardens by the Bay",
+  "Geylang Bahru",
+  "Great World",
+  "Gul Circle",
+  "HarbourFront",
+  "Havelock",
+  "Haw Par Villa",
+  "Hillview",
+  "Holland Village",
+  "Hougang",
+  "Hume",
+  "Jalan Besar",
+  "Joo Koon",
+  "Jurong East",
+  "Kaki Bukit",
+  "Kallang",
+  "Katong Park",
+  "Kembangan",
+  "Kent Ridge",
+  "Khatib",
+  "Kovan",
+  "Kranji",
+  "Labrador Park",
+  "Lakeside",
+  "Lavender",
+  "Lentor",
+  "Little India",
+  "Lorong Chuan",
+  "MacPherson",
+  "Marina Bay",
+  "Marina South Pier",
+  "Marine Parade",
+  "Marine Terrace",
+  "Marsiling",
+  "Marymount",
+  "Mattar",
+  "Maxwell",
+  "Mayflower",
+  "Mountbatten",
+  "Napier",
+  "Newton",
+  "Nicoll Highway",
+  "Novena",
+  "one-north",
+  "Orchard",
+  "Orchard Boulevard",
+  "Outram Park",
+  "Pasir Panjang",
+  "Pasir Ris",
+  "Paya Lebar",
+  "Pioneer",
+  "Potong Pasir",
+  "Promenade",
+  "Punggol",
+  "Punggol Coast",
+  "Queenstown",
+  "Raffles Place",
+  "Redhill",
+  "Rochor",
+  "Sembawang",
+  "Sengkang",
+  "Serangoon",
+  "Shenton Way",
+  "Siglap",
+  "Simei",
+  "Sixth Avenue",
+  "Somerset",
+  "Springleaf",
+  "Stadium",
+  "Stevens",
+  "Tai Seng",
+  "Tan Kah Kee",
+  "Tanah Merah",
+  "Tampines",
+  "Tampines East",
+  "Tampines West",
+  "Tanjong Katong",
+  "Tanjong Pagar",
+  "Tanjong Rhu",
+  "Telok Ayer",
+  "Telok Blangah",
+  "Tiong Bahru",
+  "Toa Payoh",
+  "Tuas Crescent",
+  "Tuas Link",
+  "Tuas West Road",
+  "Ubi",
+  "Upper Changi",
+  "Upper Thomson",
+  "Woodlands",
+  "Woodlands North",
+  "Woodlands South",
+  "Woodleigh",
+  "Yew Tee",
+  "Yio Chu Kang",
+  "Yishun"
+];
+
+const mrtStationOptions: LocationOption[] = mrtStationNames.map((stationName) => ({
+  id: `mrt-${stationName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`,
+  label: `${stationName} MRT`,
+  area: stationName,
+  nearestMrt: `${stationName} MRT`,
+  latLng: { lat: 0, lng: 0 }
+}));
+
+const destinationOptions = [
+  ...singaporeLocations,
+  ...mrtStationOptions.filter(
+    (station) => !singaporeLocations.some((location) => location.label.toLowerCase() === station.label.toLowerCase())
+  )
+];
+
+const mustHaveOptions = [
+  "Aircon",
+  "WiFi included",
+  "Cooking allowed",
+  "Private bathroom",
+  "No owner staying",
+  "Furnished",
+  "Washing machine"
+];
+
+const priorityOptions = [
+  "Short commute",
+  "Lower rent",
+  "Near MRT",
+  "Affordable food",
+  "Gym access",
+  "Quiet environment",
+  "More privacy"
+];
+
+const loadingSteps = [
+  "Extracting room details",
+  "Resolving work/study location",
+  "Estimating commute burden",
+  "Checking must-haves and deal breakers",
+  "Comparing rent against lifestyle impact",
+  "Simulating future routine",
+  "Ranking rooms"
+];
+
+const demoListingText = `Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.
+Jurong East common room, S$1100/month, 10 min walk to MRT, 5B2B, aircon, no cooking, utilities not included.
+Dover master room, S$1550/month, 7 min walk to Dover MRT, 3B2B, private bathroom, aircon, furnished, quiet block.
+Clementi common room, S$1300/month, 5 min walk to Clementi MRT, 4B2B, wifi included, cooking allowed, strong food access.
+Punggol co-living room, S$950/month, 9 min walk to Punggol MRT, co-living, furnished, washing machine, longer commute.`;
+
+const demoRooms: RoomListing[] = [
+  {
+    id: "queenstown-common",
+    rankLabel: "#1 Best Overall Fit",
+    title: "Queenstown Common Room",
+    area: "Queenstown",
+    rent: 1450,
+    roomType: "Common room",
+    unitType: "3B2B",
+    nearestMrt: "Queenstown MRT",
+    mrtWalkMinutes: 6,
+    commuteMinutes: 12,
+    annualCommuteHours: 180,
+    monthlyTransport: 68,
+    foodAccess: "Strong hawker and casual dinner options",
+    gymAccess: "Several gyms within a short evening route",
+    quietness: "Moderate-quiet residential pocket",
+    amenities: ["Aircon", "WiFi included", "Cooking allowed", "No owner staying", "Utilities included"],
+    missingFields: ["Room size", "Visitor policy", "Aircon servicing terms"],
+    pros: ["Short commute", "Within budget", "Cooking allowed", "Close to MRT", "Supports gym routine"],
+    cons: ["Shared bathroom", "Higher rent than budget option", "Room size unknown"],
+    hiddenRisks: ["Utilities may be capped", "Visitor policy unknown", "Aircon servicing unclear"],
+    whyHigh: [
+      "12 min commute to NUS School of Computing",
+      "Within S$1,500 budget",
+      "Cooking allowed",
+      "No owner staying",
+      "Strong MRT access"
+    ],
+    tradeoffs: ["Common bathroom", "Slightly higher rent than Jurong East"],
+    confidence: 91,
+    listedUrl: "https://example.com/listings/queenstown-common-room",
+    shortReason: "Best balance of commute, budget, cooking, and weekday routine.",
+    likelyRegret: "Higher rent pressure, not commute fatigue.",
+    photoTone: "aqua"
+  },
+  {
+    id: "dover-master",
+    rankLabel: "#2 Best Comfort Fit",
+    title: "Dover Master Room",
+    area: "Dover",
+    rent: 1550,
+    roomType: "Master room",
+    unitType: "3B2B",
+    nearestMrt: "Dover MRT",
+    mrtWalkMinutes: 7,
+    commuteMinutes: 10,
+    annualCommuteHours: 160,
+    monthlyTransport: 60,
+    foodAccess: "Decent daily food, less variety late at night",
+    gymAccess: "Limited but workable nearby",
+    quietness: "Calmer surroundings",
+    amenities: ["Aircon", "Private bathroom", "Furnished", "Washing machine"],
+    missingFields: ["Owner staying status", "Cooking policy", "Utilities policy"],
+    pros: ["Private bathroom", "Shortest commute", "Quieter area"],
+    cons: ["Above S$1,500 budget", "Cooking policy unclear", "Fewer lifestyle amenities"],
+    hiddenRisks: ["Owner staying status unknown", "Utilities policy unclear", "Cooking may be limited"],
+    whyHigh: ["10 min commute", "Private bathroom", "Calmer surroundings"],
+    tradeoffs: ["S$50 above max budget", "Fewer food and gym choices"],
+    confidence: 87,
+    listedUrl: "https://example.com/listings/dover-master-room",
+    shortReason: "Best if privacy and quiet matter more than strict budget.",
+    likelyRegret: "Higher rent and fewer late-night options.",
+    photoTone: "sand"
+  },
+  {
+    id: "clementi-common",
+    rankLabel: "#3 Best Convenience Fit",
+    title: "Clementi Common Room",
+    area: "Clementi",
+    rent: 1300,
+    roomType: "Common room",
+    unitType: "4B2B",
+    nearestMrt: "Clementi MRT",
+    mrtWalkMinutes: 5,
+    commuteMinutes: 18,
+    annualCommuteHours: 220,
+    monthlyTransport: 75,
+    foodAccess: "Excellent affordable food and student-friendly options",
+    gymAccess: "Good access around central Clementi",
+    quietness: "Busier student area",
+    amenities: ["Aircon", "WiFi included", "Cooking allowed", "Washing machine"],
+    missingFields: ["Owner staying status", "Utilities cap", "Visitor policy"],
+    pros: ["Affordable food", "Within budget", "Near MRT", "Cooking allowed"],
+    cons: ["Busier surroundings", "Longer commute than Queenstown", "Owner status unknown"],
+    hiddenRisks: ["Owner staying status unknown", "Utilities may be capped", "Shared-space rules unclear"],
+    whyHigh: ["Within budget", "5 min walk to MRT", "Strong food access"],
+    tradeoffs: ["Busier environment", "Less quiet than Dover or Queenstown"],
+    confidence: 89,
+    listedUrl: "https://example.com/listings/clementi-common-room",
+    shortReason: "A practical food-and-MRT option with a manageable commute.",
+    likelyRegret: "Busier environment.",
+    photoTone: "coral"
+  },
+  {
+    id: "jurong-east-common",
+    rankLabel: "#4 Best Budget Fit",
+    title: "Jurong East Common Room",
+    area: "Jurong East",
+    rent: 1100,
+    roomType: "Common room",
+    unitType: "5B2B",
+    nearestMrt: "Jurong East MRT",
+    mrtWalkMinutes: 10,
+    commuteMinutes: 38,
+    annualCommuteHours: 410,
+    monthlyTransport: 95,
+    foodAccess: "Good malls and daily food access",
+    gymAccess: "Acceptable gym access",
+    quietness: "Moderate",
+    amenities: ["Aircon"],
+    missingFields: ["WiFi", "Owner staying status", "Visitor policy", "Aircon servicing"],
+    pros: ["Lowest rent", "Large transport hub", "Good food access"],
+    cons: ["No cooking", "Utilities not included", "Longer commute"],
+    hiddenRisks: ["Utilities not included", "No cooking may affect weekly routine", "Commute fatigue likely"],
+    whyHigh: ["S$350 cheaper than Queenstown", "Near a major transport hub", "Good budget fallback"],
+    tradeoffs: ["38 min commute", "No cooking", "Utilities not included"],
+    confidence: 88,
+    listedUrl: "https://example.com/listings/jurong-east-common-room",
+    shortReason: "Lowest rent, but the commute and cooking restriction are real lifestyle costs.",
+    likelyRegret: "Commute fatigue.",
+    photoTone: "sand"
+  },
+  {
+    id: "punggol-coliving",
+    rankLabel: "#5 Cheapest Fallback",
+    title: "Punggol Co-living Room",
+    area: "Punggol",
+    rent: 950,
+    roomType: "Co-living room",
+    unitType: "Co-living",
+    nearestMrt: "Punggol MRT",
+    mrtWalkMinutes: 9,
+    commuteMinutes: 55,
+    annualCommuteHours: 590,
+    monthlyTransport: 110,
+    foodAccess: "Basic food access, less convenient for Kent Ridge routine",
+    gymAccess: "Limited compared with central-west options",
+    quietness: "Quiet residential environment",
+    amenities: ["Furnished", "Washing machine", "WiFi included"],
+    missingFields: ["Cooking policy", "Owner staying status", "Utilities cap", "Visitor policy"],
+    pros: ["Lowest rent", "Furnished", "Quiet environment"],
+    cons: ["Very long commute", "Less relevant to Kent Ridge routine", "Cooking policy unclear"],
+    hiddenRisks: ["Long travel time compounds across the year", "Co-living rules may be restrictive", "Visitor policy unknown"],
+    whyHigh: ["Lowest rent", "Quiet environment", "Furnished setup"],
+    tradeoffs: ["55 min commute", "Higher transport cost", "Weaker gym and food fit"],
+    confidence: 84,
+    listedUrl: "https://example.com/listings/punggol-coliving-room",
+    shortReason: "Acceptable only if rent is the overriding priority.",
+    likelyRegret: "Long travel time.",
+    photoTone: "coral"
+  }
+];
+
+const topRoom = demoRooms[0];
+const budgetRoom = demoRooms.find((room) => room.id === "jurong-east-common") ?? demoRooms[3];
+
+const currency = new Intl.NumberFormat("en-SG", {
+  style: "currency",
+  currency: "SGD",
+  maximumFractionDigits: 0
+});
+
+function formatMoney(value: number) {
+  return currency.format(value).replace("SGD", "S$");
+}
+
+function getSelectedLocation(profile: Profile) {
+  return destinationOptions.find((location) => location.id === profile.selectedLocationId) ?? null;
+}
+
+function getDestinationLabel(profile: Profile) {
+  return getSelectedLocation(profile)?.label || profile.destinationInput || "NUS School of Computing";
+}
+
+function formatArrival(commuteMinutes: number) {
+  const totalMinutes = 8 * 60 + 15 + commuteMinutes;
+  const hour24 = Math.floor(totalMinutes / 60);
+  const minute = totalMinutes % 60;
+  const suffix = hour24 >= 12 ? "PM" : "AM";
+  const hour12 = hour24 > 12 ? hour24 - 12 : hour24;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${suffix}`;
+}
+
+function getWeeklyCommuteHours(room: RoomListing, officeDays: number) {
+  return Math.round(((room.commuteMinutes * 2 * officeDays) / 60) * 10) / 10;
+}
+
+function App() {
+  const [profile, setProfile] = useState<Profile>({
+    destinationInput: "NUS School of Computing",
+    selectedLocationId: "nus-soc",
+    customLocationHelper: "",
+    budgetMin: 1000,
+    budgetMax: 1500,
+    officeDays: 3,
+    transportMode: "MRT/Bus",
+    preferredRoomType: "No preference",
+    peopleCount: 1,
+    mustHaves: ["Aircon", "WiFi included", "Cooking allowed", "No owner staying"],
+    rankedPriorities: ["Short commute", "Near MRT", "Gym access", "Quiet environment"]
+  });
+  const [listingMode, setListingMode] = useState<ListingInputMode>("demo");
+  const [listingInputs, setListingInputs] = useState<string[]>([""]);
+  const [status, setStatus] = useState<AppStatus>("idle");
+  const [loadingStep, setLoadingStep] = useState(0);
+  const [selectedRoomId, setSelectedRoomId] = useState(topRoom.id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const profileRef = useRef<HTMLElement | null>(null);
+  const resultsRef = useRef<HTMLElement | null>(null);
+  const timeoutRef = useRef<number[]>([]);
+
+  const selectedRoom = demoRooms.find((room) => room.id === selectedRoomId) ?? topRoom;
+
+  useEffect(() => {
+    return () => {
+      timeoutRef.current.forEach(window.clearTimeout);
+    };
+  }, []);
+
+  function scrollToProfile() {
+    profileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function analyzeRooms() {
+    timeoutRef.current.forEach(window.clearTimeout);
+    timeoutRef.current = [];
+    setStatus("loading");
+    setLoadingStep(0);
+
+    loadingSteps.forEach((_, index) => {
+      timeoutRef.current.push(
+        window.setTimeout(() => {
+          setLoadingStep(index);
+        }, index * 210)
+      );
+    });
+
+    // Replace this delay with listing extraction + recommendation API calls when backend integration resumes.
+    timeoutRef.current.push(
+      window.setTimeout(() => {
+        setSelectedRoomId(topRoom.id);
+        setStatus("results");
+        window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+      }, 1550)
+    );
+  }
+
+  function handleTryAnotherProfile() {
+    setStatus("idle");
+    window.setTimeout(scrollToProfile, 40);
+  }
+
+  return (
+    <main className="min-h-screen overflow-hidden bg-ocean-radial font-sans text-sea-ink">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-sea-glass/60 blur-3xl" />
+        <div className="absolute right-0 top-10 h-96 w-96 rounded-full bg-coral/10 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 h-80 w-80 rounded-full bg-sand/80 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
+        <LandingSection onStart={scrollToProfile} />
+
+        <ProfileForm
+          refCallback={(node) => {
+            profileRef.current = node;
+          }}
+          profile={profile}
+          setProfile={setProfile}
+        />
+
+        <RoomListingInput
+          isLoading={status === "loading"}
+          listingInputs={listingInputs}
+          listingMode={listingMode}
+          onAnalyze={analyzeRooms}
+          setListingInputs={setListingInputs}
+          setListingMode={setListingMode}
+        />
+
+        {status === "loading" && <LoadingSteps activeStep={loadingStep} />}
+
+        {status === "results" && (
+          <ResultsDashboard
+            refCallback={(node) => {
+              resultsRef.current = node;
+            }}
+            onOpenLandlordMessage={() => setIsModalOpen(true)}
+            onSelectRoom={setSelectedRoomId}
+            onTryAnotherProfile={handleTryAnotherProfile}
+            profile={profile}
+            selectedRoom={selectedRoom}
+            selectedRoomId={selectedRoomId}
+          />
+        )}
+      </div>
+
+      <LandlordMessageModal
+        destination={getDestinationLabel(profile)}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        room={topRoom}
+      />
+    </main>
+  );
+}
+
+function LandingSection({ onStart }: { onStart: () => void }) {
+  return (
+    <section className="relative grid min-h-screen place-items-center py-24 text-center">
+      <div className="absolute left-1/2 top-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/70 bg-white/35 blur-3xl" />
+      <div className="relative mx-auto max-w-4xl animate-rise-in">
+        <p className="mb-6 inline-flex rounded-full border border-sea-teal/15 bg-white/70 px-4 py-2 text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">
+          AI room decision advisor
+        </p>
+        <h1 className="font-display text-7xl font-extrabold leading-none tracking-[-0.07em] text-sea-ink sm:text-8xl lg:text-9xl">
+          🐬 DOLPHINE
+        </h1>
+        <p className="mt-7 font-display text-3xl font-bold tracking-[-0.04em] text-sea-deep sm:text-4xl">
+          Find a life, not just a room.
+        </p>
+        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">
+          Paste any room listing. Dolphine predicts how that room will fit your daily life before you sign the lease.
+        </p>
+        <button
+          className="mt-10 rounded-full bg-sea-deep px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink"
+          type="button"
+          onClick={onStart}
+        >
+          Find My Best Room
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function ProfileForm({
+  profile,
+  refCallback,
+  setProfile
+}: {
+  profile: Profile;
+  refCallback: (node: HTMLElement | null) => void;
+  setProfile: Dispatch<SetStateAction<Profile>>;
+}) {
+  return (
+    <section className="scroll-mt-8 py-28 sm:py-32 lg:py-40" ref={refCallback}>
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-10 max-w-3xl">
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Life profile</p>
+          <h2 className="mt-4 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink sm:text-5xl">
+            Tell Dolphine what your week looks like.
+          </h2>
+          <p className="mt-5 text-base leading-7 text-slate-500">
+            Keep it lightweight: destination, budget range, living constraints, and the tradeoffs you care about most.
+          </p>
+        </div>
+
+        <form
+          className="glass-card rounded-[2.5rem] p-6 sm:p-8 lg:p-10"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <LocationCombobox profile={profile} setProfile={setProfile} />
+
+          <div className="mt-7 grid gap-5 lg:grid-cols-2">
+            <div>
+              <span className="text-sm font-extrabold text-sea-ink">Monthly budget range</span>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                <MoneyInput
+                  label="Min"
+                  value={profile.budgetMin}
+                  onChange={(value) => setProfile((current) => ({ ...current, budgetMin: value }))}
+                />
+                <MoneyInput
+                  label="Max"
+                  value={profile.budgetMax}
+                  onChange={(value) => setProfile((current) => ({ ...current, budgetMax: value }))}
+                />
+              </div>
+            </div>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-extrabold text-sea-ink">Office / campus days per week</legend>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((day) => (
+                  <ChoiceButton
+                    isActive={profile.officeDays === day}
+                    key={day}
+                    label={String(day)}
+                    onClick={() => setProfile((current) => ({ ...current, officeDays: day }))}
+                  />
+                ))}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="mt-7 grid gap-7 lg:grid-cols-3">
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">Transport mode</span>
+              <select
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base font-bold text-sea-ink shadow-sm"
+                onChange={(event) =>
+                  setProfile((current) => ({ ...current, transportMode: event.target.value as TransportMode }))
+                }
+                value={profile.transportMode}
+              >
+                {(["MRT/Bus", "Walk/Cycle", "Drive"] as TransportMode[]).map((mode) => (
+                  <option key={mode} value={mode}>
+                    {mode}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">Preferred room type</span>
+              <select
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base font-bold text-sea-ink shadow-sm"
+                onChange={(event) =>
+                  setProfile((current) => ({
+                    ...current,
+                    preferredRoomType: event.target.value as RoomTypePreference
+                  }))
+                }
+                value={profile.preferredRoomType}
+              >
+                {(["Common room", "Master room", "Studio", "Whole unit", "No preference"] as RoomTypePreference[]).map(
+                  (roomType) => (
+                    <option key={roomType} value={roomType}>
+                      {roomType}
+                    </option>
+                  )
+                )}
+              </select>
+            </label>
+
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">How many people living?</span>
+              <input
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+                min={1}
+                onChange={(event) =>
+                  setProfile((current) => ({ ...current, peopleCount: Math.max(1, Number(event.target.value) || 1) }))
+                }
+                type="number"
+                value={profile.peopleCount}
+              />
+            </label>
+          </div>
+
+          <ChipGroup
+            className="mt-8"
+            label="Must-haves"
+            options={mustHaveOptions}
+            selected={profile.mustHaves}
+            onToggle={(option) =>
+              setProfile((current) => ({
+                ...current,
+                mustHaves: current.mustHaves.includes(option)
+                  ? current.mustHaves.filter((item) => item !== option)
+                  : [...current.mustHaves, option]
+              }))
+            }
+          />
+
+          <fieldset className="mt-8">
+            <legend className="mb-3 text-sm font-extrabold text-sea-ink">Rank your top priorities</legend>
+            <p className="mb-4 text-sm leading-6 text-slate-500">
+              Click in order. Dolphine uses the order as your ranking for this demo.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {priorityOptions.map((priority) => {
+                const priorityRank = profile.rankedPriorities.indexOf(priority);
+                return (
+                  <button
+                    aria-pressed={priorityRank >= 0}
+                    className={`rounded-full border px-4 py-2.5 text-sm font-extrabold transition ${
+                      priorityRank >= 0
+                        ? "border-sea-deep bg-sea-deep text-white shadow-card"
+                        : "border-sea-deep/10 bg-white/90 text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+                    }`}
+                    key={priority}
+                    onClick={() =>
+                      setProfile((current) => ({
+                        ...current,
+                        rankedPriorities:
+                          current.rankedPriorities.indexOf(priority) >= 0
+                            ? current.rankedPriorities.filter((item) => item !== priority)
+                            : [...current.rankedPriorities, priority]
+                      }))
+                    }
+                    type="button"
+                  >
+                    {priorityRank >= 0 ? `${priorityRank + 1}. ` : ""}
+                    {priority}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <p className="mt-9 border-t border-sea-deep/10 pt-7 text-sm leading-6 text-slate-500">
+            Based on: {getDestinationLabel(profile)} · {formatMoney(profile.budgetMin)}–
+            {formatMoney(profile.budgetMax)} · {profile.transportMode} · {profile.peopleCount} person ·{" "}
+            {profile.rankedPriorities.slice(0, 3).join(" · ")}
+          </p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function LocationCombobox({
+  profile,
+  setProfile
+}: {
+  profile: Profile;
+  setProfile: Dispatch<SetStateAction<Profile>>;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const query = profile.destinationInput.trim().toLowerCase();
+  const filteredLocations = destinationOptions.filter((location) =>
+    `${location.label} ${location.area} ${location.nearestMrt}`.toLowerCase().includes(query)
+  );
+  const exactMatch = destinationOptions.some((location) => location.label.toLowerCase() === query);
+  const isCustomLocation = profile.destinationInput.trim().length > 0 && !profile.selectedLocationId;
+
+  function selectLocation(location: LocationOption) {
+    setProfile((current) => ({
+      ...current,
+      destinationInput: location.label,
+      selectedLocationId: location.id,
+      customLocationHelper: ""
+    }));
+    setIsOpen(false);
+  }
+
+  return (
+    <div className="relative">
+      <label className="grid gap-2">
+        <span className="text-sm font-extrabold text-sea-ink">Where do you usually go? (Workplace/Study)</span>
+        <input
+          aria-autocomplete="list"
+          aria-expanded={isOpen}
+          aria-controls="location-options"
+          className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+          onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
+          onChange={(event) => {
+            const nextValue = event.target.value;
+            const matchedLocation = destinationOptions.find(
+              (location) => location.label.toLowerCase() === nextValue.trim().toLowerCase()
+            );
+            setProfile((current) => ({
+              ...current,
+              destinationInput: nextValue,
+              selectedLocationId: matchedLocation?.id ?? null
+            }));
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          role="combobox"
+          type="text"
+          value={profile.destinationInput}
+        />
+      </label>
+
+      {isOpen && (
+        <div
+          className="absolute z-20 mt-2 max-h-80 w-full overflow-auto rounded-3xl border border-sea-deep/10 bg-white p-2 shadow-soft"
+          id="location-options"
+          role="listbox"
+        >
+          {(query ? filteredLocations : destinationOptions).slice(0, 8).map((location) => (
+            <button
+              className="w-full rounded-2xl px-4 py-3 text-left transition hover:bg-sea-mist"
+              key={location.id}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => selectLocation(location)}
+              role="option"
+              type="button"
+            >
+              <span className="block font-extrabold text-sea-ink">{location.label}</span>
+              <span className="text-sm font-bold text-slate-500">
+                {location.area} · nearest MRT: {location.nearestMrt}
+              </span>
+            </button>
+          ))}
+
+          {query && !exactMatch && (
+            <button
+              className="w-full rounded-2xl px-4 py-3 text-left font-extrabold text-sea-teal transition hover:bg-sea-mist"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                setProfile((current) => ({ ...current, selectedLocationId: null }));
+                setIsOpen(false);
+              }}
+              role="option"
+              type="button"
+            >
+              Use “{profile.destinationInput}” as custom location
+            </button>
+          )}
+        </div>
+      )}
+
+      {isCustomLocation && (
+        <label className="mt-4 grid gap-2 rounded-3xl bg-sea-mist p-4">
+          <span className="text-sm font-extrabold text-sea-ink">Nearest MRT or postal code?</span>
+          <input
+            className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+            onChange={(event) => setProfile((current) => ({ ...current, customLocationHelper: event.target.value }))}
+            placeholder="e.g. Kent Ridge MRT, 119077, or nearest station"
+            type="text"
+            value={profile.customLocationHelper}
+          />
+          <span className="text-sm leading-6 text-slate-500">
+            This keeps broad inputs like “NUS” or “Shopee” clear enough for a commute estimate in the demo.
+          </span>
+        </label>
+      )}
+    </div>
+  );
+}
+
+function MoneyInput({ label, onChange, value }: { label: string; onChange: (value: number) => void; value: number }) {
+  return (
+    <label className="flex rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 shadow-sm">
+      <span className="mr-3 font-extrabold text-sea-teal">{label}</span>
+      <span className="mr-1 font-extrabold text-slate-400">S$</span>
+      <input
+        className="w-full border-0 bg-transparent p-0 text-base text-sea-ink outline-none"
+        min={0}
+        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        type="number"
+        value={value}
+      />
+    </label>
+  );
+}
+
+function ChoiceButton({ isActive, label, onClick }: { isActive: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      aria-pressed={isActive}
+      className={`rounded-2xl border px-4 py-3 text-sm font-extrabold transition ${
+        isActive
+          ? "border-sea-deep bg-sea-deep text-white shadow-card"
+          : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function ChipGroup({
+  className = "",
+  label,
+  onToggle,
+  options,
+  selected
+}: {
+  className?: string;
+  label: string;
+  onToggle: (option: string) => void;
+  options: string[];
+  selected: string[];
+}) {
+  return (
+    <fieldset className={className}>
+      <legend className="mb-3 text-sm font-extrabold text-sea-ink">{label}</legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => {
+          const isActive = selected.includes(option);
+          return (
+            <button
+              aria-pressed={isActive}
+              className={`rounded-full border px-4 py-2.5 text-sm font-extrabold transition ${
+                isActive
+                  ? "border-sea-deep bg-sea-deep text-white shadow-card"
+                  : "border-sea-deep/10 bg-white/90 text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+              }`}
+              key={option}
+              onClick={() => onToggle(option)}
+              type="button"
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function RoomListingInput({
+  isLoading,
+  listingInputs,
+  listingMode,
+  onAnalyze,
+  setListingInputs,
+  setListingMode
+}: {
+  isLoading: boolean;
+  listingInputs: string[];
+  listingMode: ListingInputMode;
+  onAnalyze: () => void;
+  setListingInputs: Dispatch<SetStateAction<string[]>>;
+  setListingMode: (mode: ListingInputMode) => void;
+}) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onAnalyze();
+  }
+
+  const placeholderText =
+    listingMode === "urls"
+      ? "Paste one listing URL or copied agent message here. PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, and agent messages all work for the demo."
+      : "Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.";
+
+  function updateListing(index: number, value: string) {
+    setListingInputs((current) => current.map((listing, listingIndex) => (listingIndex === index ? value : listing)));
+  }
+
+  function addListing() {
+    setListingInputs((current) => [...current, ""]);
+  }
+
+  function removeListing(index: number) {
+    setListingInputs((current) => (current.length === 1 ? [""] : current.filter((_, listingIndex) => listingIndex !== index)));
+  }
+
+  return (
+    <section className="py-28 sm:py-32 lg:py-40">
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading
+          eyebrow="Room listing input"
+          text="Paste messy listings, agent messages, or links. Add one room per box so Dolphine can compare them clearly."
+          title="Paste rooms you are considering."
+        />
+
+        <form className="mt-10 rounded-[2.5rem] border border-white/75 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:p-8 lg:p-10" onSubmit={handleSubmit}>
+          <div className="grid gap-3 md:grid-cols-3">
+            <ModeButton
+              isActive={listingMode === "demo"}
+              label="I don't have listings yet"
+              onClick={() => {
+                setListingMode("demo");
+                setListingInputs([""]);
+              }}
+            />
+            <ModeButton isActive={listingMode === "text"} label="Paste listing text" onClick={() => setListingMode("text")} />
+            <ModeButton isActive={listingMode === "urls"} label="Paste listing links" onClick={() => setListingMode("urls")} />
+          </div>
+
+          {listingMode === "demo" ? (
+            <div className="mt-6 rounded-[2rem] bg-sea-mist p-5 text-sm leading-7 text-slate-600">
+              No room links yet. Dolphine will start with a realistic sample shortlist so you can see how the advisor works.
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4">
+              {listingInputs.map((listing, index) => (
+                <div className="rounded-[2rem] border border-sea-deep/10 bg-white p-4 shadow-sm" key={index}>
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <label className="text-sm font-extrabold text-sea-ink" htmlFor={`listing-${index}`}>
+                      Listing {index + 1}
+                    </label>
+                    <button
+                      className="rounded-full bg-sea-mist px-3 py-1.5 text-xs font-extrabold text-slate-500 transition hover:bg-coral/10 hover:text-coral"
+                      onClick={() => removeListing(index)}
+                      type="button"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <textarea
+                    className="min-h-40 w-full rounded-[1.5rem] border border-sea-deep/10 bg-sea-mist/50 p-4 text-base leading-8 text-sea-ink shadow-sm"
+                    id={`listing-${index}`}
+                    onChange={(event) => updateListing(index, event.target.value)}
+                    placeholder={index === 0 ? placeholderText : "Paste another room listing or URL here."}
+                    value={listing}
+                  />
+                </div>
+              ))}
+
+              <button
+                className="rounded-full border border-sea-deep/15 bg-white px-5 py-3 text-sm font-extrabold text-sea-deep shadow-card transition hover:border-sea-teal"
+                onClick={addListing}
+                type="button"
+              >
+                Add another listing
+              </button>
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-col gap-4 border-t border-sea-deep/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-6 text-slate-500">
+              Sources can be PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, or agent messages.
+            </p>
+            <button
+              className="rounded-full bg-coral px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isLoading}
+              type="submit"
+            >
+              {isLoading ? "Analyzing rooms..." : "Analyze Rooms"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function ModeButton({ isActive, label, onClick }: { isActive: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      aria-pressed={isActive}
+      className={`rounded-2xl border px-4 py-4 text-sm font-extrabold transition ${
+        isActive
+          ? "border-sea-deep bg-sea-deep text-white shadow-card"
+          : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function LoadingSteps({ activeStep }: { activeStep: number }) {
+  return (
+    <section className="mx-auto my-28 w-full max-w-3xl animate-rise-in rounded-[2.5rem] border border-white/80 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:my-32 sm:p-8">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Agent reasoning</p>
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em]">Analyzing your rooms</h2>
+        </div>
+        <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-sea-foam text-2xl sm:flex">🐬</div>
+      </div>
+
+      <div className="grid gap-3">
+        {loadingSteps.map((step, index) => {
+          const isDone = index < activeStep;
+          const isActive = index === activeStep;
+          return (
+            <div
+              className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition ${
+                isActive
+                  ? "border-sea-teal bg-sea-foam text-sea-deep"
+                  : isDone
+                    ? "border-sea-teal/20 bg-white text-slate-500"
+                    : "border-slate-200 bg-white/70 text-slate-400"
+              }`}
+              key={step}
+            >
+              <span
+                className={`grid h-7 w-7 place-items-center rounded-full text-sm font-extrabold ${
+                  isDone || isActive ? "bg-sea-teal text-white" : "bg-slate-100 text-slate-400"
+                }`}
+              >
+                {isDone ? "✓" : index + 1}
+              </span>
+              <span className="font-bold">{step}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ResultsDashboard({
+  onOpenLandlordMessage,
+  onSelectRoom,
+  onTryAnotherProfile,
+  profile,
+  refCallback,
+  selectedRoom,
+  selectedRoomId
+}: {
+  onOpenLandlordMessage: () => void;
+  onSelectRoom: (roomId: string) => void;
+  onTryAnotherProfile: () => void;
+  profile: Profile;
+  refCallback: (node: HTMLElement | null) => void;
+  selectedRoom: RoomListing;
+  selectedRoomId: string;
+}) {
+  return (
+    <section className="scroll-mt-8 py-24 sm:py-32 lg:py-40" ref={refCallback}>
+      <div className="grid gap-28 sm:gap-32 lg:gap-40">
+        <ExtractedRoomCards profile={profile} rooms={demoRooms} />
+        <RankedRoomRecommendations
+          onSelectRoom={onSelectRoom}
+          rooms={demoRooms}
+          selectedRoomId={selectedRoomId}
+        />
+        <SelectedRoomDeepDive profile={profile} room={selectedRoom} />
+        <TradeoffSection />
+        <FutureLifeSimulator profile={profile} room={selectedRoom} />
+        <AlternativePicks />
+        <LandlordQuestions room={selectedRoom} />
+        <DolphineReport
+          onGenerateLandlordMessage={onOpenLandlordMessage}
+          onTryAnotherProfile={onTryAnotherProfile}
+          profile={profile}
+          room={topRoom}
+        />
+      </div>
+    </section>
+  );
+}
+
+function ExtractedRoomCards({ profile, rooms }: { profile: Profile; rooms: RoomListing[] }) {
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Extracted room cards"
+        text={`Dolphine found structured room details from messy listing text and estimated commute to ${getDestinationLabel(profile)}.`}
+        title="Here is what Dolphine understood."
+      />
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        {rooms.map((room) => (
+          <article className="rounded-[2rem] border border-white/75 bg-white/76 p-4 shadow-card backdrop-blur" key={room.id}>
+            <div className="grid gap-5 sm:grid-cols-[180px_1fr]">
+              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <div>
+                <h3 className="text-xl font-extrabold text-sea-ink">{room.title}</h3>
+                <p className="mt-2 text-sm font-bold text-slate-500">
+                  {formatMoney(room.rent)}/month · {room.roomType} · {room.unitType}
+                </p>
+                <p className="mt-4 text-sm leading-6 text-slate-600">
+                  {room.mrtWalkMinutes} min walk to {room.nearestMrt}
+                  <br />
+                  {room.commuteMinutes} min to {getDestinationLabel(profile)}
+                </p>
+                <p className="mt-4 text-sm font-bold leading-6 text-sea-deep">
+                  Extracted: {room.amenities.slice(0, 5).join(" · ")}
+                </p>
+                <p className="mt-3 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                  Confidence: {room.confidence}%
+                </p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function RankedRoomRecommendations({
+  onSelectRoom,
+  rooms,
+  selectedRoomId
+}: {
+  onSelectRoom: (roomId: string) => void;
+  rooms: RoomListing[];
+  selectedRoomId: string;
+}) {
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Ranked room recommendations"
+        text="These are individual listings, not neighbourhoods. Click any room to update the deep dive."
+        title="Your best room matches"
+      />
+      <div className="mt-10 grid gap-5">
+        {rooms.map((room) => (
+          <button
+            aria-pressed={selectedRoomId === room.id}
+            className={`rounded-[2.25rem] border p-5 text-left shadow-card transition hover:-translate-y-1 ${
+              selectedRoomId === room.id
+                ? "border-sea-teal bg-white ring-4 ring-sea-teal/15"
+                : "border-white/75 bg-white/76 hover:border-sea-teal/40"
+            }`}
+            key={room.id}
+            onClick={() => onSelectRoom(room.id)}
+            type="button"
+          >
+            <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
+              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <div>
+                <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-coral">{room.rankLabel}</p>
+                <h3 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+                  {room.title}
+                </h3>
+                <p className="mt-3 text-base font-bold text-slate-500">{room.shortReason}</p>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-4">
+                  <CompactMetric label="Rent" value={`${formatMoney(room.rent)}`} />
+                  <CompactMetric label="Commute" value={`${room.commuteMinutes} min`} />
+                  <CompactMetric label="MRT walk" value={`${room.mrtWalkMinutes} min`} />
+                  <CompactMetric label="Unit" value={room.unitType} />
+                </div>
+
+                <div className="mt-5 grid gap-5 lg:grid-cols-2">
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-sea-teal">
+                      Why it ranks high
+                    </p>
+                    <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-600">
+                      {room.whyHigh.map((reason) => (
+                        <li key={reason}>+ {reason}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-coral">Tradeoff</p>
+                    <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-600">
+                      {room.tradeoffs.map((tradeoff) => (
+                        <li key={tradeoff}>- {tradeoff}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CompactMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-sea-mist px-4 py-3">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{label}</span>
+      <strong className="mt-1 block text-sea-ink">{value}</strong>
+    </div>
+  );
+}
+
+function SelectedRoomDeepDive({ profile, room }: { profile: Profile; room: RoomListing }) {
+  return (
+    <section className="rounded-[2.75rem] border border-white/75 bg-white/78 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+      <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+        <div>
+          <RoomPhotoPlaceholder tone={room.photoTone} />
+          <h2 className="mt-6 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink">
+            {room.title}
+          </h2>
+          <p className="mt-3 text-base font-bold text-slate-500">
+            {room.area} · {formatMoney(room.rent)}/month · {room.roomType}
+          </p>
+          <a
+            className="mt-5 inline-flex rounded-full bg-sea-deep px-5 py-3 text-sm font-extrabold text-white transition hover:bg-sea-ink"
+            href={room.listedUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Open listing URL
+          </a>
+        </div>
+
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Selected room deep dive</p>
+          <h3 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+            How this room fits your life
+          </h3>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <RoomFact label="Area" value={room.area} />
+            <RoomFact label="Rent" value={`${formatMoney(room.rent)}/month`} />
+            <RoomFact label="Room type" value={room.roomType} />
+            <RoomFact label="Unit type" value={room.unitType} />
+            <RoomFact label="Nearest MRT" value={room.nearestMrt} />
+            <RoomFact label="Commute to workplace/school" value={`${room.commuteMinutes} min to ${getDestinationLabel(profile)}`} />
+          </div>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-5">
+            <FitPill label="Budget fit" value={room.rent <= profile.budgetMax ? "Good" : "Stretch"} />
+            <FitPill label="Commute fit" value={room.commuteMinutes <= 20 ? "Strong" : "Heavy"} />
+            <FitPill label="Amenities fit" value={`${room.amenities.length} matched`} />
+            <FitPill label="Privacy fit" value={room.roomType === "Master room" ? "High" : "Shared"} />
+            <FitPill label="Lifestyle fit" value={room.commuteMinutes <= 20 ? "Stable" : "Fragile"} />
+          </div>
+
+          <div className="mt-7 grid gap-4">
+            <DetailAccordion title="Pros" items={room.pros} tone="positive" />
+            <DetailAccordion title="Cons" items={room.cons} tone="negative" />
+            <DetailAccordion title="Hidden risks" items={room.hiddenRisks} tone="warning" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FitPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-sea-mist p-4">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-400">{label}</span>
+      <strong className="mt-2 block text-sea-deep">{value}</strong>
+    </div>
+  );
+}
+
+function DetailAccordion({
+  items,
+  title,
+  tone
+}: {
+  items: string[];
+  title: string;
+  tone: "positive" | "negative" | "warning";
+}) {
+  const toneClass =
+    tone === "positive"
+      ? "bg-sea-mist text-sea-deep"
+      : tone === "negative"
+        ? "bg-coral/10 text-sea-ink"
+        : "bg-sand/80 text-sea-ink";
+
+  return (
+    <details className={`rounded-3xl p-5 ${toneClass}`} open={title === "Pros"}>
+      <summary className="cursor-pointer text-lg font-extrabold">{title}</summary>
+      <ul className="mt-4 grid gap-2 text-sm font-bold leading-6">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+function TradeoffSection() {
+  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+  const rentDelta = topRoom.rent - budgetRoom.rent;
+
+  return (
+    <section className="overflow-hidden rounded-[2.75rem] bg-sea-ink p-7 text-white shadow-soft sm:p-10 lg:p-12">
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-glass/70">Tradeoff analysis</p>
+        <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] sm:text-6xl">
+          Queenstown Common Room vs Jurong East Common Room
+        </h2>
+        <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/68">
+          If your time and routine stability matter more than saving {formatMoney(rentDelta)}/month, Queenstown is the
+          stronger choice. If your priority is minimizing rent, Jurong East is still acceptable.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className="rounded-[2rem] border border-sea-glass/20 bg-sea-glass/12 p-6">
+          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-sea-glass/80">What you gain</h3>
+          <div className="mt-5 grid gap-3">
+            <TradeoffLine text={`+${hoursSaved} hours/year saved from shorter commute`} />
+            <TradeoffLine text="+Cooking allowed" />
+            <TradeoffLine text="+No owner staying" />
+            <TradeoffLine text="+Better gym/food access" />
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-coral/30 bg-coral/15 p-6">
+          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-coral">What you give up</h3>
+          <div className="mt-5 grid gap-3">
+            <TradeoffLine text={`-${formatMoney(rentDelta)}/month higher rent`} />
+            <TradeoffLine text="-Shared bathroom" />
+            <TradeoffLine text="-Less budget headroom" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TradeoffLine({ text }: { text: string }) {
+  return <p className="rounded-2xl bg-white/10 px-4 py-3 text-lg font-extrabold text-white">{text}</p>;
+}
+
+function FutureLifeSimulator({ profile, room }: { profile: Profile; room: RoomListing }) {
+  const destination = getDestinationLabel(profile);
+  const weeklyCommuteHours = getWeeklyCommuteHours(room, profile.officeDays);
+
+  const futureWeek = [
+    {
+      day: "Monday",
+      events: [
+        { time: "8:15 AM", label: `Leave ${room.area}` },
+        { time: formatArrival(room.commuteMinutes), label: `Arrive at ${destination}` },
+        { time: "6:15 PM", label: "Gym nearby" },
+        { time: "7:30 PM", label: "Dinner nearby" }
+      ]
+    },
+    {
+      day: "Wednesday",
+      events: [
+        { time: "Campus day", label: "Work/study from campus" },
+        { time: "12:30 PM", label: "Lunch nearby" },
+        { time: "6:30 PM", label: "Grocery run near MRT" }
+      ]
+    },
+    {
+      day: "Friday",
+      events: [
+        { time: "After class/work", label: "Short commute home" },
+        { time: "Evening", label: "Dinner with friends nearby" }
+      ]
+    }
+  ];
+
+  return (
+    <section className="glass-card rounded-[2.75rem] p-7 sm:p-10 lg:p-12">
+      <SectionHeading
+        eyebrow="Future life simulator"
+        text="A lightweight week forecast based on the selected room, commute, and routine fit."
+        title="Your life in this room"
+      />
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {futureWeek.map((day) => (
+            <article className="rounded-[2rem] bg-white/78 p-6 shadow-card" key={day.day}>
+              <h3 className="text-2xl font-extrabold text-sea-deep">{day.day}</h3>
+              <div className="mt-6 grid gap-4">
+                {day.events.map((event, index) => (
+                  <div className="relative grid grid-cols-[auto_1fr] gap-3" key={`${day.day}-${event.time}-${event.label}`}>
+                    <div className="flex flex-col items-center">
+                      <span className="h-3 w-3 rounded-full bg-sea-teal" />
+                      {index < day.events.length - 1 && <span className="mt-2 h-full min-h-8 w-px bg-sea-teal/18" />}
+                    </div>
+                    <div className="pb-2">
+                      <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{event.time}</span>
+                      <p className="mt-1 font-bold text-sea-ink">{event.label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <aside className="rounded-[2rem] bg-sea-ink p-6 text-white shadow-card">
+          <h3 className="font-display text-3xl font-extrabold tracking-[-0.04em]">Weekly summary</h3>
+          <div className="mt-6 grid gap-3">
+            <SummaryMetric label="Weekly commute time" value={`${weeklyCommuteHours} hrs`} />
+            <SummaryMetric label="Annual commute hours" value={`${room.annualCommuteHours} hrs`} />
+            <SummaryMetric label="Monthly transport estimate" value={formatMoney(room.monthlyTransport)} />
+            <SummaryMetric label="Routine stability" value={room.commuteMinutes <= 20 ? "High" : "Low"} />
+            <SummaryMetric label="Likely regret" value={room.likelyRegret} />
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function SummaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white/10 px-4 py-3">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.16em] text-white/44">{label}</span>
+      <strong className="mt-1 block text-white">{value}</strong>
+    </div>
+  );
+}
+
+function AlternativePicks() {
+  const alternatives = [
+    {
+      title: "Best Budget Pick",
+      room: demoRooms.find((listing) => listing.id === "jurong-east-common")!,
+      text: "Lower rent, but much longer commute."
+    },
+    {
+      title: "Best Comfort Pick",
+      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      text: "Private bathroom, but higher rent."
+    },
+    {
+      title: "Best Convenience Pick",
+      room: demoRooms.find((listing) => listing.id === "clementi-common")!,
+      text: "Strong food access and student-friendly area."
+    },
+    {
+      title: "Best Quiet Pick",
+      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      text: "Calmer surroundings, fewer late-night food options."
+    }
+  ];
+
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Alternative picks"
+        text="Different priorities lead to different rooms. Each card opens the mocked listing URL."
+        title="Other rooms worth considering"
+      />
+      <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {alternatives.map((alternative) => (
+          <a
+            className="rounded-[2rem] border border-white/75 bg-white/72 p-6 shadow-card backdrop-blur transition hover:-translate-y-1 hover:border-sea-teal/35"
+            href={alternative.room.listedUrl}
+            key={`${alternative.title}-${alternative.room.id}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-sea-teal">{alternative.title}</p>
+            <h3 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+              {alternative.room.title}
+            </h3>
+            <p className="mt-4 text-base leading-7 text-slate-600">{alternative.text}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LandlordQuestions({ room }: { room: RoomListing }) {
+  const questions = [
+    "Are utilities included or capped?",
+    "Is aircon servicing included?",
+    "Are visitors allowed?",
+    "Is cooking fully allowed or only light cooking?",
+    "Is the owner staying in the unit?",
+    "What is the minimum lease period?",
+    "Is WiFi included?",
+    "Are there cleaning rules for shared spaces?"
+  ];
+
+  return (
+    <section className="rounded-[2.75rem] border border-white/75 bg-white/76 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+      <SectionHeading
+        eyebrow="Questions to ask landlord"
+        text={`These are based on missing or risky fields in ${room.title}.`}
+        title="Before you say yes, ask these."
+      />
+      <div className="mt-10 grid gap-3 md:grid-cols-2">
+        {questions.map((question) => (
+          <div className="rounded-2xl bg-sea-mist px-5 py-4 text-sm font-extrabold leading-6 text-sea-ink" key={question}>
+            {question}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DolphineReport({
+  onGenerateLandlordMessage,
+  onTryAnotherProfile,
+  profile,
+  room
+}: {
+  onGenerateLandlordMessage: () => void;
+  onTryAnotherProfile: () => void;
+  profile: Profile;
+  room: RoomListing;
+}) {
+  const rentDelta = topRoom.rent - budgetRoom.rent;
+  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+
+  return (
+    <section className="mb-10 rounded-[2.75rem] border border-sea-teal/20 bg-gradient-to-br from-white via-sea-mist to-sand p-7 shadow-soft sm:p-10 lg:p-12">
+      <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Dolphine report</p>
+          <h2 className="mt-4 font-display text-4xl font-extrabold tracking-[-0.04em]">Dolphine Report</h2>
+          <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
+            Dolphine recommends {room.title} as your best overall fit. It is within your{" "}
+            {formatMoney(profile.budgetMax)} budget, has a short {room.commuteMinutes}-minute commute to{" "}
+            {getDestinationLabel(profile)}, allows cooking, and avoids owner-staying constraints. The main tradeoff is
+            that it costs {formatMoney(rentDelta)}/month more than the Jurong East room, but it saves around {hoursSaved}
+            hours of commuting per year.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <button
+            className="rounded-full border border-sea-deep/15 bg-white px-6 py-3.5 font-extrabold text-sea-deep shadow-card transition hover:border-sea-teal"
+            onClick={onTryAnotherProfile}
+            type="button"
+          >
+            Try another profile
+          </button>
+          <button
+            className="rounded-full bg-sea-deep px-6 py-3.5 font-extrabold text-white shadow-card transition hover:bg-sea-ink"
+            onClick={onGenerateLandlordMessage}
+            type="button"
+          >
+            Generate Landlord Message
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SectionHeading({ eyebrow, text, title }: { eyebrow: string; text: string; title: string }) {
+  return (
+    <div className="max-w-3xl">
+      <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">{eyebrow}</p>
+      <h2 className="mt-4 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] text-sea-ink sm:text-5xl">
+        {title}
+      </h2>
+      <p className="mt-5 text-base leading-8 text-slate-500">{text}</p>
+    </div>
+  );
+}
+
+function RoomPhotoPlaceholder({ tone }: { tone: RoomListing["photoTone"] }) {
+  const toneClass =
+    tone === "aqua"
+      ? "from-sea-glass via-white to-sea-foam"
+      : tone === "sand"
+        ? "from-sand via-white to-sea-glass"
+        : "from-coral/20 via-white to-sand";
+
+  return (
+    <div className={`relative h-48 overflow-hidden rounded-[1.5rem] bg-gradient-to-br ${toneClass}`}>
+      <div className="absolute left-5 top-5 h-16 w-24 rounded-2xl bg-white/55" />
+      <div className="absolute bottom-6 left-5 h-3 w-28 rounded-full bg-white/70" />
+      <div className="absolute bottom-11 left-5 h-3 w-44 rounded-full bg-white/55" />
+      <div className="absolute right-5 top-8 h-28 w-20 rounded-t-full bg-sea-deep/10" />
+      <span className="absolute right-5 top-5 rounded-full bg-white/75 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
+        Room photo
+      </span>
+    </div>
+  );
+}
+
+function RoomFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-2xl bg-sea-mist px-4 py-3">
+      <span className="font-bold text-slate-500">{label}</span>
+      <strong className="text-right text-sea-ink">{value}</strong>
+    </div>
+  );
+}
+
+function LandlordMessageModal({
+  destination,
+  isOpen,
+  onClose,
+  room
+}: {
+  destination: string;
+  isOpen: boolean;
+  onClose: () => void;
+  room: RoomListing;
+}) {
+  if (!isOpen) return null;
+
+  const message = `Hi, I'm interested in the ${room.title.toLowerCase()}. I study/work near ${destination} and am looking for a long-term stay. May I check whether utilities are included or capped, whether cooking is fully allowed, whether the owner is staying, and when viewing is available?`;
+
+  return (
+    <div
+      aria-labelledby="landlord-message-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-sea-ink/45 px-5 py-8 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="w-full max-w-2xl rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Generated draft</p>
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]" id="landlord-message-title">
+              Landlord message
+            </h2>
+          </div>
+          <button
+            aria-label="Close landlord message"
+            className="grid h-10 w-10 place-items-center rounded-full bg-sea-mist text-xl font-extrabold text-sea-deep hover:bg-sea-foam"
+            onClick={onClose}
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+        <div className="mt-6 rounded-3xl border border-sea-deep/10 bg-sea-mist p-5">
+          <p className="text-base leading-8 text-slate-700">{message}</p>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            className="rounded-full bg-sea-deep px-6 py-3 font-extrabold text-white transition hover:bg-sea-ink"
+            onClick={onClose}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
