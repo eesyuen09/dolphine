@@ -1,10 +1,15 @@
 {
-  "name": "roommatch-ai",
+  "name": "dolphine",
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "install:frontend": "npm --prefix frontend install",
     "install:backend": "npm --prefix backend install",
-    "start": "npm --prefix backend start",
-    "dev": "npm --prefix backend run dev"
+    "start": "npm --prefix frontend run dev",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev"
   }
 }

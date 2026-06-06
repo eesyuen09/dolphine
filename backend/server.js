@@ -14,11 +14,24 @@ const port = parsePort(process.env.PORT, DEFAULT_PORT);
 const host = process.env.HOST || undefined;
 const maxPortRetries = parseRetryCount(process.env.PORT_RETRIES, process.env.PORT ? 0 : DEFAULT_PORT_RETRIES);
 const frontendDir = path.join(__dirname, "..", "frontend");
-const dbPath = path.join(__dirname, "data", "roommatch.sqlite");
-const db = new sqlite3.Database(dbPath);
+const dbDir = path.join(__dirname, "data");
+const dbPath = path.join(dbDir, "roommatch.sqlite");
+const db = await openDatabase(dbPath);
 
 app.use(express.json());
 app.use(express.static(frontendDir));
+
+async function openDatabase(filePath) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+
+  return new Promise((resolve, reject) => {
+    let database;
+    database = new sqlite3.Database(filePath, (error) => {
+      if (error) reject(error);
+      else resolve(database);
+    });
+  });
+}
 
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {

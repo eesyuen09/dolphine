@@ -3,51 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoomMatch AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Dolphine | Find a life, not just a room</title>
 </head>
 <body>
-  <main class="app-shell mode-shell">
-    <section class="hero mode-hero">
-      <div class="hero-copy">
-        <p class="eyebrow">RoomMatch AI</p>
-        <h1>Choose how you want to find your next room.</h1>
-        <p class="hero-text">Start with a guided conversation when your needs are still rough, or jump into the metric-based recommender when you already know what matters.</p>
-      </div>
-      <div class="hero-panel" aria-label="Search modes summary">
-        <div class="metric-card">
-          <span>Search paths</span>
-          <strong>2</strong>
-        </div>
-        <div class="metric-card">
-          <span>Compared signals</span>
-          <strong>12</strong>
-        </div>
-        <div class="metric-card">
-          <span>Demo rooms</span>
-          <strong>5</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="mode-grid" aria-label="Choose recommendation mode">
-      <a class="mode-option" href="chat.html">
-        <span class="mode-kicker">Interactive mode</span>
-        <h2>Chat with the AI room scout</h2>
-        <p>Describe your needs naturally and let the assistant infer budget, commute, comfort, MRT access, and must-have features.</p>
-        <span class="mode-action">Start chat</span>
-      </a>
-
-      <a class="mode-option" href="metric.html">
-        <span class="mode-kicker">Metric mode</span>
-        <h2>Choose filters and rank rooms instantly</h2>
-        <p>Select budget, aircon, MRT walk, food access, private bathroom, and priority weights from structured controls.</p>
-        <span class="mode-action">Open recommender</span>
-      </a>
-    </section>
-  </main>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
