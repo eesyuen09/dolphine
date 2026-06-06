@@ -11,34 +11,18 @@ AI relocation demo for finding a Singapore room by comparing commute, cost, life
 ## Setup
 
 ```bash
-cp .env.example .env
-npm run install:frontend
-npm run install:backend
+npm run install:all
 ```
 
-Edit `.env`:
+Add your OpenAI key to `backend/.env`:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key
 OPENAI_MODEL=gpt-5.5
-VITE_API_PROXY_TARGET=http://localhost:4000
 ```
 
 ## Run The Website
 
-Open three terminals:
-
-```bash
-npm run start:algo
-```
-
-```bash
-npm run start:backend
-```
-
-```bash
 npm start
-```
 
 Then open:
 
@@ -57,4 +41,4 @@ npm run build
 - Frontend runs on `http://localhost:3000`.
 - Backend runs on `http://localhost:4000`.
 - Algorithm service runs on `http://localhost:8000`.
-- If backend uses another port, update `VITE_API_PROXY_TARGET`.
+- `npm start` starts all three services in one terminal.
