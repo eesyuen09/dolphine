@@ -21,48 +21,48 @@ def analyse_tradeoffs(winner: dict, runner_up: dict, prefs) -> Tradeoffs:
     losses: list[str] = []
 
     if annual_saved > 50:
-        gains.append(f"每年节省 {annual_saved} 小时通勤时间")
+        gains.append(f"Saves {annual_saved} hours of commute time per year")
     elif annual_saved < -50:
-        losses.append(f"每年多花 {abs(annual_saved)} 小时通勤时间")
+        losses.append(f"Adds {abs(annual_saved)} hours of commute time per year")
 
     gym_diff = winner["neighbourhood"]["gyms"]["score"] - runner_up["neighbourhood"]["gyms"]["score"]
     if gym_diff > 1.5:
-        gains.append(f"健身房配套更好（步行 {winner['neighbourhood']['gyms']['nearest_gym_walk_minutes']} 分钟）")
+        gains.append(f"Better gym access ({winner['neighbourhood']['gyms']['nearest_gym_walk_minutes']} min walk)")
     elif gym_diff < -1.5:
-        losses.append("健身配套较弱")
+        losses.append("Weaker gym options nearby")
 
     w_mrt = (winner["neighbourhood"].get("mrt") or {}).get("walk_minutes", 10)
     r_mrt = (runner_up["neighbourhood"].get("mrt") or {}).get("walk_minutes", 10)
     if w_mrt < r_mrt - 3:
-        gains.append(f"MRT 更近（{w_mrt} 分 vs {r_mrt} 分）")
+        gains.append(f"Closer MRT access ({w_mrt} min vs {r_mrt} min walk)")
 
     food_diff = winner["neighbourhood"]["food"]["score"] - runner_up["neighbourhood"]["food"]["score"]
     if food_diff > 1:
-        gains.append("饮食选择更丰富")
+        gains.append("More dining options nearby")
     elif food_diff < -1:
-        losses.append("饮食选择较少")
+        losses.append("Fewer dining options nearby")
 
     hdiff = runner_up["budget_headroom"] - winner["budget_headroom"]
     if hdiff > 200:
-        gains.append(f"预算余量更充裕（多 ${round(hdiff)}）")
+        gains.append(f"More budget headroom (S${round(hdiff)} extra)")
 
     q_diff = (
         winner["neighbourhood"]["environment"]["quietness_score"]
         - runner_up["neighbourhood"]["environment"]["quietness_score"]
     )
     if q_diff > 1:
-        gains.append("环境更安静")
+        gains.append("Quieter environment")
     elif q_diff < -1:
-        losses.append("环境相对较吵")
+        losses.append("Noisier environment")
 
     if true_cost_diff > 50:
-        losses.append(f"实际月成本高 S${round(true_cost_diff)}（含交通费）")
+        losses.append(f"True monthly cost is S${round(true_cost_diff)} higher (including transport)")
 
     if not gains and not losses:
         if winner["room_score"] >= runner_up["room_score"]:
-            gains.append(f"综合评分略高于备选房源（{winner['room_score']} vs {runner_up['room_score']}）")
+            gains.append(f"Overall score marginally higher than the alternative ({winner['room_score']} vs {runner_up['room_score']})")
         else:
-            losses.append(f"综合评分略低于备选房源（{winner['room_score']} vs {runner_up['room_score']}）")
+            losses.append(f"Overall score marginally lower than the alternative ({winner['room_score']} vs {runner_up['room_score']})")
 
     w_id = winner.get("id", "")
     r_id = runner_up.get("id", "")

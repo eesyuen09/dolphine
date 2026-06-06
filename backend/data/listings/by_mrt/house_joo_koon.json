@@ -64,7 +64,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 3,
         "distance_to_mrt_km": 0.217,
@@ -128,11 +128,13 @@
         "wifi_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -170,7 +172,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 6,
         "distance_to_mrt_km": 0.425,
@@ -237,11 +239,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -279,7 +283,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 7,
         "distance_to_mrt_km": 0.553,
@@ -343,11 +347,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -385,7 +391,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 7,
         "distance_to_mrt_km": 0.491,
@@ -450,11 +456,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -492,7 +500,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 6,
         "distance_to_mrt_km": 0.417,
@@ -556,11 +564,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -598,7 +608,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 6,
         "distance_to_mrt_km": 0.408,
@@ -663,11 +673,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -705,7 +717,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-10.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 3,
         "distance_to_mrt_km": 0.188,
@@ -770,11 +782,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-10.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -812,7 +826,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-11.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.334,
@@ -874,11 +888,13 @@
         "bathrooms",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-11.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -916,7 +932,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 1,
         "distance_to_mrt_km": 0.073,
@@ -978,11 +994,13 @@
         "has_aircon",
         "cooking_allowed",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -1020,7 +1038,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.303,
@@ -1080,11 +1098,13 @@
         "wifi_included",
         "utilities_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/joo-koon. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     }
   ]
 }

@@ -76,7 +76,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-04",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 14,
         "distance_to_mrt_km": 1.17,
@@ -139,11 +139,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from PropertyGuru rendered search results for Beauty World MRT room rental on 2026-06-06.",
-      "confidence": 0.84
+      "confidence": 0.84,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -181,7 +183,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-03",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.43,
@@ -244,11 +246,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from PropertyGuru rendered search results for Beauty World MRT room rental on 2026-06-06.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -286,7 +290,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-02",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.31,
@@ -349,11 +353,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from PropertyGuru rendered search results for Beauty World MRT room rental on 2026-06-06.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -391,7 +397,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-04",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-06.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.05,
@@ -453,11 +459,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from PropertyGuru rendered search results for Beauty World MRT room rental on 2026-06-06.",
-      "confidence": 0.84
+      "confidence": 0.84,
+      "media": {
+        "image_url": "/listing-images/pg-room-06.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -495,7 +503,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-01",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 6,
         "distance_to_mrt_km": 0.5,
@@ -558,11 +566,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from PropertyGuru rendered search results for Beauty World MRT room rental on 2026-06-06.",
-      "confidence": 0.84
+      "confidence": 0.84,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "source_platform": "Carousell",
@@ -600,7 +610,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-01",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": null,
         "distance_to_mrt_km": null,
@@ -664,11 +674,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from Carousell rendered search results for Beauty World MRT room rental on 2026-06-06. Individual listing fetch redirected through tracking, so fields are limited to search-card details.",
-      "confidence": 0.73
+      "confidence": 0.73,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "source_platform": "Carousell",
@@ -706,7 +718,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-28",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-10.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": null,
         "distance_to_mrt_km": null,
@@ -770,11 +782,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from Carousell rendered search results for Beauty World MRT room rental on 2026-06-06. Individual listing fetch redirected through tracking, so fields are limited to search-card details.",
-      "confidence": 0.72
+      "confidence": 0.72,
+      "media": {
+        "image_url": "/listing-images/pg-room-10.jpg"
+      }
     },
     {
       "source_platform": "Carousell",
@@ -812,7 +826,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-18",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-11.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": null,
         "distance_to_mrt_km": null,
@@ -877,11 +891,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from Carousell rendered search results for Beauty World MRT room rental on 2026-06-06. Individual listing fetch redirected through tracking, so fields are limited to search-card details.",
-      "confidence": 0.74
+      "confidence": 0.74,
+      "media": {
+        "image_url": "/listing-images/pg-room-11.jpg"
+      }
     },
     {
       "source_platform": "Carousell",
@@ -919,7 +935,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-10",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": null,
@@ -984,11 +1000,13 @@
         "has_private_bathroom",
         "cooking_allowed",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from Carousell rendered search results for Beauty World MRT room rental on 2026-06-06. Individual listing fetch redirected through tracking, so fields are limited to search-card details.",
-      "confidence": 0.78
+      "confidence": 0.78,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "source_platform": "Carousell",
@@ -1026,7 +1044,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-31",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": null,
         "distance_to_mrt_km": null,
@@ -1090,11 +1108,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Fallback source after 99.co Beauty World room page returned Page Not Found. Extracted from Carousell rendered search results for Beauty World MRT room rental on 2026-06-06. Individual listing fetch redirected through tracking, so fields are limited to search-card details.",
-      "confidence": 0.75
+      "confidence": 0.75,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     }
   ]
 }

@@ -76,7 +76,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-02",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-01.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.45,
@@ -146,11 +146,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 02, 2026 (3d ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-01.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -188,7 +190,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-06",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.75,
@@ -252,11 +254,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 06, 2026 (5h ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -294,7 +298,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-05",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.75,
@@ -359,11 +363,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 05, 2026 (1d ago).",
-      "confidence": 0.89
+      "confidence": 0.89,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -401,7 +407,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-03",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-06.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.75,
@@ -466,11 +472,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 03, 2026 (2d ago).",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-06.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -508,7 +516,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-03",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.75,
@@ -573,11 +581,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 03, 2026 (3d ago).",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -615,7 +625,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-02",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 6,
         "distance_to_mrt_km": 0.53,
@@ -679,11 +689,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 02, 2026 (3d ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -721,7 +733,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-23",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-10.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.75,
@@ -786,11 +798,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on May 23, 2026 (2w ago).",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-10.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -828,7 +842,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-05-08",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.45,
@@ -892,11 +906,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on May 08, 2026 (4w ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -934,7 +950,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-05",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 7,
         "distance_to_mrt_km": 0.61,
@@ -998,11 +1014,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 05, 2026 (16h ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "source_platform": "PropertyGuru",
@@ -1040,7 +1058,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": "2026-06-03",
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 7,
         "distance_to_mrt_km": 0.56,
@@ -1104,11 +1122,13 @@
         "wifi_included",
         "utilities_included",
         "landlord_verified",
-        "is_direct_landlord",
-        "image_url"
+        "is_direct_landlord"
       ],
       "research_notes": "Extracted from the rendered PropertyGuru room-rental search page for CC19 Botanic Gardens MRT on 2026-06-06. The card indicated the listing was listed on Jun 03, 2026 (2d ago).",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     }
   ]
 }

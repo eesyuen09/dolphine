@@ -1,37 +1,37 @@
 from ..schemas import LifeSimulation, PersonSchedule, WeekdaySchedule
 from ..utils import format_time
 
-_GYM_DAYS = {1: ["周三"], 2: ["周一", "周四"], 3: ["周一", "周三", "周五"], 4: ["周一", "周三", "周五", "周六"]}
+_GYM_DAYS = {1: ["Wednesday"], 2: ["Monday", "Thursday"], 3: ["Monday", "Wednesday", "Friday"], 4: ["Monday", "Wednesday", "Friday", "Saturday"]}
 
 
 def simulate_life(winner: dict, runner_up: dict, prefs) -> LifeSimulation:
     commute = winner["neighbourhood"]["commute_minutes"]
     gym_pw = prefs.gym_per_week or 0
     work_days = prefs.work_days_per_week
-    workplace = prefs.workplace or "工作地点"
+    workplace = prefs.workplace or "Workplace"
 
     arrival = 9 * 60
     dep = arrival - commute
 
     food = winner["neighbourhood"].get("food") or {}
-    lunch_venue = "熟食中心" if food.get("hawker_centres", 0) > 0 else "附近餐厅"
+    lunch_venue = "hawker centre" if food.get("hawker_centres", 0) > 0 else "nearby restaurant"
     food_walk = food.get("nearest_hawker_walk_minutes") or 5
 
     gyms = winner["neighbourhood"].get("gyms") or {}
-    gym_name = f"ActiveSG {winner['neighbourhood']['name']}" if gyms.get("activesg_gym") else "附近健身房"
+    gym_name = f"ActiveSG {winner['neighbourhood']['name']}" if gyms.get("activesg_gym") else "nearby gym"
     gym_walk = gyms.get("nearest_gym_walk_minutes", 10)
     is_gym_day = gym_pw >= 3
 
     timeline = [
-        f"{format_time(dep)} 出门",
-        f"{format_time(arrival)} 抵达 {workplace}（通勤 {commute} 分钟）",
-        f"12:30 在附近{lunch_venue}吃午饭（步行 {food_walk} 分钟）",
+        f"{format_time(dep)} Leave home",
+        f"{format_time(arrival)} Arrive at {workplace} (commute: {commute} min)",
+        f"12:30 Lunch at nearby {lunch_venue} ({food_walk}-min walk)",
     ]
     if is_gym_day:
-        timeline += [f"18:00 在 {gym_name} 健身（步行 {gym_walk} 分钟）", "19:15 在附近吃晚饭"]
+        timeline += [f"18:00 Gym at {gym_name} ({gym_walk}-min walk)", "19:15 Dinner nearby"]
     else:
-        timeline.append("18:30 在附近吃晚饭")
-    timeline.append("20:00 到家")
+        timeline.append("18:30 Dinner nearby")
+    timeline.append("20:00 Home")
 
     gym_days = _GYM_DAYS.get(min(gym_pw, 4), []) if gym_pw > 0 else []
 
@@ -41,19 +41,19 @@ def simulate_life(winner: dict, runner_up: dict, prefs) -> LifeSimulation:
 
     runner_dep = arrival - runner_commute
     runner_timeline = [
-        f"{format_time(runner_dep)} 出门",
-        f"{format_time(arrival)} 抵达 {workplace}（通勤 {runner_commute} 分钟）",
+        f"{format_time(runner_dep)} Leave home",
+        f"{format_time(arrival)} Arrive at {workplace} (commute: {runner_commute} min)",
     ]
 
     parts = [
-        f"{format_time(dep)} 出门 → {format_time(arrival)} 抵达 {workplace}（通勤 {commute} 分钟）",
-        f"12:30 {lunch_venue}午饭",
+        f"{format_time(dep)} Leave → {format_time(arrival)} Arrive at {workplace} (commute: {commute} min)",
+        f"12:30 Lunch at {lunch_venue}",
     ]
     if is_gym_day:
-        parts.append(f"18:00 {gym_name}健身（{gym_walk} 分钟步行）")
-    parts.append("20:00 到家")
+        parts.append(f"18:00 Gym at {gym_name} ({gym_walk}-min walk)")
+    parts.append("20:00 Home")
     if annual_saved > 0:
-        parts.append(f"相比 {runner_up['neighbourhood']['name']}，每年节省约 {annual_saved} 小时通勤")
+        parts.append(f"Saves ~{annual_saved} hours/year on commute vs {runner_up['neighbourhood']['name']}")
 
     return LifeSimulation(
         winner=PersonSchedule(weekday=WeekdaySchedule(

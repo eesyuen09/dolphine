@@ -79,7 +79,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-06-05",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -140,11 +140,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on Jun 05, 2026 (1d ago).",
-      "confidence": 0.84
+      "confidence": 0.84,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -184,7 +186,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-29",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -249,11 +251,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 29, 2026 (1w ago).",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -293,7 +297,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-21",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -355,11 +359,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 21, 2026 (2w ago).",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -399,7 +405,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-20",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -464,11 +470,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 20, 2026 (2w ago).",
-      "confidence": 0.83
+      "confidence": 0.83,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -508,7 +516,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-20",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -571,11 +579,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 20, 2026 (2w ago).",
-      "confidence": 0.82
+      "confidence": 0.82,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -615,7 +625,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-20",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -678,11 +688,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 20, 2026 (2w ago).",
-      "confidence": 0.82
+      "confidence": 0.82,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -722,7 +734,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-19",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-02.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -786,11 +798,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 19, 2026 (2w ago).",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-02.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -830,7 +844,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-18",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-11.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -894,11 +908,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 18, 2026 (2w ago).",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-11.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -938,7 +954,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-05-07",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -1001,11 +1017,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card states Listed on May 07, 2026 (4w ago). The large sqft value may refer to the apartment, not the bedroom.",
-      "confidence": 0.78
+      "confidence": 0.78,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "station_slug": "bayfront",
@@ -1045,7 +1063,7 @@
       "is_direct_landlord": false,
       "listing_posted_at": "2026-06-06",
       "scraped_at": "2026-06-06T06:50:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 13,
         "distance_to_mrt_km": 1.08,
@@ -1106,11 +1124,13 @@
         "cooking_allowed",
         "wifi_included",
         "utilities_included",
-        "landlord_verified",
-        "image_url"
+        "landlord_verified"
       ],
       "research_notes": "Captured from live PropertyGuru search page for rooms near CE1 Bayfront MRT Station. Card has no visible title text before the price in the captured snapshot; title is normalized from project and room type. Card states Listed on Jun 06, 2026 (3h ago).",
-      "confidence": 0.8
+      "confidence": 0.8,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     }
   ]
 }

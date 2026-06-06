@@ -74,16 +74,28 @@ def rank_rooms(
     prefs,
 ) -> Tuple[List[Dict], Optional[str]]:
     top3 = scored_neighbourhoods[:3]
+    top1 = scored_neighbourhoods[:1]
     top3_ids = {n["id"] for n in top3}
     nb_by_id = {n["id"]: n for n in top3}
 
+    top1_ids = {n["id"] for n in top1}
+    strict_top1 = [r for r in (_process(l, top1_ids, nb_by_id, prefs, False) for l in listings) if r]
+    if strict_top1:
+        return sorted(strict_top1, key=lambda r: r["room_score"], reverse=True)[:5], None
+
+    relaxed_top1 = [r for r in (_process(l, top1_ids, nb_by_id, prefs, True) for l in listings) if r]
+    if relaxed_top1:
+        return sorted(relaxed_top1, key=lambda r: r["room_score"], reverse=True)[:5], None
+
     passed = [r for r in (_process(l, top3_ids, nb_by_id, prefs, False) for l in listings) if r]
     if passed:
-        return sorted(passed, key=lambda r: r["room_score"], reverse=True)[:5], None
+        best_area = top1[0]["name"] if top1 else "best area"
+        return sorted(passed, key=lambda r: r["room_score"], reverse=True)[:5], f"Top neighbourhood {best_area} has no viable rooms after your hard filters; showing the strongest room from the next-best areas."
 
     relaxed = [r for r in (_process(l, top3_ids, nb_by_id, prefs, True) for l in listings) if r]
     if relaxed:
-        return sorted(relaxed, key=lambda r: r["room_score"], reverse=True)[:5], None
+        best_area = top1[0]["name"] if top1 else "best area"
+        return sorted(relaxed, key=lambda r: r["room_score"], reverse=True)[:5], f"Top neighbourhood {best_area} has no viable rooms after your hard filters; showing a relaxed match from the next-best areas."
 
     in_area = [l for l in listings if (l.get("location") or {}).get("neighbourhood_id") in top3_ids]
     cheapest = min(
@@ -91,4 +103,4 @@ def rank_rooms(
         default=prefs.budget or 1500,
     )
     suggested = cheapest + 100
-    return [], f"当前预算 ${prefs.budget} 在附近社区暂无匹配房源。建议放宽预算至 ${suggested} 或调整房型。"
+    return [], f"No listings found within your budget of S${prefs.budget} in the top neighbourhoods. Consider raising your budget to S${suggested} or adjusting your room type."

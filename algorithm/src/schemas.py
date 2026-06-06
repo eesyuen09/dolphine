@@ -85,6 +85,18 @@ class Recommendation(BaseModel):
     true_monthly_cost: Optional[float] = None
 
 
+class NeighbourhoodComparison(BaseModel):
+    id: str
+    name: str
+    score: float
+    commute_minutes: int
+    annual_commute_hours: float
+    annual_transport_cost: float
+    rent: Optional[float] = None
+    true_monthly_cost: Optional[float] = None
+    dimension_scores: Dict[str, float] = Field(default_factory=dict)
+
+
 class RecommendResult(BaseModel):
     recommendation: Recommendation
     bias_warnings: List[BiasWarning]
@@ -93,6 +105,7 @@ class RecommendResult(BaseModel):
     all_rooms: List[Dict[str, Any]] = Field(default_factory=list)
     weights_used: Dict[str, float]
     fallback_message: Optional[str] = None
+    neighbourhood_comparison: List[NeighbourhoodComparison] = Field(default_factory=list)
 
 
 class ChatMessage(BaseModel):

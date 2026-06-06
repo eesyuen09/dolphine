@@ -1,36 +1,60 @@
 # Dolphine
 
-An AI relocation agent demo that helps users choose where to live by simulating future lifestyle outcomes instead of only browsing rental listings.
+AI relocation demo for finding a Singapore room by comparing commute, cost, lifestyle fit, and rental tradeoffs.
 
-Tagline: **Find a life, not just a room.**
+## Requirements
 
-The current app is a polished frontend-only skeleton for a hackathon demo. It uses local mock data to simulate commute burden, lifestyle fit, neighbourhood tradeoffs, future-week routines, and a generated landlord message.
+- Node.js
+- Python 3
+- OpenAI API key
 
-## Stack
-
-- `frontend/`: React, TypeScript, Vite, and Tailwind CSS.
-- `backend/`: Node.js, Express, and SQLite kept for later API integration.
-- `backend/db/schema.sql`: SQL database definition.
-- `backend/db/seed.sql`: demo room and commute data.
-
-## Run Locally
+## Setup
 
 ```bash
+cp .env.example .env
 npm run install:frontend
+npm run install:backend
+```
+
+Edit `.env`:
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-5.5
+VITE_API_PROXY_TARGET=http://localhost:4000
+```
+
+## Run The Website
+
+Open three terminals:
+
+```bash
+npm run start:algo
+```
+
+```bash
+npm run start:backend
+```
+
+```bash
 npm start
 ```
 
-Open `http://localhost:3000`.
+Then open:
 
-Build the frontend:
+```bash
+http://localhost:3000
+```
+
+## Build Check
 
 ```bash
 npm run build
 ```
 
-The legacy backend can still be run separately when API integration resumes:
+## Notes
 
-```bash
-npm run install:backend
-npm run start:backend
-```
+- Frontend runs on `http://localhost:3000`.
+- Backend runs on `http://localhost:4000`.
+- Algorithm service runs on `http://localhost:8000`.
+- If backend uses another port, update `VITE_API_PROXY_TARGET`.

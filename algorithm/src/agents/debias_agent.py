@@ -96,7 +96,7 @@ def _detect_time_blindness(prefs: Preferences, top_two: List[Dict]) -> Optional[
         worse = top_two[0] if hrs[0] > hrs[1] else top_two[1]
         return BiasWarning(
             type="time_value_blindness", severity="high",
-            message=f"每年多花 {round(diff)} 小时通勤 — {worse['name']} 相比次优选项通勤时间显著更长。",
+            message=f"Choosing {worse['name']} costs you an extra {round(diff)} hours of commuting per year compared to the next-best option.",
         )
     return None
 
@@ -105,7 +105,7 @@ def _detect_gym_friction(prefs: Preferences, n: Dict) -> Optional[BiasWarning]:
     gym_pw = prefs.gym_per_week or 0
     walk = (n.get("gyms") or {}).get("nearest_gym_walk_minutes")
     if gym_pw >= 3 and walk is not None and walk > GYM_FRICTION_WALK_LIMIT:
-        return BiasWarning(type="gym_friction", severity="medium", message=f"健身房步行 {walk} 分钟，坚持难度高")
+        return BiasWarning(type="gym_friction", severity="medium", message=f"The nearest gym is a {walk}-minute walk — hard to stay consistent at that frequency.")
     return None
 
 
@@ -135,7 +135,7 @@ def _detect_budget_illusion(room_rent: float, prefs: Preferences) -> Optional[Bi
         return None
     headroom = prefs.budget - room_rent
     if headroom < BUDGET_TIGHT_THRESHOLD:
-        return BiasWarning(type="budget_tight", severity="low", message=f"预算余量仅 ${round(headroom)}")
+        return BiasWarning(type="budget_tight", severity="low", message=f"Only S${round(headroom)} of budget headroom remaining.")
     return None
 
 

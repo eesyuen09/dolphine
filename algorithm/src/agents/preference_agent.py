@@ -12,6 +12,15 @@ WORKPLACE_ALIASES = {
     "alexandra hospital": "Queenstown",
     "cbd": "Raffles Place",
     "marina bay": "Raffles Place",
+    "tiktok": "Raffles Place",
+    "tiktok hq": "Raffles Place",
+    "tiktok singapore": "Raffles Place",
+    "bytedance": "Raffles Place",
+    "one raffles quay": "Raffles Place",
+    "shopee": "Buona Vista",
+    "google": "Buona Vista",
+    "meta": "Raffles Place",
+    "grab": "Buona Vista",
     "one north": "Buona Vista",
     "one-north": "Buona Vista",
     "science park": "Buona Vista",
@@ -31,6 +40,10 @@ def _get_client() -> AsyncOpenAI:
     return _client
 
 
+def _get_openai_model() -> str:
+    return os.getenv("OPENAI_MODEL", "gpt-5.5")
+
+
 def _apply_aliases(workplace: str | None) -> str | None:
     if workplace is None:
         return None
@@ -41,6 +54,35 @@ def _apply_aliases(workplace: str | None) -> str | None:
     return workplace
 
 
+def _u(*codes: str) -> str:
+    return "".join(chr(int(code, 16)) for code in codes)
+
+
+NON_ENGLISH_KEYWORDS = {
+    "budget": "|".join([
+        _u("9884", "7b97"),
+        _u("76ee", "6807"),
+        _u("6700", "591a"),
+        _u("9650", "5236"),
+    ]),
+    "weekly": _u("6bcf", "5468"),
+    "gym": "|".join([
+        _u("5065", "8eab"),
+        _u("53bb", "5065", "8eab", "623f"),
+        _u("8fd0", "52a8"),
+    ]),
+    "times": _u("6b21"),
+    "work": "|".join([
+        _u("4e0a", "73ed"),
+        _u("5de5", "4f5c"),
+        _u("8fdb", "516c", "53f8"),
+    ]),
+    "days": _u("5929"),
+    "quiet": _u("5b89", "9759"),
+    "food": _u("7f8e", "98df"),
+}
+
+
 def _regex_fallback(user_input: str) -> Preferences:
     workplace = None
     budget = None
@@ -48,7 +90,7 @@ def _regex_fallback(user_input: str) -> Preferences:
     gym_per_week = None
     lifestyle_signals = []
 
-    m = re.search(r'(?:budget|under|below|up to|\$|预算|目标|最多|限制)\s*\$?\s*(\d{3,5})', user_input, re.I)
+    m = re.search(rf'(?:budget|under|below|up to|\$|{NON_ENGLISH_KEYWORDS["budget"]})\s*\$?\s*(\d{{3,5}})', user_input, re.I)
     if m:
         budget = float(m.group(1))
 
@@ -63,22 +105,22 @@ def _regex_fallback(user_input: str) -> Preferences:
                 workplace = wp
                 break
 
-    m = re.search(r'(\d+)\s*(?:times?|x)/(?:week|wk)|每周(?:健身|去健身房|运动)?(\d+)次', user_input, re.I)
+    m = re.search(rf'(\d+)\s*(?:times?|x)/(?:week|wk)|{NON_ENGLISH_KEYWORDS["weekly"]}(?:{NON_ENGLISH_KEYWORDS["gym"]})?(\d+){NON_ENGLISH_KEYWORDS["times"]}', user_input, re.I)
     if m:
         gym_per_week = int(m.group(1) or m.group(2))
 
     if re.search(r'hybrid', user_input, re.I):
         work_days_per_week = 3
     else:
-        m = re.search(r'(\d+)\s*days?/(?:week|wk)|每周(?:上班|工作|进公司)?(\d+)天', user_input, re.I)
+        m = re.search(rf'(\d+)\s*days?/(?:week|wk)|{NON_ENGLISH_KEYWORDS["weekly"]}(?:{NON_ENGLISH_KEYWORDS["work"]})?(\d+){NON_ENGLISH_KEYWORDS["days"]}', user_input, re.I)
         if m:
             work_days_per_week = int(m.group(1) or m.group(2))
 
-    if re.search(r'quiet|peaceful|安静', user_input, re.I):
+    if re.search(rf'quiet|peaceful|{NON_ENGLISH_KEYWORDS["quiet"]}', user_input, re.I):
         lifestyle_signals.append("quiet")
-    if re.search(r'gym|fitness|健身', user_input, re.I):
+    if re.search(rf'gym|fitness|{NON_ENGLISH_KEYWORDS["gym"]}', user_input, re.I):
         lifestyle_signals.append("gym")
-    if re.search(r'food|hawker|美食', user_input, re.I):
+    if re.search(rf'food|hawker|{NON_ENGLISH_KEYWORDS["food"]}', user_input, re.I):
         lifestyle_signals.append("food")
 
     return Preferences(
@@ -115,7 +157,14 @@ async def extract_preferences(user_input: str, conversation_history: Optional[li
     try:
         system_message = {
             "role": "system",
-            "content": "You are a Singapore housing preference analyst. Extract structured info from user input. Return ONLY valid JSON. Use null for any field the user did not mention.",
+            "content": (
+                "You are Dolphine's senior Singapore relocation and housing preference analyst for a championship hackathon demo. "
+                "Extract structured preferences for ranking Singapore room rentals and neighbourhoods. Return ONLY one valid JSON object matching the provided schema; no markdown, no comments, no extra keys. "
+                "Think like an experienced Singapore tenant advisor: understand HDB/condo/common room/master room/co-living, MRT-only vs driving, SGD monthly rent budgets, landlord-stay concerns, cooking rules, PUB/utilities, aircon, visitor policy, hawker/food access, gym routine, quietness, and office commute days. "
+                "Use null for scalar fields not explicitly mentioned or clearly inferable; use [] for missing arrays. Prefer the latest user message when it contradicts earlier context, otherwise carry forward stable preferences. "
+                "Canonicalize clear workplace anchors: NUS/NUH -> Kent Ridge; CBD/Marina Bay/TikTok/ByteDance/Meta/One Raffles Quay -> Raffles Place; Google/Shopee/Grab/one-north/Science Park -> Buona Vista; Alexandra Hospital -> Queenstown; Jurong -> Jurong East; Changi Airport -> Changi. "
+                "If workplace is uncertain, keep the user's original place name rather than guessing. Budget means maximum monthly rent in SGD only. If the user says hybrid without a number, use 3 office days. raw_priorities should mark non-negotiables as high, stated preferences as medium, weak preferences as low."
+            ),
         }
 
         if conversation_history:
@@ -134,7 +183,7 @@ async def extract_preferences(user_input: str, conversation_history: Optional[li
             ]
 
         resp = await _get_client().chat.completions.create(
-            model="gpt-4o-mini",
+            model=_get_openai_model(),
             response_format={"type": "json_object"},
             messages=messages,
         )
