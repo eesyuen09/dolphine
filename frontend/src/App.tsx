@@ -1,148 +1,437 @@
-import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 
 type TransportMode = "MRT/Bus" | "Walk/Cycle" | "Drive";
 type AppStatus = "idle" | "loading" | "results";
-
-type Profile = {
-  workplace: string;
-  budget: number;
-  officeDays: number;
-  transportMode: TransportMode;
-};
+type ListingInputMode = "demo" | "text" | "urls";
+type RoomTypePreference = "Common room" | "Master room" | "Studio" | "Whole unit" | "No preference";
 
 type LocationOption = {
   id: string;
+  label: string;
   area: string;
-  rent: number;
-  commute: number;
-  annualCommuteHours: number;
-  transportCost: number;
-  gymScore: number;
-  foodScore: number;
-  quietness: number;
-  lifestyleScore: number;
-  likelyRegret: string;
+  nearestMrt: string;
+  postalCode?: string;
+  latLng: {
+    lat: number;
+    lng: number;
+  };
 };
 
-const loadingSteps = [
-  "Understanding your lifestyle",
-  "Calculating commute burden",
-  "Checking neighbourhood fit",
-  "Simulating your future week"
+type Profile = {
+  destinationInput: string;
+  selectedLocationId: string | null;
+  customLocationHelper: string;
+  budgetMin: number;
+  budgetMax: number;
+  officeDays: number;
+  transportMode: TransportMode;
+  preferredRoomType: RoomTypePreference;
+  peopleCount: number;
+  mustHaves: string[];
+  rankedPriorities: string[];
+};
+
+type RoomListing = {
+  id: string;
+  rankLabel: string;
+  title: string;
+  area: string;
+  rent: number;
+  roomType: string;
+  unitType: string;
+  nearestMrt: string;
+  mrtWalkMinutes: number;
+  commuteMinutes: number;
+  annualCommuteHours: number;
+  monthlyTransport: number;
+  foodAccess: string;
+  gymAccess: string;
+  quietness: string;
+  amenities: string[];
+  missingFields: string[];
+  pros: string[];
+  cons: string[];
+  hiddenRisks: string[];
+  whyHigh: string[];
+  tradeoffs: string[];
+  confidence: number;
+  listedUrl: string;
+  shortReason: string;
+  likelyRegret: string;
+  photoTone: "aqua" | "sand" | "coral";
+};
+
+const singaporeLocations: LocationOption[] = [
+  { id: "nus-kent-ridge", label: "NUS Kent Ridge", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119077", latLng: { lat: 1.2966, lng: 103.7764 } },
+  { id: "nus-utown", label: "NUS UTown", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "138607", latLng: { lat: 1.3039, lng: 103.7742 } },
+  { id: "nus-soc", label: "NUS School of Computing", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "117417", latLng: { lat: 1.2949, lng: 103.7738 } },
+  { id: "nus-business", label: "NUS Business School", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119245", latLng: { lat: 1.293, lng: 103.7758 } },
+  { id: "kent-ridge-mrt", label: "Kent Ridge MRT", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119074", latLng: { lat: 1.2935, lng: 103.7845 } },
+  { id: "one-north", label: "One-North", area: "One-North", nearestMrt: "one-north MRT", postalCode: "138632", latLng: { lat: 1.2997, lng: 103.7871 } },
+  { id: "buona-vista", label: "Buona Vista", area: "Buona Vista", nearestMrt: "Buona Vista MRT", postalCode: "138617", latLng: { lat: 1.3072, lng: 103.7902 } },
+  { id: "raffles-place", label: "Raffles Place", area: "CBD", nearestMrt: "Raffles Place MRT", postalCode: "048621", latLng: { lat: 1.284, lng: 103.8513 } },
+  { id: "tanjong-pagar", label: "Tanjong Pagar", area: "CBD", nearestMrt: "Tanjong Pagar MRT", postalCode: "079903", latLng: { lat: 1.2764, lng: 103.8458 } },
+  { id: "marina-bay", label: "Marina Bay", area: "Marina Bay", nearestMrt: "Marina Bay MRT", postalCode: "018984", latLng: { lat: 1.2763, lng: 103.8547 } },
+  { id: "changi-business-park", label: "Changi Business Park", area: "Changi", nearestMrt: "Expo MRT", postalCode: "486066", latLng: { lat: 1.3346, lng: 103.9628 } },
+  { id: "ntu", label: "NTU", area: "Jurong West", nearestMrt: "Pioneer MRT", postalCode: "639798", latLng: { lat: 1.3483, lng: 103.6831 } },
+  { id: "smu", label: "SMU", area: "Bras Basah", nearestMrt: "Bencoolen MRT", postalCode: "178899", latLng: { lat: 1.2966, lng: 103.8501 } },
+  { id: "sutd", label: "SUTD", area: "Changi", nearestMrt: "Upper Changi MRT", postalCode: "487372", latLng: { lat: 1.3414, lng: 103.9639 } },
+  { id: "singapore-management-university", label: "Singapore Management University", area: "Bras Basah", nearestMrt: "Bencoolen MRT", postalCode: "178899", latLng: { lat: 1.2966, lng: 103.8501 } },
+  { id: "nuh", label: "National University Hospital", area: "Kent Ridge", nearestMrt: "Kent Ridge MRT", postalCode: "119074", latLng: { lat: 1.2945, lng: 103.7832 } }
+];
+
+const mrtStationNames = [
+  "Admiralty",
+  "Aljunied",
+  "Ang Mo Kio",
+  "Bartley",
+  "Bayfront",
+  "Bayshore",
+  "Beauty World",
+  "Bedok",
+  "Bedok North",
+  "Bedok Reservoir",
+  "Bencoolen",
+  "Bendemeer",
+  "Bishan",
+  "Boon Keng",
+  "Boon Lay",
+  "Botanic Gardens",
+  "Braddell",
+  "Bras Basah",
+  "Bright Hill",
+  "Buangkok",
+  "Bugis",
+  "Bukit Batok",
+  "Bukit Gombak",
+  "Bukit Panjang",
+  "Buona Vista",
+  "Caldecott",
+  "Canberra",
+  "Cashew",
+  "Changi Airport",
+  "Chinatown",
+  "Chinese Garden",
+  "Choa Chu Kang",
+  "City Hall",
+  "Clarke Quay",
+  "Clementi",
+  "Commonwealth",
+  "Dakota",
+  "Dhoby Ghaut",
+  "Dover",
+  "Downtown",
+  "Esplanade",
+  "Eunos",
+  "Expo",
+  "Farrer Park",
+  "Farrer Road",
+  "Fort Canning",
+  "Gardens by the Bay",
+  "Geylang Bahru",
+  "Great World",
+  "Gul Circle",
+  "HarbourFront",
+  "Havelock",
+  "Haw Par Villa",
+  "Hillview",
+  "Holland Village",
+  "Hougang",
+  "Hume",
+  "Jalan Besar",
+  "Joo Koon",
+  "Jurong East",
+  "Kaki Bukit",
+  "Kallang",
+  "Katong Park",
+  "Kembangan",
+  "Kent Ridge",
+  "Khatib",
+  "Kovan",
+  "Kranji",
+  "Labrador Park",
+  "Lakeside",
+  "Lavender",
+  "Lentor",
+  "Little India",
+  "Lorong Chuan",
+  "MacPherson",
+  "Marina Bay",
+  "Marina South Pier",
+  "Marine Parade",
+  "Marine Terrace",
+  "Marsiling",
+  "Marymount",
+  "Mattar",
+  "Maxwell",
+  "Mayflower",
+  "Mountbatten",
+  "Napier",
+  "Newton",
+  "Nicoll Highway",
+  "Novena",
+  "one-north",
+  "Orchard",
+  "Orchard Boulevard",
+  "Outram Park",
+  "Pasir Panjang",
+  "Pasir Ris",
+  "Paya Lebar",
+  "Pioneer",
+  "Potong Pasir",
+  "Promenade",
+  "Punggol",
+  "Punggol Coast",
+  "Queenstown",
+  "Raffles Place",
+  "Redhill",
+  "Rochor",
+  "Sembawang",
+  "Sengkang",
+  "Serangoon",
+  "Shenton Way",
+  "Siglap",
+  "Simei",
+  "Sixth Avenue",
+  "Somerset",
+  "Springleaf",
+  "Stadium",
+  "Stevens",
+  "Tai Seng",
+  "Tan Kah Kee",
+  "Tanah Merah",
+  "Tampines",
+  "Tampines East",
+  "Tampines West",
+  "Tanjong Katong",
+  "Tanjong Pagar",
+  "Tanjong Rhu",
+  "Telok Ayer",
+  "Telok Blangah",
+  "Tiong Bahru",
+  "Toa Payoh",
+  "Tuas Crescent",
+  "Tuas Link",
+  "Tuas West Road",
+  "Ubi",
+  "Upper Changi",
+  "Upper Thomson",
+  "Woodlands",
+  "Woodlands North",
+  "Woodlands South",
+  "Woodleigh",
+  "Yew Tee",
+  "Yio Chu Kang",
+  "Yishun"
+];
+
+const mrtStationOptions: LocationOption[] = mrtStationNames.map((stationName) => ({
+  id: `mrt-${stationName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`,
+  label: `${stationName} MRT`,
+  area: stationName,
+  nearestMrt: `${stationName} MRT`,
+  latLng: { lat: 0, lng: 0 }
+}));
+
+const destinationOptions = [
+  ...singaporeLocations,
+  ...mrtStationOptions.filter(
+    (station) => !singaporeLocations.some((location) => location.label.toLowerCase() === station.label.toLowerCase())
+  )
+];
+
+const mustHaveOptions = [
+  "Aircon",
+  "WiFi included",
+  "Cooking allowed",
+  "Private bathroom",
+  "No owner staying",
+  "Furnished",
+  "Washing machine"
 ];
 
 const priorityOptions = [
-  "Gym access",
+  "Short commute",
+  "Lower rent",
+  "Near MRT",
   "Affordable food",
+  "Gym access",
   "Quiet environment",
-  "MRT access",
-  "Supermarket nearby",
-  "Cafés / study spaces",
-  "Parks"
+  "More privacy"
 ];
 
-// Mock data lives here for the demo. Replace this with POST /api/recommendations when the backend contract is ready.
-const locationOptions: LocationOption[] = [
+const loadingSteps = [
+  "Extracting room details",
+  "Resolving work/study location",
+  "Estimating commute burden",
+  "Checking must-haves and deal breakers",
+  "Comparing rent against lifestyle impact",
+  "Simulating future routine",
+  "Ranking rooms"
+];
+
+const demoListingText = `Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.
+Jurong East common room, S$1100/month, 10 min walk to MRT, 5B2B, aircon, no cooking, utilities not included.
+Dover master room, S$1550/month, 7 min walk to Dover MRT, 3B2B, private bathroom, aircon, furnished, quiet block.
+Clementi common room, S$1300/month, 5 min walk to Clementi MRT, 4B2B, wifi included, cooking allowed, strong food access.
+Punggol co-living room, S$950/month, 9 min walk to Punggol MRT, co-living, furnished, washing machine, longer commute.`;
+
+const demoRooms: RoomListing[] = [
   {
-    id: "queenstown",
+    id: "queenstown-common",
+    rankLabel: "#1 Best Overall Fit",
+    title: "Queenstown Common Room",
     area: "Queenstown",
     rent: 1450,
-    commute: 12,
+    roomType: "Common room",
+    unitType: "3B2B",
+    nearestMrt: "Queenstown MRT",
+    mrtWalkMinutes: 6,
+    commuteMinutes: 12,
     annualCommuteHours: 180,
-    transportCost: 68,
-    gymScore: 9,
-    foodScore: 8,
-    quietness: 7,
-    lifestyleScore: 88,
-    likelyRegret: "Higher rent pressure"
+    monthlyTransport: 68,
+    foodAccess: "Strong hawker and casual dinner options",
+    gymAccess: "Several gyms within a short evening route",
+    quietness: "Moderate-quiet residential pocket",
+    amenities: ["Aircon", "WiFi included", "Cooking allowed", "No owner staying", "Utilities included"],
+    missingFields: ["Room size", "Visitor policy", "Aircon servicing terms"],
+    pros: ["Short commute", "Within budget", "Cooking allowed", "Close to MRT", "Supports gym routine"],
+    cons: ["Shared bathroom", "Higher rent than budget option", "Room size unknown"],
+    hiddenRisks: ["Utilities may be capped", "Visitor policy unknown", "Aircon servicing unclear"],
+    whyHigh: [
+      "12 min commute to NUS School of Computing",
+      "Within S$1,500 budget",
+      "Cooking allowed",
+      "No owner staying",
+      "Strong MRT access"
+    ],
+    tradeoffs: ["Common bathroom", "Slightly higher rent than Jurong East"],
+    confidence: 91,
+    listedUrl: "https://example.com/listings/queenstown-common-room",
+    shortReason: "Best balance of commute, budget, cooking, and weekday routine.",
+    likelyRegret: "Higher rent pressure, not commute fatigue.",
+    photoTone: "aqua"
   },
   {
-    id: "clementi",
+    id: "dover-master",
+    rankLabel: "#2 Best Comfort Fit",
+    title: "Dover Master Room",
+    area: "Dover",
+    rent: 1550,
+    roomType: "Master room",
+    unitType: "3B2B",
+    nearestMrt: "Dover MRT",
+    mrtWalkMinutes: 7,
+    commuteMinutes: 10,
+    annualCommuteHours: 160,
+    monthlyTransport: 60,
+    foodAccess: "Decent daily food, less variety late at night",
+    gymAccess: "Limited but workable nearby",
+    quietness: "Calmer surroundings",
+    amenities: ["Aircon", "Private bathroom", "Furnished", "Washing machine"],
+    missingFields: ["Owner staying status", "Cooking policy", "Utilities policy"],
+    pros: ["Private bathroom", "Shortest commute", "Quieter area"],
+    cons: ["Above S$1,500 budget", "Cooking policy unclear", "Fewer lifestyle amenities"],
+    hiddenRisks: ["Owner staying status unknown", "Utilities policy unclear", "Cooking may be limited"],
+    whyHigh: ["10 min commute", "Private bathroom", "Calmer surroundings"],
+    tradeoffs: ["S$50 above max budget", "Fewer food and gym choices"],
+    confidence: 87,
+    listedUrl: "https://example.com/listings/dover-master-room",
+    shortReason: "Best if privacy and quiet matter more than strict budget.",
+    likelyRegret: "Higher rent and fewer late-night options.",
+    photoTone: "sand"
+  },
+  {
+    id: "clementi-common",
+    rankLabel: "#3 Best Convenience Fit",
+    title: "Clementi Common Room",
     area: "Clementi",
     rent: 1300,
-    commute: 18,
+    roomType: "Common room",
+    unitType: "4B2B",
+    nearestMrt: "Clementi MRT",
+    mrtWalkMinutes: 5,
+    commuteMinutes: 18,
     annualCommuteHours: 220,
-    transportCost: 75,
-    gymScore: 7,
-    foodScore: 9,
-    quietness: 6,
-    lifestyleScore: 83,
-    likelyRegret: "Busier student area"
+    monthlyTransport: 75,
+    foodAccess: "Excellent affordable food and student-friendly options",
+    gymAccess: "Good access around central Clementi",
+    quietness: "Busier student area",
+    amenities: ["Aircon", "WiFi included", "Cooking allowed", "Washing machine"],
+    missingFields: ["Owner staying status", "Utilities cap", "Visitor policy"],
+    pros: ["Affordable food", "Within budget", "Near MRT", "Cooking allowed"],
+    cons: ["Busier surroundings", "Longer commute than Queenstown", "Owner status unknown"],
+    hiddenRisks: ["Owner staying status unknown", "Utilities may be capped", "Shared-space rules unclear"],
+    whyHigh: ["Within budget", "5 min walk to MRT", "Strong food access"],
+    tradeoffs: ["Busier environment", "Less quiet than Dover or Queenstown"],
+    confidence: 89,
+    listedUrl: "https://example.com/listings/clementi-common-room",
+    shortReason: "A practical food-and-MRT option with a manageable commute.",
+    likelyRegret: "Busier environment.",
+    photoTone: "coral"
   },
   {
-    id: "dover",
-    area: "Dover",
-    rent: 1350,
-    commute: 10,
-    annualCommuteHours: 160,
-    transportCost: 60,
-    gymScore: 6,
-    foodScore: 7,
-    quietness: 8,
-    lifestyleScore: 84,
-    likelyRegret: "Fewer lifestyle amenities"
-  },
-  {
-    id: "jurong-east",
+    id: "jurong-east-common",
+    rankLabel: "#4 Best Budget Fit",
+    title: "Jurong East Common Room",
     area: "Jurong East",
     rent: 1100,
-    commute: 38,
+    roomType: "Common room",
+    unitType: "5B2B",
+    nearestMrt: "Jurong East MRT",
+    mrtWalkMinutes: 10,
+    commuteMinutes: 38,
     annualCommuteHours: 410,
-    transportCost: 95,
-    gymScore: 6,
-    foodScore: 7,
-    quietness: 6,
-    lifestyleScore: 69,
-    likelyRegret: "Commute fatigue"
+    monthlyTransport: 95,
+    foodAccess: "Good malls and daily food access",
+    gymAccess: "Acceptable gym access",
+    quietness: "Moderate",
+    amenities: ["Aircon"],
+    missingFields: ["WiFi", "Owner staying status", "Visitor policy", "Aircon servicing"],
+    pros: ["Lowest rent", "Large transport hub", "Good food access"],
+    cons: ["No cooking", "Utilities not included", "Longer commute"],
+    hiddenRisks: ["Utilities not included", "No cooking may affect weekly routine", "Commute fatigue likely"],
+    whyHigh: ["S$350 cheaper than Queenstown", "Near a major transport hub", "Good budget fallback"],
+    tradeoffs: ["38 min commute", "No cooking", "Utilities not included"],
+    confidence: 88,
+    listedUrl: "https://example.com/listings/jurong-east-common-room",
+    shortReason: "Lowest rent, but the commute and cooking restriction are real lifestyle costs.",
+    likelyRegret: "Commute fatigue.",
+    photoTone: "sand"
   },
   {
-    id: "punggol",
+    id: "punggol-coliving",
+    rankLabel: "#5 Cheapest Fallback",
+    title: "Punggol Co-living Room",
     area: "Punggol",
     rent: 950,
-    commute: 55,
+    roomType: "Co-living room",
+    unitType: "Co-living",
+    nearestMrt: "Punggol MRT",
+    mrtWalkMinutes: 9,
+    commuteMinutes: 55,
     annualCommuteHours: 590,
-    transportCost: 110,
-    gymScore: 5,
-    foodScore: 6,
-    quietness: 8,
-    lifestyleScore: 51,
-    likelyRegret: "Long travel time"
+    monthlyTransport: 110,
+    foodAccess: "Basic food access, less convenient for Kent Ridge routine",
+    gymAccess: "Limited compared with central-west options",
+    quietness: "Quiet residential environment",
+    amenities: ["Furnished", "Washing machine", "WiFi included"],
+    missingFields: ["Cooking policy", "Owner staying status", "Utilities cap", "Visitor policy"],
+    pros: ["Lowest rent", "Furnished", "Quiet environment"],
+    cons: ["Very long commute", "Less relevant to Kent Ridge routine", "Cooking policy unclear"],
+    hiddenRisks: ["Long travel time compounds across the year", "Co-living rules may be restrictive", "Visitor policy unknown"],
+    whyHigh: ["Lowest rent", "Quiet environment", "Furnished setup"],
+    tradeoffs: ["55 min commute", "Higher transport cost", "Weaker gym and food fit"],
+    confidence: 84,
+    listedUrl: "https://example.com/listings/punggol-coliving-room",
+    shortReason: "Acceptable only if rent is the overriding priority.",
+    likelyRegret: "Long travel time.",
+    photoTone: "coral"
   }
 ];
 
-const bestLocation = locationOptions[0];
-const comparisonLocation = locationOptions.find((location) => location.id === "jurong-east")!;
-
-const futureWeek = [
-  {
-    day: "Monday",
-    events: [
-      { time: "8:15 AM", label: "Leave home" },
-      { time: "8:27 AM", label: "Arrive at Kent Ridge" },
-      { time: "6:15 PM", label: "Gym nearby" },
-      { time: "7:30 PM", label: "Dinner nearby" }
-    ]
-  },
-  {
-    day: "Wednesday",
-    events: [
-      { time: "Morning", label: "Work from home" },
-      { time: "12:30 PM", label: "Lunch nearby" },
-      { time: "6:30 PM", label: "Grocery run" }
-    ]
-  },
-  {
-    day: "Friday",
-    events: [
-      { time: "8:15 AM", label: "Leave home" },
-      { time: "8:27 AM", label: "Arrive at Kent Ridge" },
-      { time: "6:30 PM", label: "Dinner with friends nearby" }
-    ]
-  }
-];
-
-const landlordMessage =
-  "Hi, I'm interested in this room near Queenstown. I work near Kent Ridge and am looking for a quiet long-term stay. May I check whether utilities are included, cooking is allowed, and when viewing is available?";
+const topRoom = demoRooms[0];
+const budgetRoom = demoRooms.find((room) => room.id === "jurong-east-common") ?? demoRooms[3];
 
 const currency = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -154,30 +443,52 @@ function formatMoney(value: number) {
   return currency.format(value).replace("SGD", "S$");
 }
 
+function getSelectedLocation(profile: Profile) {
+  return destinationOptions.find((location) => location.id === profile.selectedLocationId) ?? null;
+}
+
+function getDestinationLabel(profile: Profile) {
+  return getSelectedLocation(profile)?.label || profile.destinationInput || "NUS School of Computing";
+}
+
+function formatArrival(commuteMinutes: number) {
+  const totalMinutes = 8 * 60 + 15 + commuteMinutes;
+  const hour24 = Math.floor(totalMinutes / 60);
+  const minute = totalMinutes % 60;
+  const suffix = hour24 >= 12 ? "PM" : "AM";
+  const hour12 = hour24 > 12 ? hour24 - 12 : hour24;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${suffix}`;
+}
+
+function getWeeklyCommuteHours(room: RoomListing, officeDays: number) {
+  return Math.round(((room.commuteMinutes * 2 * officeDays) / 60) * 10) / 10;
+}
+
 function App() {
   const [profile, setProfile] = useState<Profile>({
-    workplace: "Kent Ridge",
-    budget: 1500,
+    destinationInput: "NUS School of Computing",
+    selectedLocationId: "nus-soc",
+    customLocationHelper: "",
+    budgetMin: 1000,
+    budgetMax: 1500,
     officeDays: 3,
-    transportMode: "MRT/Bus"
+    transportMode: "MRT/Bus",
+    preferredRoomType: "No preference",
+    peopleCount: 1,
+    mustHaves: ["Aircon", "WiFi included", "Cooking allowed", "No owner staying"],
+    rankedPriorities: ["Short commute", "Near MRT", "Gym access", "Quiet environment"]
   });
-  const [activePriorities, setActivePriorities] = useState<string[]>([
-    "Gym access",
-    "Affordable food",
-    "MRT access"
-  ]);
+  const [listingMode, setListingMode] = useState<ListingInputMode>("demo");
+  const [listingInputs, setListingInputs] = useState<string[]>([""]);
   const [status, setStatus] = useState<AppStatus>("idle");
   const [loadingStep, setLoadingStep] = useState(0);
-  const [selectedLocationId, setSelectedLocationId] = useState(bestLocation.id);
+  const [selectedRoomId, setSelectedRoomId] = useState(topRoom.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const profileRef = useRef<HTMLElement | null>(null);
   const resultsRef = useRef<HTMLElement | null>(null);
   const timeoutRef = useRef<number[]>([]);
 
-  const selectedLocation = useMemo(
-    () => locationOptions.find((location) => location.id === selectedLocationId) ?? bestLocation,
-    [selectedLocationId]
-  );
+  const selectedRoom = demoRooms.find((room) => room.id === selectedRoomId) ?? topRoom;
 
   useEffect(() => {
     return () => {
@@ -189,7 +500,7 @@ function App() {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function runSimulation() {
+  function analyzeRooms() {
     timeoutRef.current.forEach(window.clearTimeout);
     timeoutRef.current = [];
     setStatus("loading");
@@ -199,17 +510,17 @@ function App() {
       timeoutRef.current.push(
         window.setTimeout(() => {
           setLoadingStep(index);
-        }, index * 260)
+        }, index * 210)
       );
     });
 
-    // Later, replace this demo delay with an API call and render the returned ranked rooms.
+    // Replace this delay with listing extraction + recommendation API calls when backend integration resumes.
     timeoutRef.current.push(
       window.setTimeout(() => {
-        setSelectedLocationId(bestLocation.id);
+        setSelectedRoomId(topRoom.id);
         setStatus("results");
         window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-      }, 1100)
+      }, 1550)
     );
   }
 
@@ -226,25 +537,24 @@ function App() {
         <div className="absolute bottom-0 left-1/2 h-80 w-80 rounded-full bg-sand/80 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-16 px-5 py-6 sm:px-8 lg:px-10">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <LandingSection onStart={scrollToProfile} />
 
         <ProfileForm
           refCallback={(node) => {
             profileRef.current = node;
           }}
-          activePriorities={activePriorities}
-          isLoading={status === "loading"}
-          onRun={runSimulation}
-          onTogglePriority={(priority) => {
-            setActivePriorities((current) =>
-              current.includes(priority)
-                ? current.filter((item) => item !== priority)
-                : [...current, priority]
-            );
-          }}
           profile={profile}
           setProfile={setProfile}
+        />
+
+        <RoomListingInput
+          isLoading={status === "loading"}
+          listingInputs={listingInputs}
+          listingMode={listingMode}
+          onAnalyze={analyzeRooms}
+          setListingInputs={setListingInputs}
+          setListingMode={setListingMode}
         />
 
         {status === "loading" && <LoadingSteps activeStep={loadingStep} />}
@@ -254,246 +564,213 @@ function App() {
             refCallback={(node) => {
               resultsRef.current = node;
             }}
-            activePriorities={activePriorities}
             onOpenLandlordMessage={() => setIsModalOpen(true)}
-            onSelectLocation={setSelectedLocationId}
+            onSelectRoom={setSelectedRoomId}
             onTryAnotherProfile={handleTryAnotherProfile}
             profile={profile}
-            selectedLocation={selectedLocation}
-            selectedLocationId={selectedLocationId}
+            selectedRoom={selectedRoom}
+            selectedRoomId={selectedRoomId}
           />
         )}
       </div>
 
-      <LandlordMessageModal isOpen={isModalOpen} message={landlordMessage} onClose={() => setIsModalOpen(false)} />
+      <LandlordMessageModal
+        destination={getDestinationLabel(profile)}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        room={topRoom}
+      />
     </main>
   );
 }
 
-type LandingSectionProps = {
-  onStart: () => void;
-};
-
-function LandingSection({ onStart }: LandingSectionProps) {
+function LandingSection({ onStart }: { onStart: () => void }) {
   return (
-    <section className="grid min-h-[88vh] items-center gap-10 pt-4 lg:grid-cols-[1.05fr_0.95fr]">
-      <div className="animate-rise-in">
-        <nav className="mb-16 flex items-center justify-between gap-4 rounded-full border border-white/80 bg-white/55 px-4 py-3 shadow-card backdrop-blur-xl">
-          <a href="#top" className="text-base font-extrabold tracking-tight text-sea-deep" aria-label="Dolphine home">
-            Dolphine 🐬
-          </a>
-          <div className="hidden items-center gap-2 text-sm font-bold text-slate-500 sm:flex">
-            <span className="rounded-full bg-white px-3 py-1.5">Commute</span>
-            <span className="rounded-full bg-white px-3 py-1.5">Budget</span>
-            <span className="rounded-full bg-white px-3 py-1.5">Lifestyle</span>
-          </div>
-        </nav>
-
-        <p className="mb-4 inline-flex rounded-full border border-sea-teal/15 bg-white/70 px-4 py-2 text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">
-          Singapore relocation agent
+    <section className="relative grid min-h-screen place-items-center py-24 text-center">
+      <div className="absolute left-1/2 top-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/70 bg-white/35 blur-3xl" />
+      <div className="relative mx-auto max-w-4xl animate-rise-in">
+        <p className="mb-6 inline-flex rounded-full border border-sea-teal/15 bg-white/70 px-4 py-2 text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">
+          AI room decision advisor
         </p>
-        <h1 className="max-w-4xl font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.05em] text-sea-ink sm:text-6xl lg:text-7xl">
-          Find a life, not just a room.
+        <h1 className="font-display text-7xl font-extrabold leading-none tracking-[-0.07em] text-sea-ink sm:text-8xl lg:text-9xl">
+          🐬 DOLPHINE
         </h1>
-        <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-600">
-          Dolphine simulates your future daily life across commute, cost, neighbourhood fit, and lifestyle before you
-          sign a lease.
+        <p className="mt-7 font-display text-3xl font-bold tracking-[-0.04em] text-sea-deep sm:text-4xl">
+          Find a life, not just a room.
         </p>
-        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-          <button
-            className="rounded-full bg-sea-deep px-7 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink"
-            type="button"
-            onClick={onStart}
-          >
-            Simulate My Life
-          </button>
-          <a
-            className="rounded-full border border-sea-deep/15 bg-white/70 px-7 py-4 text-center text-base font-extrabold text-sea-deep transition hover:border-sea-teal hover:bg-white"
-            href="#demo"
-          >
-            View demo signals
-          </a>
-        </div>
-      </div>
-
-      <div className="relative animate-soft-float">
-        <div className="absolute -left-8 top-10 h-24 w-24 rounded-[2rem] bg-coral/20 blur-xl" />
-        <div className="glass-card relative rounded-[2.5rem] p-5 sm:p-7">
-          <div className="rounded-[2rem] bg-gradient-to-br from-sea-deep via-sea-teal to-[#6cc7bd] p-6 text-white">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/70">Liveability forecast</p>
-                <h2 className="mt-4 font-display text-4xl font-extrabold leading-none tracking-tight">Queenstown</h2>
-              </div>
-              <span className="rounded-full bg-white/18 px-4 py-2 text-sm font-extrabold">88/100</span>
-            </div>
-
-            <div className="mt-10 grid gap-3">
-              {[
-                ["Commute to Kent Ridge", "12 min"],
-                ["Annual commute saved", "~230 hrs"],
-                ["Budget pressure", "Medium"],
-                ["Neighbourhood fit", "Excellent"]
-              ].map(([label, value]) => (
-                <div
-                  className="flex items-center justify-between rounded-2xl border border-white/15 bg-white/12 px-4 py-3 backdrop-blur"
-                  key={label}
-                >
-                  <span className="text-sm text-white/78">{label}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-            <MiniMetric label="Areas" value="5" />
-            <MiniMetric label="Signals" value="9" />
-            <MiniMetric label="Week sim" value="3 days" />
-          </div>
-        </div>
+        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">
+          Paste any room listing. Dolphine predicts how that room will fit your daily life before you sign the lease.
+        </p>
+        <button
+          className="mt-10 rounded-full bg-sea-deep px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink"
+          type="button"
+          onClick={onStart}
+        >
+          Find My Best Room
+        </button>
       </div>
     </section>
   );
 }
 
-function MiniMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-white/80 bg-white/68 px-3 py-4 shadow-card">
-      <strong className="block text-lg text-sea-deep">{value}</strong>
-      <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{label}</span>
-    </div>
-  );
-}
-
-type ProfileFormProps = {
-  activePriorities: string[];
-  isLoading: boolean;
-  onRun: () => void;
-  onTogglePriority: (priority: string) => void;
-  profile: Profile;
-  refCallback: (node: HTMLElement | null) => void;
-  setProfile: Dispatch<SetStateAction<Profile>>;
-};
-
 function ProfileForm({
-  activePriorities,
-  isLoading,
-  onRun,
-  onTogglePriority,
   profile,
   refCallback,
   setProfile
-}: ProfileFormProps) {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    onRun();
-  }
-
+}: {
+  profile: Profile;
+  refCallback: (node: HTMLElement | null) => void;
+  setProfile: Dispatch<SetStateAction<Profile>>;
+}) {
   return (
-    <section className="scroll-mt-8" ref={refCallback} id="demo">
+    <section className="scroll-mt-8 py-28 sm:py-32 lg:py-40" ref={refCallback}>
       <div className="mx-auto max-w-5xl">
-        <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Lifestyle profile</p>
-            <h2 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink sm:text-5xl">
-              Tell Dolphine how your week should feel.
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-6 text-slate-500">
-            This is a frontend-only profile today. The same fields can be sent directly to the recommendation API later.
+        <div className="mb-10 max-w-3xl">
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Life profile</p>
+          <h2 className="mt-4 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink sm:text-5xl">
+            Tell Dolphine what your week looks like.
+          </h2>
+          <p className="mt-5 text-base leading-7 text-slate-500">
+            Keep it lightweight: destination, budget range, living constraints, and the tradeoffs you care about most.
           </p>
         </div>
 
-        <form className="glass-card rounded-[2rem] p-5 sm:p-7 lg:p-8" onSubmit={handleSubmit}>
-          <div className="grid gap-5 lg:grid-cols-2">
-            <label className="grid gap-2">
-              <span className="text-sm font-extrabold text-sea-ink">Workplace / School</span>
-              <input
-                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
-                onChange={(event) => setProfile((current) => ({ ...current, workplace: event.target.value }))}
-                type="text"
-                value={profile.workplace}
-              />
-            </label>
+        <form
+          className="glass-card rounded-[2.5rem] p-6 sm:p-8 lg:p-10"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <LocationCombobox profile={profile} setProfile={setProfile} />
 
-            <label className="grid gap-2">
-              <span className="text-sm font-extrabold text-sea-ink">Monthly budget</span>
-              <div className="flex rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 shadow-sm">
-                <span className="mr-2 font-extrabold text-sea-teal">S$</span>
-                <input
-                  className="w-full border-0 bg-transparent p-0 text-base text-sea-ink outline-none"
-                  min={0}
-                  onChange={(event) =>
-                    setProfile((current) => ({ ...current, budget: Number(event.target.value) || 0 }))
-                  }
-                  type="number"
-                  value={profile.budget}
+          <div className="mt-7 grid gap-5 lg:grid-cols-2">
+            <div>
+              <span className="text-sm font-extrabold text-sea-ink">Monthly budget range</span>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                <MoneyInput
+                  label="Min"
+                  value={profile.budgetMin}
+                  onChange={(value) => setProfile((current) => ({ ...current, budgetMin: value }))}
+                />
+                <MoneyInput
+                  label="Max"
+                  value={profile.budgetMax}
+                  onChange={(value) => setProfile((current) => ({ ...current, budgetMax: value }))}
                 />
               </div>
+            </div>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-extrabold text-sea-ink">Office / campus days per week</legend>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((day) => (
+                  <ChoiceButton
+                    isActive={profile.officeDays === day}
+                    key={day}
+                    label={String(day)}
+                    onClick={() => setProfile((current) => ({ ...current, officeDays: day }))}
+                  />
+                ))}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="mt-7 grid gap-7 lg:grid-cols-3">
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">Transport mode</span>
+              <select
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base font-bold text-sea-ink shadow-sm"
+                onChange={(event) =>
+                  setProfile((current) => ({ ...current, transportMode: event.target.value as TransportMode }))
+                }
+                value={profile.transportMode}
+              >
+                {(["MRT/Bus", "Walk/Cycle", "Drive"] as TransportMode[]).map((mode) => (
+                  <option key={mode} value={mode}>
+                    {mode}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">Preferred room type</span>
+              <select
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base font-bold text-sea-ink shadow-sm"
+                onChange={(event) =>
+                  setProfile((current) => ({
+                    ...current,
+                    preferredRoomType: event.target.value as RoomTypePreference
+                  }))
+                }
+                value={profile.preferredRoomType}
+              >
+                {(["Common room", "Master room", "Studio", "Whole unit", "No preference"] as RoomTypePreference[]).map(
+                  (roomType) => (
+                    <option key={roomType} value={roomType}>
+                      {roomType}
+                    </option>
+                  )
+                )}
+              </select>
+            </label>
+
+            <label className="grid content-start gap-2">
+              <span className="text-sm font-extrabold text-sea-ink">How many people living?</span>
+              <input
+                className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+                min={1}
+                onChange={(event) =>
+                  setProfile((current) => ({ ...current, peopleCount: Math.max(1, Number(event.target.value) || 1) }))
+                }
+                type="number"
+                value={profile.peopleCount}
+              />
             </label>
           </div>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]">
-            <fieldset>
-              <legend className="mb-3 text-sm font-extrabold text-sea-ink">Office days per week</legend>
-              <div className="grid grid-cols-6 gap-2">
-                {[0, 1, 2, 3, 4, 5].map((day) => (
-                  <button
-                    aria-pressed={profile.officeDays === day}
-                    className={`rounded-2xl border px-3 py-3 text-sm font-extrabold transition ${
-                      profile.officeDays === day
-                        ? "border-sea-deep bg-sea-deep text-white shadow-card"
-                        : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
-                    }`}
-                    key={day}
-                    onClick={() => setProfile((current) => ({ ...current, officeDays: day }))}
-                    type="button"
-                  >
-                    {day}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
+          <ChipGroup
+            className="mt-8"
+            label="Must-haves"
+            options={mustHaveOptions}
+            selected={profile.mustHaves}
+            onToggle={(option) =>
+              setProfile((current) => ({
+                ...current,
+                mustHaves: current.mustHaves.includes(option)
+                  ? current.mustHaves.filter((item) => item !== option)
+                  : [...current.mustHaves, option]
+              }))
+            }
+          />
 
-            <fieldset>
-              <legend className="mb-3 text-sm font-extrabold text-sea-ink">Transport mode</legend>
-              <div className="grid gap-2 sm:grid-cols-3">
-                {(["MRT/Bus", "Walk/Cycle", "Drive"] as TransportMode[]).map((mode) => (
-                  <button
-                    aria-pressed={profile.transportMode === mode}
-                    className={`rounded-2xl border px-4 py-3 text-sm font-extrabold transition ${
-                      profile.transportMode === mode
-                        ? "border-sea-teal bg-sea-teal text-white shadow-card"
-                        : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
-                    }`}
-                    key={mode}
-                    onClick={() => setProfile((current) => ({ ...current, transportMode: mode }))}
-                    type="button"
-                  >
-                    {mode}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-          </div>
-
-          <fieldset className="mt-7">
-            <legend className="mb-3 text-sm font-extrabold text-sea-ink">Lifestyle priorities</legend>
+          <fieldset className="mt-8">
+            <legend className="mb-3 text-sm font-extrabold text-sea-ink">Rank your top priorities</legend>
+            <p className="mb-4 text-sm leading-6 text-slate-500">
+              Click in order. Dolphine uses the order as your ranking for this demo.
+            </p>
             <div className="flex flex-wrap gap-2">
               {priorityOptions.map((priority) => {
-                const isActive = activePriorities.includes(priority);
+                const priorityRank = profile.rankedPriorities.indexOf(priority);
                 return (
                   <button
-                    aria-pressed={isActive}
+                    aria-pressed={priorityRank >= 0}
                     className={`rounded-full border px-4 py-2.5 text-sm font-extrabold transition ${
-                      isActive
+                      priorityRank >= 0
                         ? "border-sea-deep bg-sea-deep text-white shadow-card"
                         : "border-sea-deep/10 bg-white/90 text-slate-500 hover:border-sea-teal hover:text-sea-deep"
                     }`}
                     key={priority}
-                    onClick={() => onTogglePriority(priority)}
+                    onClick={() =>
+                      setProfile((current) => ({
+                        ...current,
+                        rankedPriorities:
+                          current.rankedPriorities.indexOf(priority) >= 0
+                            ? current.rankedPriorities.filter((item) => item !== priority)
+                            : [...current.rankedPriorities, priority]
+                      }))
+                    }
                     type="button"
                   >
+                    {priorityRank >= 0 ? `${priorityRank + 1}. ` : ""}
                     {priority}
                   </button>
                 );
@@ -501,16 +778,312 @@ function ProfileForm({
             </div>
           </fieldset>
 
-          <div className="mt-8 flex flex-col gap-3 border-t border-sea-deep/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="mt-9 border-t border-sea-deep/10 pt-7 text-sm leading-6 text-slate-500">
+            Based on: {getDestinationLabel(profile)} · {formatMoney(profile.budgetMin)}–
+            {formatMoney(profile.budgetMax)} · {profile.transportMode} · {profile.peopleCount} person ·{" "}
+            {profile.rankedPriorities.slice(0, 3).join(" · ")}
+          </p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function LocationCombobox({
+  profile,
+  setProfile
+}: {
+  profile: Profile;
+  setProfile: Dispatch<SetStateAction<Profile>>;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const query = profile.destinationInput.trim().toLowerCase();
+  const filteredLocations = destinationOptions.filter((location) =>
+    `${location.label} ${location.area} ${location.nearestMrt}`.toLowerCase().includes(query)
+  );
+  const exactMatch = destinationOptions.some((location) => location.label.toLowerCase() === query);
+  const isCustomLocation = profile.destinationInput.trim().length > 0 && !profile.selectedLocationId;
+
+  function selectLocation(location: LocationOption) {
+    setProfile((current) => ({
+      ...current,
+      destinationInput: location.label,
+      selectedLocationId: location.id,
+      customLocationHelper: ""
+    }));
+    setIsOpen(false);
+  }
+
+  return (
+    <div className="relative">
+      <label className="grid gap-2">
+        <span className="text-sm font-extrabold text-sea-ink">Where do you usually go? (Workplace/Study)</span>
+        <input
+          aria-autocomplete="list"
+          aria-expanded={isOpen}
+          aria-controls="location-options"
+          className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+          onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
+          onChange={(event) => {
+            const nextValue = event.target.value;
+            const matchedLocation = destinationOptions.find(
+              (location) => location.label.toLowerCase() === nextValue.trim().toLowerCase()
+            );
+            setProfile((current) => ({
+              ...current,
+              destinationInput: nextValue,
+              selectedLocationId: matchedLocation?.id ?? null
+            }));
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          role="combobox"
+          type="text"
+          value={profile.destinationInput}
+        />
+      </label>
+
+      {isOpen && (
+        <div
+          className="absolute z-20 mt-2 max-h-80 w-full overflow-auto rounded-3xl border border-sea-deep/10 bg-white p-2 shadow-soft"
+          id="location-options"
+          role="listbox"
+        >
+          {(query ? filteredLocations : destinationOptions).slice(0, 8).map((location) => (
+            <button
+              className="w-full rounded-2xl px-4 py-3 text-left transition hover:bg-sea-mist"
+              key={location.id}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => selectLocation(location)}
+              role="option"
+              type="button"
+            >
+              <span className="block font-extrabold text-sea-ink">{location.label}</span>
+              <span className="text-sm font-bold text-slate-500">
+                {location.area} · nearest MRT: {location.nearestMrt}
+              </span>
+            </button>
+          ))}
+
+          {query && !exactMatch && (
+            <button
+              className="w-full rounded-2xl px-4 py-3 text-left font-extrabold text-sea-teal transition hover:bg-sea-mist"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                setProfile((current) => ({ ...current, selectedLocationId: null }));
+                setIsOpen(false);
+              }}
+              role="option"
+              type="button"
+            >
+              Use “{profile.destinationInput}” as custom location
+            </button>
+          )}
+        </div>
+      )}
+
+      {isCustomLocation && (
+        <label className="mt-4 grid gap-2 rounded-3xl bg-sea-mist p-4">
+          <span className="text-sm font-extrabold text-sea-ink">Nearest MRT or postal code?</span>
+          <input
+            className="rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 text-base text-sea-ink shadow-sm"
+            onChange={(event) => setProfile((current) => ({ ...current, customLocationHelper: event.target.value }))}
+            placeholder="e.g. Kent Ridge MRT, 119077, or nearest station"
+            type="text"
+            value={profile.customLocationHelper}
+          />
+          <span className="text-sm leading-6 text-slate-500">
+            This keeps broad inputs like “NUS” or “Shopee” clear enough for a commute estimate in the demo.
+          </span>
+        </label>
+      )}
+    </div>
+  );
+}
+
+function MoneyInput({ label, onChange, value }: { label: string; onChange: (value: number) => void; value: number }) {
+  return (
+    <label className="flex rounded-2xl border border-sea-deep/10 bg-white px-4 py-3 shadow-sm">
+      <span className="mr-3 font-extrabold text-sea-teal">{label}</span>
+      <span className="mr-1 font-extrabold text-slate-400">S$</span>
+      <input
+        className="w-full border-0 bg-transparent p-0 text-base text-sea-ink outline-none"
+        min={0}
+        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        type="number"
+        value={value}
+      />
+    </label>
+  );
+}
+
+function ChoiceButton({ isActive, label, onClick }: { isActive: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      aria-pressed={isActive}
+      className={`rounded-2xl border px-4 py-3 text-sm font-extrabold transition ${
+        isActive
+          ? "border-sea-deep bg-sea-deep text-white shadow-card"
+          : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function ChipGroup({
+  className = "",
+  label,
+  onToggle,
+  options,
+  selected
+}: {
+  className?: string;
+  label: string;
+  onToggle: (option: string) => void;
+  options: string[];
+  selected: string[];
+}) {
+  return (
+    <fieldset className={className}>
+      <legend className="mb-3 text-sm font-extrabold text-sea-ink">{label}</legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => {
+          const isActive = selected.includes(option);
+          return (
+            <button
+              aria-pressed={isActive}
+              className={`rounded-full border px-4 py-2.5 text-sm font-extrabold transition ${
+                isActive
+                  ? "border-sea-deep bg-sea-deep text-white shadow-card"
+                  : "border-sea-deep/10 bg-white/90 text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+              }`}
+              key={option}
+              onClick={() => onToggle(option)}
+              type="button"
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function RoomListingInput({
+  isLoading,
+  listingInputs,
+  listingMode,
+  onAnalyze,
+  setListingInputs,
+  setListingMode
+}: {
+  isLoading: boolean;
+  listingInputs: string[];
+  listingMode: ListingInputMode;
+  onAnalyze: () => void;
+  setListingInputs: Dispatch<SetStateAction<string[]>>;
+  setListingMode: (mode: ListingInputMode) => void;
+}) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onAnalyze();
+  }
+
+  const placeholderText =
+    listingMode === "urls"
+      ? "Paste one listing URL or copied agent message here. PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, and agent messages all work for the demo."
+      : "Queenstown common room, S$1450/month, 6 min walk to Queenstown MRT, 3B2B, aircon, wifi included, cooking allowed, no owner staying, utilities included.";
+
+  function updateListing(index: number, value: string) {
+    setListingInputs((current) => current.map((listing, listingIndex) => (listingIndex === index ? value : listing)));
+  }
+
+  function addListing() {
+    setListingInputs((current) => [...current, ""]);
+  }
+
+  function removeListing(index: number) {
+    setListingInputs((current) => (current.length === 1 ? [""] : current.filter((_, listingIndex) => listingIndex !== index)));
+  }
+
+  return (
+    <section className="py-28 sm:py-32 lg:py-40">
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading
+          eyebrow="Room listing input"
+          text="Paste messy listings, agent messages, or links. Add one room per box so Dolphine can compare them clearly."
+          title="Paste rooms you are considering."
+        />
+
+        <form className="mt-10 rounded-[2.5rem] border border-white/75 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:p-8 lg:p-10" onSubmit={handleSubmit}>
+          <div className="grid gap-3 md:grid-cols-3">
+            <ModeButton
+              isActive={listingMode === "demo"}
+              label="I don't have listings yet"
+              onClick={() => {
+                setListingMode("demo");
+                setListingInputs([""]);
+              }}
+            />
+            <ModeButton isActive={listingMode === "text"} label="Paste listing text" onClick={() => setListingMode("text")} />
+            <ModeButton isActive={listingMode === "urls"} label="Paste listing links" onClick={() => setListingMode("urls")} />
+          </div>
+
+          {listingMode === "demo" ? (
+            <div className="mt-6 rounded-[2rem] bg-sea-mist p-5 text-sm leading-7 text-slate-600">
+              No room links yet. Dolphine will start with a realistic sample shortlist so you can see how the advisor works.
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4">
+              {listingInputs.map((listing, index) => (
+                <div className="rounded-[2rem] border border-sea-deep/10 bg-white p-4 shadow-sm" key={index}>
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <label className="text-sm font-extrabold text-sea-ink" htmlFor={`listing-${index}`}>
+                      Listing {index + 1}
+                    </label>
+                    <button
+                      className="rounded-full bg-sea-mist px-3 py-1.5 text-xs font-extrabold text-slate-500 transition hover:bg-coral/10 hover:text-coral"
+                      onClick={() => removeListing(index)}
+                      type="button"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <textarea
+                    className="min-h-40 w-full rounded-[1.5rem] border border-sea-deep/10 bg-sea-mist/50 p-4 text-base leading-8 text-sea-ink shadow-sm"
+                    id={`listing-${index}`}
+                    onChange={(event) => updateListing(index, event.target.value)}
+                    placeholder={index === 0 ? placeholderText : "Paste another room listing or URL here."}
+                    value={listing}
+                  />
+                </div>
+              ))}
+
+              <button
+                className="rounded-full border border-sea-deep/15 bg-white px-5 py-3 text-sm font-extrabold text-sea-deep shadow-card transition hover:border-sea-teal"
+                onClick={addListing}
+                type="button"
+              >
+                Add another listing
+              </button>
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-col gap-4 border-t border-sea-deep/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm leading-6 text-slate-500">
-              Profile: {profile.officeDays} office days, {profile.transportMode}, {formatMoney(profile.budget)} budget.
+              Sources can be PropertyGuru, 99.co, Facebook, Xiaohongshu, Telegram, WhatsApp, or agent messages.
             </p>
             <button
-              className="rounded-full bg-coral px-7 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full bg-coral px-8 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isLoading}
               type="submit"
             >
-              {isLoading ? "Running simulation..." : "Run Dolphine Simulation"}
+              {isLoading ? "Analyzing rooms..." : "Analyze Rooms"}
             </button>
           </div>
         </form>
@@ -519,13 +1092,30 @@ function ProfileForm({
   );
 }
 
+function ModeButton({ isActive, label, onClick }: { isActive: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      aria-pressed={isActive}
+      className={`rounded-2xl border px-4 py-4 text-sm font-extrabold transition ${
+        isActive
+          ? "border-sea-deep bg-sea-deep text-white shadow-card"
+          : "border-sea-deep/10 bg-white text-slate-500 hover:border-sea-teal hover:text-sea-deep"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
 function LoadingSteps({ activeStep }: { activeStep: number }) {
   return (
-    <section className="mx-auto w-full max-w-3xl animate-rise-in rounded-[2rem] border border-white/80 bg-white/76 p-6 shadow-soft backdrop-blur-xl">
-      <div className="mb-5 flex items-center justify-between gap-4">
+    <section className="mx-auto my-28 w-full max-w-3xl animate-rise-in rounded-[2.5rem] border border-white/80 bg-white/76 p-6 shadow-soft backdrop-blur-xl sm:my-32 sm:p-8">
+      <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Agent reasoning</p>
-          <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]">Simulating your future week</h2>
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em]">Analyzing your rooms</h2>
         </div>
         <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-sea-foam text-2xl sm:flex">🐬</div>
       </div>
@@ -561,319 +1151,78 @@ function LoadingSteps({ activeStep }: { activeStep: number }) {
   );
 }
 
-type ResultsDashboardProps = {
-  activePriorities: string[];
-  onOpenLandlordMessage: () => void;
-  onSelectLocation: (locationId: string) => void;
-  onTryAnotherProfile: () => void;
-  profile: Profile;
-  refCallback: (node: HTMLElement | null) => void;
-  selectedLocation: LocationOption;
-  selectedLocationId: string;
-};
-
 function ResultsDashboard({
-  activePriorities,
   onOpenLandlordMessage,
-  onSelectLocation,
+  onSelectRoom,
   onTryAnotherProfile,
   profile,
   refCallback,
-  selectedLocation,
-  selectedLocationId
-}: ResultsDashboardProps) {
-  const commuteHoursSaved = comparisonLocation.annualCommuteHours - bestLocation.annualCommuteHours;
-  const extraRent = bestLocation.rent - comparisonLocation.rent;
-
-  return (
-    <section className="scroll-mt-8" ref={refCallback}>
-      <div className="grid gap-8">
-        <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="rounded-[2.2rem] bg-sea-deep p-6 text-white shadow-soft sm:p-8">
-            <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-white/60">Dolphine recommendation</p>
-            <div className="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-              <div>
-                <h2 className="font-display text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-                  Best Fit: {bestLocation.area}
-                </h2>
-                <p className="mt-3 text-xl font-extrabold text-sea-glass">
-                  Lifestyle Score: {bestLocation.lifestyleScore}/100
-                </p>
-              </div>
-              <div className="rounded-3xl border border-white/14 bg-white/10 p-5">
-                <span className="block text-sm font-bold text-white/62">Saves</span>
-                <strong className="block text-4xl font-extrabold">~{commuteHoursSaved}</strong>
-                <span className="text-sm font-bold text-white/74">hours/year compared with Jurong East</span>
-              </div>
-            </div>
-            <p className="mt-7 max-w-3xl text-base leading-8 text-white/78">
-              Although Queenstown costs {formatMoney(extraRent)} more per month than Jurong East, it saves significant
-              commute time and better matches your gym and convenience preferences.
-            </p>
-          </div>
-
-          <div className="glass-card rounded-[2.2rem] p-6 sm:p-8">
-            <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Profile used</p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <SummaryPill label="Destination" value={profile.workplace || "Kent Ridge"} />
-              <SummaryPill label="Budget" value={formatMoney(profile.budget)} />
-              <SummaryPill label="Office days" value={`${profile.officeDays}/week`} />
-              <SummaryPill label="Transport" value={profile.transportMode} />
-            </div>
-            <div className="mt-5 rounded-3xl bg-white/75 p-4">
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">Priorities</span>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {activePriorities.map((priority) => (
-                  <span className="rounded-full bg-sea-foam px-3 py-1.5 text-xs font-extrabold text-sea-deep" key={priority}>
-                    {priority}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <div>
-            <div className="mb-4 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Compare areas</p>
-                <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]">Rental choices ranked</h2>
-              </div>
-              <p className="hidden max-w-sm text-right text-sm leading-6 text-slate-500 md:block">
-                Click any card to inspect its tradeoffs in the detail panel.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {locationOptions.map((location) => (
-                <LocationCard
-                  isRecommended={location.id === bestLocation.id}
-                  isSelected={location.id === selectedLocationId}
-                  key={location.id}
-                  location={location}
-                  onSelect={() => onSelectLocation(location.id)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <DetailPanel location={selectedLocation} workplace={profile.workplace || "Kent Ridge"} />
-        </div>
-
-        <TradeoffSection />
-        <FutureWeekTimeline />
-        <DolphineReport onGenerateLandlordMessage={onOpenLandlordMessage} onTryAnotherProfile={onTryAnotherProfile} />
-      </div>
-    </section>
-  );
-}
-
-function SummaryPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-3xl bg-white/78 p-4 shadow-sm">
-      <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">{label}</span>
-      <strong className="mt-1 block text-base text-sea-ink">{value}</strong>
-    </div>
-  );
-}
-
-type LocationCardProps = {
-  isRecommended: boolean;
-  isSelected: boolean;
-  location: LocationOption;
-  onSelect: () => void;
-};
-
-function LocationCard({ isRecommended, isSelected, location, onSelect }: LocationCardProps) {
-  return (
-    <button
-      aria-pressed={isSelected}
-      className={`group rounded-[1.75rem] border p-5 text-left shadow-card transition hover:-translate-y-1 ${
-        isSelected
-          ? "border-sea-teal bg-white ring-4 ring-sea-teal/15"
-          : "border-white/75 bg-white/76 hover:border-sea-teal/40"
-      }`}
-      onClick={onSelect}
-      type="button"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xl font-extrabold text-sea-ink">{location.area}</h3>
-            {isRecommended && (
-              <span className="rounded-full bg-coral/12 px-3 py-1 text-xs font-extrabold text-coral">Recommended</span>
-            )}
-          </div>
-          <p className="mt-1 text-sm font-bold text-slate-500">
-            {formatMoney(location.rent)}/mo · {location.commute} min commute
-          </p>
-        </div>
-        <span className="rounded-2xl bg-sea-foam px-3 py-2 text-sm font-extrabold text-sea-deep">
-          {location.lifestyleScore}
-        </span>
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-        <CardStat label="Rent" value={`${formatMoney(location.rent)}`} />
-        <CardStat label="Annual commute" value={`${location.annualCommuteHours} hrs`} />
-      </div>
-
-      <div className="mt-5 grid gap-3">
-        <ScoreBar label="Gym" score={location.gymScore} />
-        <ScoreBar label="Food" score={location.foodScore} />
-        <ScoreBar label="Quiet" score={location.quietness} />
-      </div>
-    </button>
-  );
-}
-
-function CardStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-sea-mist px-3 py-2">
-      <span className="block text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{label}</span>
-      <strong className="text-sea-ink">{value}</strong>
-    </div>
-  );
-}
-
-function ScoreBar({ label, score }: { label: string; score: number }) {
-  return (
-    <div>
-      <div className="mb-1 flex justify-between text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
-        <span>{label}</span>
-        <span>{score}/10</span>
-      </div>
-      <div className="h-2 rounded-full bg-slate-100">
-        <div
-          className="metric-bar h-2 rounded-full bg-gradient-to-r from-sea-teal to-[#73cfc4]"
-          style={{ width: `${score * 10}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function DetailPanel({ location, workplace }: { location: LocationOption; workplace: string }) {
-  const details = [
-    ["Rent", `${formatMoney(location.rent)}/mo`],
-    [`Commute to ${workplace}`, `${location.commute} min`],
-    ["Annual commute hours", `${location.annualCommuteHours} hrs`],
-    ["Monthly transport cost", `${formatMoney(location.transportCost)}`],
-    ["Gym access", `${location.gymScore}/10`],
-    ["Food access", `${location.foodScore}/10`],
-    ["Quietness", `${location.quietness}/10`]
-  ];
-
-  return (
-    <aside className="sticky top-5 self-start rounded-[2rem] border border-white/75 bg-white/78 p-6 shadow-soft backdrop-blur-xl">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Selected area</p>
-          <h2 className="mt-2 font-display text-4xl font-extrabold tracking-[-0.04em]">{location.area}</h2>
-        </div>
-        <span className="rounded-2xl bg-sea-deep px-4 py-2 text-sm font-extrabold text-white">
-          {location.lifestyleScore}/100
-        </span>
-      </div>
-
-      <div className="mt-6 grid gap-3">
-        {details.map(([label, value]) => (
-          <div className="flex items-center justify-between rounded-2xl bg-sea-mist px-4 py-3" key={label}>
-            <span className="text-sm font-bold text-slate-500">{label}</span>
-            <strong className="text-sea-ink">{value}</strong>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-5 rounded-3xl border border-coral/20 bg-coral/10 p-4">
-        <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-coral">Likely regret</span>
-        <p className="mt-2 text-lg font-extrabold text-sea-ink">{location.likelyRegret}</p>
-      </div>
-    </aside>
-  );
-}
-
-function TradeoffSection() {
-  const hoursSaved = comparisonLocation.annualCommuteHours - bestLocation.annualCommuteHours;
-  const rentDelta = bestLocation.rent - comparisonLocation.rent;
-
-  return (
-    <section className="overflow-hidden rounded-[2.5rem] bg-sea-ink p-6 text-white shadow-soft sm:p-8 lg:p-10">
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div>
-          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-glass/70">Demo moment</p>
-          <h2 className="mt-3 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] sm:text-5xl">
-            Queenstown beats cheaper rent when you price your time.
-          </h2>
-          <p className="mt-5 text-base leading-8 text-white/68">
-            Dolphine turns a listing comparison into a future-life comparison, so the tradeoff is visible before signing.
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TradeoffTile tone="positive" title={`+${hoursSaved} hours/year saved`} caption="Less commute drag across office days" />
-          <TradeoffTile tone="positive" title="+Better gym access" caption="Higher fit for your evening routine" />
-          <TradeoffTile tone="positive" title="+Better MRT convenience" caption="Shorter routes around central Singapore" />
-          <TradeoffTile tone="negative" title={`-${formatMoney(rentDelta)}/month higher rent`} caption="The main pressure point to budget around" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TradeoffTile({
-  caption,
-  title,
-  tone
+  selectedRoom,
+  selectedRoomId
 }: {
-  caption: string;
-  title: string;
-  tone: "positive" | "negative";
+  onOpenLandlordMessage: () => void;
+  onSelectRoom: (roomId: string) => void;
+  onTryAnotherProfile: () => void;
+  profile: Profile;
+  refCallback: (node: HTMLElement | null) => void;
+  selectedRoom: RoomListing;
+  selectedRoomId: string;
 }) {
   return (
-    <div
-      className={`rounded-[1.75rem] border p-5 ${
-        tone === "positive"
-          ? "border-sea-glass/25 bg-sea-glass/12"
-          : "border-coral/30 bg-coral/15"
-      }`}
-    >
-      <h3 className="text-xl font-extrabold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-white/64">{caption}</p>
-    </div>
+    <section className="scroll-mt-8 py-24 sm:py-32 lg:py-40" ref={refCallback}>
+      <div className="grid gap-28 sm:gap-32 lg:gap-40">
+        <ExtractedRoomCards profile={profile} rooms={demoRooms} />
+        <RankedRoomRecommendations
+          onSelectRoom={onSelectRoom}
+          rooms={demoRooms}
+          selectedRoomId={selectedRoomId}
+        />
+        <SelectedRoomDeepDive profile={profile} room={selectedRoom} />
+        <TradeoffSection />
+        <FutureLifeSimulator profile={profile} room={selectedRoom} />
+        <AlternativePicks />
+        <LandlordQuestions room={selectedRoom} />
+        <DolphineReport
+          onGenerateLandlordMessage={onOpenLandlordMessage}
+          onTryAnotherProfile={onTryAnotherProfile}
+          profile={profile}
+          room={topRoom}
+        />
+      </div>
+    </section>
   );
 }
 
-function FutureWeekTimeline() {
+function ExtractedRoomCards({ profile, rooms }: { profile: Profile; rooms: RoomListing[] }) {
   return (
-    <section className="glass-card rounded-[2.5rem] p-6 sm:p-8 lg:p-10">
-      <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-        <div>
-          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Future week simulation</p>
-          <h2 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.04em]">Your future week in Queenstown</h2>
-        </div>
-        <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-sea-deep shadow-card">
-          3-day lifestyle snapshot
-        </span>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-3">
-        {futureWeek.map((day) => (
-          <article className="rounded-[1.75rem] bg-white/78 p-5 shadow-card" key={day.day}>
-            <h3 className="text-2xl font-extrabold text-sea-deep">{day.day}</h3>
-            <div className="mt-5 grid gap-4">
-              {day.events.map((event, index) => (
-                <div className="relative grid grid-cols-[auto_1fr] gap-3" key={`${day.day}-${event.time}-${event.label}`}>
-                  <div className="flex flex-col items-center">
-                    <span className="h-3 w-3 rounded-full bg-sea-teal" />
-                    {index < day.events.length - 1 && <span className="mt-2 h-full min-h-8 w-px bg-sea-teal/18" />}
-                  </div>
-                  <div className="pb-2">
-                    <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{event.time}</span>
-                    <p className="mt-1 font-bold text-sea-ink">{event.label}</p>
-                  </div>
-                </div>
-              ))}
+    <section>
+      <SectionHeading
+        eyebrow="Extracted room cards"
+        text={`Dolphine found structured room details from messy listing text and estimated commute to ${getDestinationLabel(profile)}.`}
+        title="Here is what Dolphine understood."
+      />
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        {rooms.map((room) => (
+          <article className="rounded-[2rem] border border-white/75 bg-white/76 p-4 shadow-card backdrop-blur" key={room.id}>
+            <div className="grid gap-5 sm:grid-cols-[180px_1fr]">
+              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <div>
+                <h3 className="text-xl font-extrabold text-sea-ink">{room.title}</h3>
+                <p className="mt-2 text-sm font-bold text-slate-500">
+                  {formatMoney(room.rent)}/month · {room.roomType} · {room.unitType}
+                </p>
+                <p className="mt-4 text-sm leading-6 text-slate-600">
+                  {room.mrtWalkMinutes} min walk to {room.nearestMrt}
+                  <br />
+                  {room.commuteMinutes} min to {getDestinationLabel(profile)}
+                </p>
+                <p className="mt-4 text-sm font-bold leading-6 text-sea-deep">
+                  Extracted: {room.amenities.slice(0, 5).join(" · ")}
+                </p>
+                <p className="mt-3 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                  Confidence: {room.confidence}%
+                </p>
+              </div>
             </div>
           </article>
         ))}
@@ -882,23 +1231,421 @@ function FutureWeekTimeline() {
   );
 }
 
+function RankedRoomRecommendations({
+  onSelectRoom,
+  rooms,
+  selectedRoomId
+}: {
+  onSelectRoom: (roomId: string) => void;
+  rooms: RoomListing[];
+  selectedRoomId: string;
+}) {
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Ranked room recommendations"
+        text="These are individual listings, not neighbourhoods. Click any room to update the deep dive."
+        title="Your best room matches"
+      />
+      <div className="mt-10 grid gap-5">
+        {rooms.map((room) => (
+          <button
+            aria-pressed={selectedRoomId === room.id}
+            className={`rounded-[2.25rem] border p-5 text-left shadow-card transition hover:-translate-y-1 ${
+              selectedRoomId === room.id
+                ? "border-sea-teal bg-white ring-4 ring-sea-teal/15"
+                : "border-white/75 bg-white/76 hover:border-sea-teal/40"
+            }`}
+            key={room.id}
+            onClick={() => onSelectRoom(room.id)}
+            type="button"
+          >
+            <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
+              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <div>
+                <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-coral">{room.rankLabel}</p>
+                <h3 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+                  {room.title}
+                </h3>
+                <p className="mt-3 text-base font-bold text-slate-500">{room.shortReason}</p>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-4">
+                  <CompactMetric label="Rent" value={`${formatMoney(room.rent)}`} />
+                  <CompactMetric label="Commute" value={`${room.commuteMinutes} min`} />
+                  <CompactMetric label="MRT walk" value={`${room.mrtWalkMinutes} min`} />
+                  <CompactMetric label="Unit" value={room.unitType} />
+                </div>
+
+                <div className="mt-5 grid gap-5 lg:grid-cols-2">
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-sea-teal">
+                      Why it ranks high
+                    </p>
+                    <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-600">
+                      {room.whyHigh.map((reason) => (
+                        <li key={reason}>+ {reason}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-coral">Tradeoff</p>
+                    <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-600">
+                      {room.tradeoffs.map((tradeoff) => (
+                        <li key={tradeoff}>- {tradeoff}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CompactMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-sea-mist px-4 py-3">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{label}</span>
+      <strong className="mt-1 block text-sea-ink">{value}</strong>
+    </div>
+  );
+}
+
+function SelectedRoomDeepDive({ profile, room }: { profile: Profile; room: RoomListing }) {
+  return (
+    <section className="rounded-[2.75rem] border border-white/75 bg-white/78 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+      <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+        <div>
+          <RoomPhotoPlaceholder tone={room.photoTone} />
+          <h2 className="mt-6 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink">
+            {room.title}
+          </h2>
+          <p className="mt-3 text-base font-bold text-slate-500">
+            {room.area} · {formatMoney(room.rent)}/month · {room.roomType}
+          </p>
+          <a
+            className="mt-5 inline-flex rounded-full bg-sea-deep px-5 py-3 text-sm font-extrabold text-white transition hover:bg-sea-ink"
+            href={room.listedUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Open listing URL
+          </a>
+        </div>
+
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Selected room deep dive</p>
+          <h3 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+            How this room fits your life
+          </h3>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <RoomFact label="Area" value={room.area} />
+            <RoomFact label="Rent" value={`${formatMoney(room.rent)}/month`} />
+            <RoomFact label="Room type" value={room.roomType} />
+            <RoomFact label="Unit type" value={room.unitType} />
+            <RoomFact label="Nearest MRT" value={room.nearestMrt} />
+            <RoomFact label="Commute to workplace/school" value={`${room.commuteMinutes} min to ${getDestinationLabel(profile)}`} />
+          </div>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-5">
+            <FitPill label="Budget fit" value={room.rent <= profile.budgetMax ? "Good" : "Stretch"} />
+            <FitPill label="Commute fit" value={room.commuteMinutes <= 20 ? "Strong" : "Heavy"} />
+            <FitPill label="Amenities fit" value={`${room.amenities.length} matched`} />
+            <FitPill label="Privacy fit" value={room.roomType === "Master room" ? "High" : "Shared"} />
+            <FitPill label="Lifestyle fit" value={room.commuteMinutes <= 20 ? "Stable" : "Fragile"} />
+          </div>
+
+          <div className="mt-7 grid gap-4">
+            <DetailAccordion title="Pros" items={room.pros} tone="positive" />
+            <DetailAccordion title="Cons" items={room.cons} tone="negative" />
+            <DetailAccordion title="Hidden risks" items={room.hiddenRisks} tone="warning" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FitPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-sea-mist p-4">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-400">{label}</span>
+      <strong className="mt-2 block text-sea-deep">{value}</strong>
+    </div>
+  );
+}
+
+function DetailAccordion({
+  items,
+  title,
+  tone
+}: {
+  items: string[];
+  title: string;
+  tone: "positive" | "negative" | "warning";
+}) {
+  const toneClass =
+    tone === "positive"
+      ? "bg-sea-mist text-sea-deep"
+      : tone === "negative"
+        ? "bg-coral/10 text-sea-ink"
+        : "bg-sand/80 text-sea-ink";
+
+  return (
+    <details className={`rounded-3xl p-5 ${toneClass}`} open={title === "Pros"}>
+      <summary className="cursor-pointer text-lg font-extrabold">{title}</summary>
+      <ul className="mt-4 grid gap-2 text-sm font-bold leading-6">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+function TradeoffSection() {
+  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+  const rentDelta = topRoom.rent - budgetRoom.rent;
+
+  return (
+    <section className="overflow-hidden rounded-[2.75rem] bg-sea-ink p-7 text-white shadow-soft sm:p-10 lg:p-12">
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-glass/70">Tradeoff analysis</p>
+        <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] sm:text-6xl">
+          Queenstown Common Room vs Jurong East Common Room
+        </h2>
+        <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/68">
+          If your time and routine stability matter more than saving {formatMoney(rentDelta)}/month, Queenstown is the
+          stronger choice. If your priority is minimizing rent, Jurong East is still acceptable.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className="rounded-[2rem] border border-sea-glass/20 bg-sea-glass/12 p-6">
+          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-sea-glass/80">What you gain</h3>
+          <div className="mt-5 grid gap-3">
+            <TradeoffLine text={`+${hoursSaved} hours/year saved from shorter commute`} />
+            <TradeoffLine text="+Cooking allowed" />
+            <TradeoffLine text="+No owner staying" />
+            <TradeoffLine text="+Better gym/food access" />
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-coral/30 bg-coral/15 p-6">
+          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-coral">What you give up</h3>
+          <div className="mt-5 grid gap-3">
+            <TradeoffLine text={`-${formatMoney(rentDelta)}/month higher rent`} />
+            <TradeoffLine text="-Shared bathroom" />
+            <TradeoffLine text="-Less budget headroom" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TradeoffLine({ text }: { text: string }) {
+  return <p className="rounded-2xl bg-white/10 px-4 py-3 text-lg font-extrabold text-white">{text}</p>;
+}
+
+function FutureLifeSimulator({ profile, room }: { profile: Profile; room: RoomListing }) {
+  const destination = getDestinationLabel(profile);
+  const weeklyCommuteHours = getWeeklyCommuteHours(room, profile.officeDays);
+
+  const futureWeek = [
+    {
+      day: "Monday",
+      events: [
+        { time: "8:15 AM", label: `Leave ${room.area}` },
+        { time: formatArrival(room.commuteMinutes), label: `Arrive at ${destination}` },
+        { time: "6:15 PM", label: "Gym nearby" },
+        { time: "7:30 PM", label: "Dinner nearby" }
+      ]
+    },
+    {
+      day: "Wednesday",
+      events: [
+        { time: "Campus day", label: "Work/study from campus" },
+        { time: "12:30 PM", label: "Lunch nearby" },
+        { time: "6:30 PM", label: "Grocery run near MRT" }
+      ]
+    },
+    {
+      day: "Friday",
+      events: [
+        { time: "After class/work", label: "Short commute home" },
+        { time: "Evening", label: "Dinner with friends nearby" }
+      ]
+    }
+  ];
+
+  return (
+    <section className="glass-card rounded-[2.75rem] p-7 sm:p-10 lg:p-12">
+      <SectionHeading
+        eyebrow="Future life simulator"
+        text="A lightweight week forecast based on the selected room, commute, and routine fit."
+        title="Your life in this room"
+      />
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {futureWeek.map((day) => (
+            <article className="rounded-[2rem] bg-white/78 p-6 shadow-card" key={day.day}>
+              <h3 className="text-2xl font-extrabold text-sea-deep">{day.day}</h3>
+              <div className="mt-6 grid gap-4">
+                {day.events.map((event, index) => (
+                  <div className="relative grid grid-cols-[auto_1fr] gap-3" key={`${day.day}-${event.time}-${event.label}`}>
+                    <div className="flex flex-col items-center">
+                      <span className="h-3 w-3 rounded-full bg-sea-teal" />
+                      {index < day.events.length - 1 && <span className="mt-2 h-full min-h-8 w-px bg-sea-teal/18" />}
+                    </div>
+                    <div className="pb-2">
+                      <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{event.time}</span>
+                      <p className="mt-1 font-bold text-sea-ink">{event.label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <aside className="rounded-[2rem] bg-sea-ink p-6 text-white shadow-card">
+          <h3 className="font-display text-3xl font-extrabold tracking-[-0.04em]">Weekly summary</h3>
+          <div className="mt-6 grid gap-3">
+            <SummaryMetric label="Weekly commute time" value={`${weeklyCommuteHours} hrs`} />
+            <SummaryMetric label="Annual commute hours" value={`${room.annualCommuteHours} hrs`} />
+            <SummaryMetric label="Monthly transport estimate" value={formatMoney(room.monthlyTransport)} />
+            <SummaryMetric label="Routine stability" value={room.commuteMinutes <= 20 ? "High" : "Low"} />
+            <SummaryMetric label="Likely regret" value={room.likelyRegret} />
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function SummaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white/10 px-4 py-3">
+      <span className="block text-xs font-extrabold uppercase tracking-[0.16em] text-white/44">{label}</span>
+      <strong className="mt-1 block text-white">{value}</strong>
+    </div>
+  );
+}
+
+function AlternativePicks() {
+  const alternatives = [
+    {
+      title: "Best Budget Pick",
+      room: demoRooms.find((listing) => listing.id === "jurong-east-common")!,
+      text: "Lower rent, but much longer commute."
+    },
+    {
+      title: "Best Comfort Pick",
+      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      text: "Private bathroom, but higher rent."
+    },
+    {
+      title: "Best Convenience Pick",
+      room: demoRooms.find((listing) => listing.id === "clementi-common")!,
+      text: "Strong food access and student-friendly area."
+    },
+    {
+      title: "Best Quiet Pick",
+      room: demoRooms.find((listing) => listing.id === "dover-master")!,
+      text: "Calmer surroundings, fewer late-night food options."
+    }
+  ];
+
+  return (
+    <section>
+      <SectionHeading
+        eyebrow="Alternative picks"
+        text="Different priorities lead to different rooms. Each card opens the mocked listing URL."
+        title="Other rooms worth considering"
+      />
+      <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {alternatives.map((alternative) => (
+          <a
+            className="rounded-[2rem] border border-white/75 bg-white/72 p-6 shadow-card backdrop-blur transition hover:-translate-y-1 hover:border-sea-teal/35"
+            href={alternative.room.listedUrl}
+            key={`${alternative.title}-${alternative.room.id}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-sea-teal">{alternative.title}</p>
+            <h3 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+              {alternative.room.title}
+            </h3>
+            <p className="mt-4 text-base leading-7 text-slate-600">{alternative.text}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LandlordQuestions({ room }: { room: RoomListing }) {
+  const questions = [
+    "Are utilities included or capped?",
+    "Is aircon servicing included?",
+    "Are visitors allowed?",
+    "Is cooking fully allowed or only light cooking?",
+    "Is the owner staying in the unit?",
+    "What is the minimum lease period?",
+    "Is WiFi included?",
+    "Are there cleaning rules for shared spaces?"
+  ];
+
+  return (
+    <section className="rounded-[2.75rem] border border-white/75 bg-white/76 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+      <SectionHeading
+        eyebrow="Questions to ask landlord"
+        text={`These are based on missing or risky fields in ${room.title}.`}
+        title="Before you say yes, ask these."
+      />
+      <div className="mt-10 grid gap-3 md:grid-cols-2">
+        {questions.map((question) => (
+          <div className="rounded-2xl bg-sea-mist px-5 py-4 text-sm font-extrabold leading-6 text-sea-ink" key={question}>
+            {question}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function DolphineReport({
   onGenerateLandlordMessage,
-  onTryAnotherProfile
+  onTryAnotherProfile,
+  profile,
+  room
 }: {
   onGenerateLandlordMessage: () => void;
   onTryAnotherProfile: () => void;
+  profile: Profile;
+  room: RoomListing;
 }) {
+  const rentDelta = topRoom.rent - budgetRoom.rent;
+  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+
   return (
-    <section className="mb-10 rounded-[2.5rem] border border-sea-teal/20 bg-gradient-to-br from-white via-sea-mist to-sand p-6 shadow-soft sm:p-8 lg:p-10">
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+    <section className="mb-10 rounded-[2.75rem] border border-sea-teal/20 bg-gradient-to-br from-white via-sea-mist to-sand p-7 shadow-soft sm:p-10 lg:p-12">
+      <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
-          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">AI relocation report</p>
-          <h2 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.04em]">Dolphine Report</h2>
-          <p className="mt-5 max-w-3xl text-base leading-8 text-slate-600">
-            Dolphine recommends Queenstown because it offers the strongest balance of commute efficiency, lifestyle
-            access, and budget fit. If minimizing rent is your top priority, Jurong East is acceptable, but it comes with
-            a heavy commute penalty.
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Dolphine report</p>
+          <h2 className="mt-4 font-display text-4xl font-extrabold tracking-[-0.04em]">Dolphine Report</h2>
+          <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
+            Dolphine recommends {room.title} as your best overall fit. It is within your{" "}
+            {formatMoney(profile.budgetMax)} budget, has a short {room.commuteMinutes}-minute commute to{" "}
+            {getDestinationLabel(profile)}, allows cooking, and avoids owner-staying constraints. The main tradeoff is
+            that it costs {formatMoney(rentDelta)}/month more than the Jurong East room, but it saves around {hoursSaved}
+            hours of commuting per year.
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
@@ -914,7 +1661,7 @@ function DolphineReport({
             onClick={onGenerateLandlordMessage}
             type="button"
           >
-            Generate landlord message
+            Generate Landlord Message
           </button>
         </div>
       </div>
@@ -922,16 +1669,62 @@ function DolphineReport({
   );
 }
 
+function SectionHeading({ eyebrow, text, title }: { eyebrow: string; text: string; title: string }) {
+  return (
+    <div className="max-w-3xl">
+      <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">{eyebrow}</p>
+      <h2 className="mt-4 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] text-sea-ink sm:text-5xl">
+        {title}
+      </h2>
+      <p className="mt-5 text-base leading-8 text-slate-500">{text}</p>
+    </div>
+  );
+}
+
+function RoomPhotoPlaceholder({ tone }: { tone: RoomListing["photoTone"] }) {
+  const toneClass =
+    tone === "aqua"
+      ? "from-sea-glass via-white to-sea-foam"
+      : tone === "sand"
+        ? "from-sand via-white to-sea-glass"
+        : "from-coral/20 via-white to-sand";
+
+  return (
+    <div className={`relative h-48 overflow-hidden rounded-[1.5rem] bg-gradient-to-br ${toneClass}`}>
+      <div className="absolute left-5 top-5 h-16 w-24 rounded-2xl bg-white/55" />
+      <div className="absolute bottom-6 left-5 h-3 w-28 rounded-full bg-white/70" />
+      <div className="absolute bottom-11 left-5 h-3 w-44 rounded-full bg-white/55" />
+      <div className="absolute right-5 top-8 h-28 w-20 rounded-t-full bg-sea-deep/10" />
+      <span className="absolute right-5 top-5 rounded-full bg-white/75 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
+        Room photo
+      </span>
+    </div>
+  );
+}
+
+function RoomFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-2xl bg-sea-mist px-4 py-3">
+      <span className="font-bold text-slate-500">{label}</span>
+      <strong className="text-right text-sea-ink">{value}</strong>
+    </div>
+  );
+}
+
 function LandlordMessageModal({
+  destination,
   isOpen,
-  message,
-  onClose
+  onClose,
+  room
 }: {
+  destination: string;
   isOpen: boolean;
-  message: string;
   onClose: () => void;
+  room: RoomListing;
 }) {
   if (!isOpen) return null;
+
+  const message = `Hi, I'm interested in the ${room.title.toLowerCase()}. I study/work near ${destination} and am looking for a long-term stay. May I check whether utilities are included or capped, whether cooking is fully allowed, whether the owner is staying, and when viewing is available?`;
 
   return (
     <div
