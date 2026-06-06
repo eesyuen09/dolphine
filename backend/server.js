@@ -100,7 +100,7 @@ async function initializeDatabase() {
     });
   });
 
-  const row = await get("SELECT COUNT(*) AS count FROM house_properties");
+  const row = await get("SELECT COUNT(*) AS count FROM listings");
   if (row.count === 0) {
     await new Promise((resolve, reject) => {
       db.exec(seed, (error) => {
