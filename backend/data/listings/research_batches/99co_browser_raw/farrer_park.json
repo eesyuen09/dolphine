@@ -40,7 +40,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.392,
@@ -100,11 +100,13 @@
         "bedrooms",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -142,7 +144,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.334,
@@ -207,11 +209,13 @@
         "cooking_allowed",
         "utilities_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -249,7 +253,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 3,
         "distance_to_mrt_km": 0.183,
@@ -312,11 +316,13 @@
         "cooking_allowed",
         "utilities_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -354,7 +360,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-06.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.392,
@@ -418,11 +424,13 @@
         "has_aircon",
         "cooking_allowed",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-06.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -460,7 +468,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.334,
@@ -521,11 +529,13 @@
         "cooking_allowed",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -563,7 +573,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-01.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.359,
@@ -626,11 +636,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-01.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -668,7 +680,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-02.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.392,
@@ -734,11 +746,13 @@
         "cooking_allowed",
         "wifi_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-02.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -776,7 +790,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-11.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.359,
@@ -839,11 +853,13 @@
         "tenant_type_allowed",
         "cooking_allowed",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-11.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -881,7 +897,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.086,
@@ -942,11 +958,13 @@
         "lease_term_months",
         "bedrooms",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -984,7 +1002,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 1,
         "distance_to_mrt_km": 0.055,
@@ -1047,11 +1065,13 @@
         "bathrooms",
         "has_private_bathroom",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/farrer-park. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     }
   ]
 }

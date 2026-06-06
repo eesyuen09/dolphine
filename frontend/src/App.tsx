@@ -1,4 +1,14 @@
 import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { BiasWarningsPanel } from "./dolphine/BiasWarningsPanel";
+import { NeighbourhoodComparison } from "./dolphine/NeighbourhoodComparison";
+import { AIWeightsPanel } from "./dolphine/AIWeightsPanel";
+import { VerdictCard } from "./dolphine/VerdictCard";
+import { TotalLifeCostMatrix } from "./dolphine/TotalLifeCostMatrix";
+import { VibeScoreCard } from "./dolphine/VibeScoreCard";
+import { ScoreBreakdownPanel } from "./dolphine/ScoreBreakdownPanel";
+import { AgentReasoningBubble } from "./dolphine/AgentReasoningBubble";
+import { CorrectnessPanel } from "./dolphine/CorrectnessPanel";
+import type { DolphineInsights, RoomExtras } from "./dolphine/types";
 
 type TransportMode = "MRT/Bus" | "Walk/Cycle" | "Drive";
 type AppStatus = "idle" | "loading" | "results";
@@ -33,6 +43,8 @@ type Profile = {
 
 type RoomListing = {
   id: string;
+  image: string;
+  imageUrl?: string;
   rankLabel: string;
   title: string;
   area: string;
@@ -59,6 +71,14 @@ type RoomListing = {
   shortReason: string;
   likelyRegret: string;
   photoTone: "aqua" | "sand" | "coral";
+  regretProbability?: number;
+  regretDriver?: string;
+  totalMonthlyCost?: number;
+  timeTax?: number;
+  vibeScore?: RoomExtras["vibeScore"];
+  agentInsight?: string;
+  twelveMonthForecast?: string;
+  scoreBreakdown?: RoomExtras["scoreBreakdown"];
 };
 
 const singaporeLocations: LocationOption[] = [
@@ -70,6 +90,8 @@ const singaporeLocations: LocationOption[] = [
   { id: "one-north", label: "One-North", area: "One-North", nearestMrt: "one-north MRT", postalCode: "138632", latLng: { lat: 1.2997, lng: 103.7871 } },
   { id: "buona-vista", label: "Buona Vista", area: "Buona Vista", nearestMrt: "Buona Vista MRT", postalCode: "138617", latLng: { lat: 1.3072, lng: 103.7902 } },
   { id: "raffles-place", label: "Raffles Place", area: "CBD", nearestMrt: "Raffles Place MRT", postalCode: "048621", latLng: { lat: 1.284, lng: 103.8513 } },
+  { id: "tiktok-hq", label: "TikTok HQ (One Raffles Quay)", area: "Raffles Place", nearestMrt: "Raffles Place MRT", postalCode: "048583", latLng: { lat: 1.2814, lng: 103.8514 } },
+  { id: "shopee-hq", label: "Shopee HQ (one-north)", area: "Buona Vista", nearestMrt: "one-north MRT", postalCode: "118222", latLng: { lat: 1.2986, lng: 103.7872 } },
   { id: "tanjong-pagar", label: "Tanjong Pagar", area: "CBD", nearestMrt: "Tanjong Pagar MRT", postalCode: "079903", latLng: { lat: 1.2764, lng: 103.8458 } },
   { id: "marina-bay", label: "Marina Bay", area: "Marina Bay", nearestMrt: "Marina Bay MRT", postalCode: "018984", latLng: { lat: 1.2763, lng: 103.8547 } },
   { id: "changi-business-park", label: "Changi Business Park", area: "Changi", nearestMrt: "Expo MRT", postalCode: "486066", latLng: { lat: 1.3346, lng: 103.9628 } },
@@ -320,6 +342,8 @@ const demoRooms: RoomListing[] = [
     ],
     tradeoffs: ["Common bathroom", "Slightly higher rent than Jurong East"],
     confidence: 91,
+    image: "/listing-images/pg-room-12.jpg",
+    imageUrl: "/listing-images/pg-room-12.jpg",
     listedUrl: "https://example.com/listings/queenstown-common-room",
     shortReason: "Best balance of commute, budget, cooking, and weekday routine.",
     likelyRegret: "Higher rent pressure, not commute fatigue.",
@@ -349,6 +373,8 @@ const demoRooms: RoomListing[] = [
     whyHigh: ["10 min commute", "Private bathroom", "Calmer surroundings"],
     tradeoffs: ["S$50 above max budget", "Fewer food and gym choices"],
     confidence: 87,
+    image: "/listing-images/pg-room-01.jpg",
+    imageUrl: "/listing-images/pg-room-01.jpg",
     listedUrl: "https://example.com/listings/dover-master-room",
     shortReason: "Best if privacy and quiet matter more than strict budget.",
     likelyRegret: "Higher rent and fewer late-night options.",
@@ -378,6 +404,8 @@ const demoRooms: RoomListing[] = [
     whyHigh: ["Within budget", "5 min walk to MRT", "Strong food access"],
     tradeoffs: ["Busier environment", "Less quiet than Dover or Queenstown"],
     confidence: 89,
+    image: "/listing-images/pg-room-13.jpg",
+    imageUrl: "/listing-images/pg-room-13.jpg",
     listedUrl: "https://example.com/listings/clementi-common-room",
     shortReason: "A practical food-and-MRT option with a manageable commute.",
     likelyRegret: "Busier environment.",
@@ -407,6 +435,8 @@ const demoRooms: RoomListing[] = [
     whyHigh: ["S$350 cheaper than Queenstown", "Near a major transport hub", "Good budget fallback"],
     tradeoffs: ["38 min commute", "No cooking", "Utilities not included"],
     confidence: 88,
+    image: "/listing-images/pg-room-09.jpg",
+    imageUrl: "/listing-images/pg-room-09.jpg",
     listedUrl: "https://example.com/listings/jurong-east-common-room",
     shortReason: "Lowest rent, but the commute and cooking restriction are real lifestyle costs.",
     likelyRegret: "Commute fatigue.",
@@ -436,6 +466,8 @@ const demoRooms: RoomListing[] = [
     whyHigh: ["Lowest rent", "Quiet environment", "Furnished setup"],
     tradeoffs: ["55 min commute", "Higher transport cost", "Weaker gym and food fit"],
     confidence: 84,
+    image: "/listing-images/pg-room-08.jpg",
+    imageUrl: "/listing-images/pg-room-08.jpg",
     listedUrl: "https://example.com/listings/punggol-coliving-room",
     shortReason: "Acceptable only if rent is the overriding priority.",
     likelyRegret: "Long travel time.",
@@ -444,7 +476,6 @@ const demoRooms: RoomListing[] = [
 ];
 
 const topRoom = demoRooms[0];
-const budgetRoom = demoRooms.find((room) => room.id === "jurong-east-common") ?? demoRooms[3];
 
 const currency = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -462,15 +493,6 @@ function getSelectedLocation(profile: Profile) {
 
 function getDestinationLabel(profile: Profile) {
   return getSelectedLocation(profile)?.label || profile.destinationInput || "NUS School of Computing";
-}
-
-function formatArrival(commuteMinutes: number) {
-  const totalMinutes = 8 * 60 + 15 + commuteMinutes;
-  const hour24 = Math.floor(totalMinutes / 60);
-  const minute = totalMinutes % 60;
-  const suffix = hour24 >= 12 ? "PM" : "AM";
-  const hour12 = hour24 > 12 ? hour24 - 12 : hour24;
-  return `${hour12}:${String(minute).padStart(2, "0")} ${suffix}`;
 }
 
 function getWeeklyCommuteHours(room: RoomListing, officeDays: number) {
@@ -500,8 +522,11 @@ function App() {
   const profileRef = useRef<HTMLElement | null>(null);
   const resultsRef = useRef<HTMLElement | null>(null);
   const timeoutRef = useRef<number[]>([]);
-
-  const selectedRoom = demoRooms.find((room) => room.id === selectedRoomId) ?? topRoom;
+  const [rooms, setRooms] = useState<RoomListing[]>(demoRooms);
+  const [sessionId] = useState<string>(() => crypto.randomUUID());
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [insights, setInsights] = useState<DolphineInsights | null>(null);
 
   useEffect(() => {
     return () => {
@@ -513,28 +538,88 @@ function App() {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function analyzeRooms() {
+  function serializeProfileToNL(p: Profile): string {
+    const loc = singaporeLocations.find((l) => l.id === p.selectedLocationId);
+    const location = loc?.label || p.destinationInput || "NUS School of Computing";
+    const parts: string[] = [
+      `I work at ${location}.`,
+      `My budget is S$${p.budgetMax}/month.`,
+      `I work in office ${p.officeDays} day${p.officeDays !== 1 ? "s" : ""} per week.`,
+    ];
+    if (p.preferredRoomType && p.preferredRoomType !== "No preference") {
+      parts.push(`I prefer a ${p.preferredRoomType.toLowerCase()}.`);
+    }
+    if (p.mustHaves.length > 0) parts.push(`Must haves: ${p.mustHaves.join(", ")}.`);
+    if (p.rankedPriorities.length > 0) {
+      parts.push(`My top priorities are: ${p.rankedPriorities.slice(0, 3).join(", ")}.`);
+      if (p.rankedPriorities.includes("Gym access")) parts.push("I go to the gym regularly.");
+      if (p.rankedPriorities.includes("Quiet environment")) parts.push("I prefer a quiet environment.");
+    }
+    return parts.join(" ");
+  }
+
+  async function analyzeRooms() {
     timeoutRef.current.forEach(window.clearTimeout);
     timeoutRef.current = [];
     setStatus("loading");
     setLoadingStep(0);
 
     loadingSteps.forEach((_, index) => {
-      timeoutRef.current.push(
-        window.setTimeout(() => {
-          setLoadingStep(index);
-        }, index * 210)
-      );
+      timeoutRef.current.push(window.setTimeout(() => setLoadingStep(index), index * 210));
     });
 
-    // Replace this delay with listing extraction + recommendation API calls when backend integration resumes.
-    timeoutRef.current.push(
-      window.setTimeout(() => {
-        setSelectedRoomId(topRoom.id);
-        setStatus("results");
-        window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-      }, 1550)
-    );
+    try {
+      const message = serializeProfileToNL(profile);
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          message,
+          profile,
+          listingMode,
+          listingInputs: listingMode !== "demo" ? listingInputs : [],
+        }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.rooms && data.rooms.length > 0) {
+          setRooms(data.rooms);
+          setSelectedRoomId(data.rooms[0].id);
+        }
+        if (data.insights) setInsights(data.insights);
+      }
+    } catch {
+      // API unavailable — keep demoRooms visible
+    } finally {
+      setStatus("results");
+      window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    }
+  }
+
+  async function handleChatRefinement(msg: string) {
+    if (!msg.trim() || chatLoading) return;
+    setChatLoading(true);
+    setChatInput("");
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, message: msg, profile }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.rooms && data.rooms.length > 0) {
+          setRooms(data.rooms);
+          setSelectedRoomId(data.rooms[0].id);
+        }
+        if (data.insights) setInsights(data.insights);
+      }
+    } catch {
+      // keep existing results on error
+    } finally {
+      setChatLoading(false);
+    }
   }
 
   function handleTryAnotherProfile() {
@@ -561,14 +646,25 @@ function App() {
           setProfile={setProfile}
         />
 
-        <RoomListingInput
-          isLoading={status === "loading"}
-          listingInputs={listingInputs}
-          listingMode={listingMode}
-          onAnalyze={analyzeRooms}
-          setListingInputs={setListingInputs}
-          setListingMode={setListingMode}
-        />
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-3xl rounded-[2.5rem] border border-white/75 bg-white/76 p-8 text-center shadow-soft backdrop-blur-xl sm:p-10">
+            <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Ready when you are</p>
+            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink sm:text-4xl">
+              Let Dolphine analyze it for you.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-slate-600">
+              Dolphine picks from real listings, models your lifestyle, spots decision blind spots, and gives you an evidence-backed verdict.
+            </p>
+            <button
+              className="mt-8 rounded-full bg-coral px-10 py-4 text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-[#df5f51] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={status === "loading"}
+              type="button"
+              onClick={analyzeRooms}
+            >
+              {status === "loading" ? "Analyzing rooms..." : "Analyze Rooms"}
+            </button>
+          </div>
+        </section>
 
         {status === "loading" && <LoadingSteps activeStep={loadingStep} />}
 
@@ -577,11 +673,17 @@ function App() {
             refCallback={(node) => {
               resultsRef.current = node;
             }}
+            chatInput={chatInput}
+            chatLoading={chatLoading}
+            onChatInput={setChatInput}
+            onChatSubmit={handleChatRefinement}
             onOpenLandlordMessage={() => setIsModalOpen(true)}
             onSelectRoom={setSelectedRoomId}
             onTryAnotherProfile={handleTryAnotherProfile}
+            insights={insights}
             profile={profile}
-            selectedRoom={selectedRoom}
+            rooms={rooms}
+            selectedRoom={rooms.find((r) => r.id === selectedRoomId) ?? rooms[0] ?? topRoom}
             selectedRoomId={selectedRoomId}
           />
         )}
@@ -591,7 +693,7 @@ function App() {
         destination={getDestinationLabel(profile)}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        room={topRoom}
+        room={rooms.find((r) => r.id === selectedRoomId) ?? rooms[0] ?? topRoom}
       />
     </main>
   );
@@ -1269,41 +1371,78 @@ function LoadingSteps({ activeStep }: { activeStep: number }) {
 }
 
 function ResultsDashboard({
+  chatInput,
+  chatLoading,
+  onChatInput,
+  onChatSubmit,
   onOpenLandlordMessage,
   onSelectRoom,
   onTryAnotherProfile,
+  insights,
   profile,
   refCallback,
+  rooms,
   selectedRoom,
-  selectedRoomId
+  selectedRoomId,
 }: {
+  chatInput: string;
+  chatLoading: boolean;
+  onChatInput: (value: string) => void;
+  onChatSubmit: (msg: string) => void;
   onOpenLandlordMessage: () => void;
   onSelectRoom: (roomId: string) => void;
   onTryAnotherProfile: () => void;
+  insights: DolphineInsights | null;
   profile: Profile;
   refCallback: (node: HTMLElement | null) => void;
+  rooms: RoomListing[];
   selectedRoom: RoomListing;
   selectedRoomId: string;
 }) {
+  const deepDiveRef = useRef<HTMLElement | null>(null);
   return (
     <section className="scroll-mt-8 py-24 sm:py-32 lg:py-40" ref={refCallback}>
       <div className="grid gap-28 sm:gap-32 lg:gap-40">
-        <ExtractedRoomCards profile={profile} rooms={demoRooms} />
+        <VerdictCard
+          winner={rooms[0] ?? null}
+          tradeoffs={insights?.tradeoffs ?? null}
+          onViewAnalysis={() => deepDiveRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          onGenerateMessage={onOpenLandlordMessage}
+        />
+        <DolphineChatRefinement
+          input={chatInput}
+          isLoading={chatLoading}
+          onInput={onChatInput}
+          onSubmit={onChatSubmit}
+        />
         <RankedRoomRecommendations
           onSelectRoom={onSelectRoom}
-          rooms={demoRooms}
+          rooms={rooms}
           selectedRoomId={selectedRoomId}
         />
-        <SelectedRoomDeepDive profile={profile} room={selectedRoom} />
-        <TradeoffSection />
+        {insights && <CorrectnessPanel correctness={insights.correctness} />}
+        {insights && (
+          <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
+            <AIWeightsPanel weights={insights.weights} />
+            {insights.biasWarnings.length > 0 && <BiasWarningsPanel warnings={insights.biasWarnings} />}
+          </div>
+        )}
+        {insights && insights.neighbourhoodComparison.length > 0 && (
+          <TotalLifeCostMatrix rows={insights.neighbourhoodComparison} selectedArea={rooms[0]?.area} />
+        )}
+        <TradeoffSection rooms={rooms} tradeoffs={insights?.tradeoffs ?? null} />
+        <SelectedRoomDeepDive profile={profile} room={selectedRoom} refCallback={(node) => { deepDiveRef.current = node; }} />
         <FutureLifeSimulator profile={profile} room={selectedRoom} />
-        <AlternativePicks />
+        {insights && insights.neighbourhoodComparison.length > 0 && (
+          <NeighbourhoodComparison rows={insights.neighbourhoodComparison} />
+        )}
+        <AlternativePicks rooms={rooms} />
         <LandlordQuestions room={selectedRoom} />
         <DolphineReport
           onGenerateLandlordMessage={onOpenLandlordMessage}
           onTryAnotherProfile={onTryAnotherProfile}
           profile={profile}
-          room={topRoom}
+          room={selectedRoom}
         />
       </div>
     </section>
@@ -1322,7 +1461,7 @@ function ExtractedRoomCards({ profile, rooms }: { profile: Profile; rooms: RoomL
         {rooms.map((room) => (
           <article className="rounded-[2rem] border border-white/75 bg-white/76 p-4 shadow-card backdrop-blur" key={room.id}>
             <div className="grid gap-5 sm:grid-cols-[180px_1fr]">
-              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <RoomPhoto room={room} />
               <div>
                 <h3 className="text-xl font-extrabold text-sea-ink">{room.title}</h3>
                 <p className="mt-2 text-sm font-bold text-slate-500">
@@ -1378,7 +1517,7 @@ function RankedRoomRecommendations({
             type="button"
           >
             <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
-              <RoomPhotoPlaceholder tone={room.photoTone} />
+              <RoomPhoto room={room} />
               <div>
                 <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-coral">{room.rankLabel}</p>
                 <h3 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
@@ -1392,6 +1531,34 @@ function RankedRoomRecommendations({
                   <CompactMetric label="MRT walk" value={`${room.mrtWalkMinutes} min`} />
                   <CompactMetric label="Unit" value={room.unitType} />
                 </div>
+
+                {room.regretProbability != null && (
+                  <div className="mt-5 rounded-2xl bg-sea-mist px-4 py-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
+                        Regret probability
+                      </span>
+                      <strong
+                        className={`text-sm font-extrabold ${
+                          room.regretProbability > 50 ? "text-coral" : "text-sea-teal"
+                        }`}
+                      >
+                        {room.regretProbability}%
+                      </strong>
+                    </div>
+                    <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/70">
+                      <div
+                        className={`h-full rounded-full ${
+                          room.regretProbability > 50 ? "bg-coral" : "bg-sea-teal"
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, room.regretProbability))}%` }}
+                      />
+                    </div>
+                    {room.regretDriver && room.regretProbability <= 50 && (
+                      <p className="mt-2 text-xs font-bold leading-5 text-slate-500">{room.regretDriver}</p>
+                    )}
+                  </div>
+                )}
 
                 <div className="mt-5 grid gap-5 lg:grid-cols-2">
                   <div>
@@ -1431,17 +1598,65 @@ function CompactMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SelectedRoomDeepDive({ profile, room }: { profile: Profile; room: RoomListing }) {
+// Maps a ranked priority label to the room dimension that satisfies it.
+// Returns the 0-10 score for that dimension (vibe scores, or budget via totalMonthlyCost).
+function getPriorityMatch(
+  priority: string,
+  room: RoomListing
+): { label: string; score: number; detail: string } | null {
+  const vibe = room.vibeScore ?? { food: 5, transit: 5, gym: 5, quiet: 5, lifestyle: 5 };
+  switch (priority) {
+    case "Short commute":
+      return { label: priority, score: vibe.transit, detail: `${room.commuteMinutes} min commute` };
+    case "Near MRT":
+      return { label: priority, score: vibe.transit, detail: `${room.mrtWalkMinutes} min walk to ${room.nearestMrt}` };
+    case "Quiet environment":
+      return { label: priority, score: vibe.quiet, detail: room.quietness };
+    case "Gym access":
+      return { label: priority, score: vibe.gym, detail: room.gymAccess };
+    case "Affordable food":
+      return { label: priority, score: vibe.food, detail: room.foodAccess };
+    case "Lower rent": {
+      // Budget dimension derived from total monthly cost — lower total = better.
+      const total = room.totalMonthlyCost ?? room.rent;
+      const score = total <= 1500 ? 9 : total <= 2200 ? 7 : 5;
+      return { label: priority, score, detail: `${formatMoney(total)}/month all-in` };
+    }
+    default:
+      return null;
+  }
+}
+
+function SelectedRoomDeepDive({
+  profile,
+  refCallback,
+  room
+}: {
+  profile: Profile;
+  refCallback?: (node: HTMLElement | null) => void;
+  room: RoomListing;
+}) {
+  const vibe = room.vibeScore ?? { food: 5, transit: 5, gym: 5, quiet: 5, lifestyle: 5 };
+  const regret = room.regretProbability;
+  const priorityMatches = profile.rankedPriorities
+    .slice(0, 3)
+    .map((priority) => getPriorityMatch(priority, room))
+    .filter((match): match is NonNullable<typeof match> => match != null);
+
   return (
-    <section className="rounded-[2.75rem] border border-white/75 bg-white/78 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+    <section
+      className="scroll-mt-8 rounded-[2.75rem] border border-white/75 bg-white/78 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12"
+      ref={refCallback}
+    >
       <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
-          <RoomPhotoPlaceholder tone={room.photoTone} />
+          <RoomPhoto room={room} />
           <h2 className="mt-6 font-display text-4xl font-extrabold tracking-[-0.04em] text-sea-ink">
             {room.title}
           </h2>
+          {/* One compact summary line — no field dump */}
           <p className="mt-3 text-base font-bold text-slate-500">
-            {room.area} · {formatMoney(room.rent)}/month · {room.roomType}
+            {room.area} · {formatMoney(room.totalMonthlyCost ?? room.rent)}/mo all-in · {room.commuteMinutes} min to {getDestinationLabel(profile)}
           </p>
           <a
             className="mt-5 inline-flex rounded-full bg-sea-deep px-5 py-3 text-sm font-extrabold text-white transition hover:bg-sea-ink"
@@ -1451,6 +1666,35 @@ function SelectedRoomDeepDive({ profile, room }: { profile: Profile; room: RoomL
           >
             Open listing URL
           </a>
+
+          {/* Priority match mini list */}
+          {priorityMatches.length > 0 && (
+            <div className="mt-7 rounded-[2rem] border border-white/70 bg-white/70 p-5 shadow-card">
+              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-sea-teal">Priority match</p>
+              <ul className="mt-4 grid gap-3">
+                {priorityMatches.map((match) => {
+                  const hit = match.score >= 7;
+                  return (
+                    <li className="flex items-start gap-3" key={match.label}>
+                      <span
+                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ${
+                          hit ? "bg-sea-teal/15 text-sea-teal" : "bg-coral/15 text-coral"
+                        }`}
+                      >
+                        {hit ? "✓" : "△"}
+                      </span>
+                      <div>
+                        <p className="text-sm font-extrabold text-sea-ink">
+                          {match.label} <span className="text-slate-400">· {match.score}/10</span>
+                        </p>
+                        <p className="text-xs font-bold text-slate-500">{match.detail}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div>
@@ -1459,40 +1703,49 @@ function SelectedRoomDeepDive({ profile, room }: { profile: Profile; room: RoomL
             How this room fits your life
           </h3>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <RoomFact label="Area" value={room.area} />
-            <RoomFact label="Rent" value={`${formatMoney(room.rent)}/month`} />
-            <RoomFact label="Room type" value={room.roomType} />
-            <RoomFact label="Unit type" value={room.unitType} />
-            <RoomFact label="Nearest MRT" value={room.nearestMrt} />
-            <RoomFact label="Commute to workplace/school" value={`${room.commuteMinutes} min to ${getDestinationLabel(profile)}`} />
-          </div>
+          <div className="mt-6 grid gap-6">
+            <ScoreBreakdownPanel
+              breakdown={room.scoreBreakdown ?? []}
+              totalScore={Math.round(room.confidence)}
+              roomTitle={room.title}
+            />
 
-          <div className="mt-7 grid gap-3 sm:grid-cols-5">
-            <FitPill label="Budget fit" value={room.rent <= profile.budgetMax ? "Good" : "Stretch"} />
-            <FitPill label="Commute fit" value={room.commuteMinutes <= 20 ? "Strong" : "Heavy"} />
-            <FitPill label="Amenities fit" value={`${room.amenities.length} matched`} />
-            <FitPill label="Privacy fit" value={room.roomType === "Master room" ? "High" : "Shared"} />
-            <FitPill label="Lifestyle fit" value={room.commuteMinutes <= 20 ? "Stable" : "Fragile"} />
-          </div>
+            <VibeScoreCard vibe={vibe} title={`${room.area} · Vibe`} />
 
-          <div className="mt-7 grid gap-4">
-            <DetailAccordion title="Pros" items={room.pros} tone="positive" />
-            <DetailAccordion title="Cons" items={room.cons} tone="negative" />
-            <DetailAccordion title="Hidden risks" items={room.hiddenRisks} tone="warning" />
+            {/* Regret probability block */}
+            {regret != null && (
+              <div className="rounded-[2rem] border border-white/75 bg-white/80 p-6 shadow-card">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-sea-teal">Regret probability</p>
+                  <strong className={`text-2xl font-extrabold ${regret > 50 ? "text-coral" : "text-sea-deep"}`}>
+                    {regret}%
+                  </strong>
+                </div>
+                <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-sea-mist">
+                  <div
+                    className={`h-full rounded-full ${regret > 50 ? "bg-coral" : "bg-sea-teal"}`}
+                    style={{ width: `${Math.min(100, Math.max(0, regret))}%` }}
+                  />
+                </div>
+                {room.regretDriver && (
+                  <p className="mt-3 text-sm font-bold leading-6 text-slate-600">
+                    Main reason: {room.regretDriver}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <AgentReasoningBubble text={room.agentInsight ?? ""} />
+
+            <div className="grid gap-4">
+              <DetailAccordion title="Pros" items={room.pros} tone="positive" />
+              <DetailAccordion title="Cons" items={room.cons} tone="negative" />
+              <DetailAccordion title="Hidden risks" items={room.hiddenRisks} tone="warning" />
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function FitPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-sea-mist p-4">
-      <span className="block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-400">{label}</span>
-      <strong className="mt-2 block text-sea-deep">{value}</strong>
-    </div>
   );
 }
 
@@ -1524,121 +1777,263 @@ function DetailAccordion({
   );
 }
 
-function TradeoffSection() {
-  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
-  const rentDelta = topRoom.rent - budgetRoom.rent;
+function TradeoffSection({
+  rooms,
+  tradeoffs,
+}: {
+  rooms: RoomListing[];
+  tradeoffs: DolphineInsights["tradeoffs"];
+}) {
+  const winner = rooms[0];
+  const runnerUp = rooms[1];
+  if (!winner || !runnerUp) return null;
+
+  const winnerCost = winner.totalMonthlyCost ?? winner.rent;
+  const runnerCost = runnerUp.totalMonthlyCost ?? runnerUp.rent;
+  const costDelta = Math.round(winnerCost - runnerCost);
+  const commuteDelta = winner.commuteMinutes - runnerUp.commuteMinutes;
+  const listingPairLabel = `${winner.title} vs ${runnerUp.title}`;
+  const verdict =
+    tradeoffs?.verdict ||
+    `${winner.title} wins because it protects more of your daily routine, while ${runnerUp.title} is the strongest alternative if your priorities shift.`;
+
+  const comparisonRows = [
+    {
+      label: "Rent",
+      winner: formatMoney(winner.rent),
+      runner: formatMoney(runnerUp.rent),
+      note: costDelta <= 0 ? "Winner also protects total cost" : "Runner-up is cheaper after time/transport",
+    },
+    {
+      label: "Life cost / mo",
+      winner: formatMoney(winnerCost),
+      runner: formatMoney(runnerCost),
+      note: `${costDelta >= 0 ? "+" : ""}${formatMoney(costDelta)} vs runner-up`,
+    },
+    {
+      label: "Commute",
+      winner: `${winner.commuteMinutes} min`,
+      runner: `${runnerUp.commuteMinutes} min`,
+      note: commuteDelta <= 0 ? `${Math.abs(commuteDelta)} min faster` : `${commuteDelta} min slower`,
+    },
+    {
+      label: "MRT walk",
+      winner: `${winner.mrtWalkMinutes} min`,
+      runner: `${runnerUp.mrtWalkMinutes} min`,
+      note: winner.mrtWalkMinutes <= runnerUp.mrtWalkMinutes ? "Lower doorstep friction" : "Runner-up is closer to MRT",
+    },
+  ];
 
   return (
-    <section className="overflow-hidden rounded-[2.75rem] bg-sea-ink p-7 text-white shadow-soft sm:p-10 lg:p-12">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-glass/70">Tradeoff analysis</p>
-        <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] sm:text-6xl">
-          Queenstown Common Room vs Jurong East Common Room
-        </h2>
-        <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/68">
-          If your time and routine stability matter more than saving {formatMoney(rentDelta)}/month, Queenstown is the
-          stronger choice. If your priority is minimizing rent, Jurong East is still acceptable.
-        </p>
+    <section className="rounded-[2.75rem] border border-white/75 bg-white/78 p-7 shadow-soft backdrop-blur-xl sm:p-10 lg:p-12">
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-sea-teal">Top 2 room tradeoff</p>
+          <h2 className="mt-4 font-display text-4xl font-extrabold leading-tight tracking-[-0.04em] text-sea-ink sm:text-5xl">
+            {listingPairLabel}
+          </h2>
+          <p className="mt-4 text-sm font-bold leading-6 text-slate-500">
+            Comparing the actual top two listings from your current shortlist.
+          </p>
+        </div>
+        <p className="text-base font-bold leading-8 text-slate-600">{verdict}</p>
       </div>
 
       <div className="mt-10 grid gap-5 lg:grid-cols-2">
-        <div className="rounded-[2rem] border border-sea-glass/20 bg-sea-glass/12 p-6">
-          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-sea-glass/80">What you gain</h3>
-          <div className="mt-5 grid gap-3">
-            <TradeoffLine text={`+${hoursSaved} hours/year saved from shorter commute`} />
-            <TradeoffLine text="+Cooking allowed" />
-            <TradeoffLine text="+No owner staying" />
-            <TradeoffLine text="+Better gym/food access" />
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-coral/30 bg-coral/15 p-6">
-          <h3 className="text-sm font-extrabold uppercase tracking-[0.22em] text-coral">What you give up</h3>
-          <div className="mt-5 grid gap-3">
-            <TradeoffLine text={`-${formatMoney(rentDelta)}/month higher rent`} />
-            <TradeoffLine text="-Shared bathroom" />
-            <TradeoffLine text="-Less budget headroom" />
-          </div>
-        </div>
+        <TradeoffRoomCard room={winner} title="Best overall fit" tone="winner" />
+        <TradeoffRoomCard room={runnerUp} title="Best alternative" tone="runner" />
       </div>
+
+      <div className="mt-6 overflow-hidden rounded-[2rem] border border-sea-deep/10 bg-sea-mist/45">
+        {comparisonRows.map((row) => (
+          <div className="grid gap-3 border-t border-white/70 p-4 first:border-t-0 md:grid-cols-[160px_1fr_1fr_1fr] md:items-center" key={row.label}>
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-sea-teal">{row.label}</p>
+            <p className="font-display text-2xl font-extrabold text-sea-ink">{row.winner}</p>
+            <p className="font-display text-2xl font-extrabold text-slate-500">{row.runner}</p>
+            <p className="text-sm font-bold leading-6 text-slate-600">{row.note}</p>
+          </div>
+        ))}
+      </div>
+
+      {tradeoffs && (
+        <div className="mt-6 flex flex-wrap gap-3">
+          <span className="rounded-full bg-sea-deep px-4 py-2 text-sm font-extrabold text-white">
+            Confidence: {tradeoffs.confidence}
+          </span>
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-sea-deep shadow-card">
+            Commute saved: {tradeoffs.annualCommuteHoursSaved} hrs/year
+          </span>
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-sea-deep shadow-card">
+            Rent Δ {formatMoney(tradeoffs.rentDifference)}
+          </span>
+        </div>
+      )}
     </section>
   );
 }
 
-function TradeoffLine({ text }: { text: string }) {
-  return <p className="rounded-2xl bg-white/10 px-4 py-3 text-lg font-extrabold text-white">{text}</p>;
+function TradeoffRoomCard({
+  room,
+  title,
+  tone,
+}: {
+  room: RoomListing;
+  title: string;
+  tone: "winner" | "runner";
+}) {
+  const toneClass = tone === "winner" ? "border-sea-teal/30 bg-sea-mist/70" : "border-sand/80 bg-white";
+  return (
+    <article className={`rounded-[2rem] border p-6 shadow-card ${toneClass}`}>
+      <RoomPhoto room={room} />
+      <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.2em] text-sea-teal">{title}</p>
+      <h3 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+        {room.title}
+      </h3>
+      <p className="mt-2 text-sm font-bold text-slate-500">
+        {room.area} · {room.roomType} · {room.nearestMrt} ({room.mrtWalkMinutes} min walk)
+      </p>
+      <p className="mt-4 text-base font-bold leading-7 text-slate-700">{room.shortReason}</p>
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <SummaryPill label="Rent" value={formatMoney(room.rent)} />
+        <SummaryPill label="Life cost" value={formatMoney(room.totalMonthlyCost ?? room.rent)} />
+        <SummaryPill label="Commute" value={`${room.commuteMinutes} min`} />
+      </div>
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-sea-teal">Why it works</p>
+          <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-700">
+            {room.pros.slice(0, 3).map((item) => <li key={item}>✓ {item}</li>)}
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-coral">Watch-outs</p>
+          <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-slate-700">
+            {(room.hiddenRisks.length ? room.hiddenRisks : room.cons).slice(0, 3).map((item) => <li key={item}>⚠ {item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function SummaryPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white/76 px-4 py-3 shadow-sm">
+      <span className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-400">{label}</span>
+      <strong className="mt-1 block text-sea-deep">{value}</strong>
+    </div>
+  );
+}
+
+function parseFirstNumber(text: string, fallback: number) {
+  const match = text.match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : fallback;
+}
+
+function parseScoreOutOfTen(text: string, fallback: number) {
+  const match = text.match(/(\d+(?:\.\d+)?)\s*\/\s*10/);
+  return match ? Number(match[1]) : fallback;
 }
 
 function FutureLifeSimulator({ profile, room }: { profile: Profile; room: RoomListing }) {
   const destination = getDestinationLabel(profile);
   const weeklyCommuteHours = getWeeklyCommuteHours(room, profile.officeDays);
+  const gymMinutes = parseFirstNumber(room.gymAccess, 15);
+  const foodScore = parseScoreOutOfTen(room.foodAccess, room.vibeScore?.food ?? 5);
+  const quietScore = room.vibeScore?.quiet ?? 5;
+  const budgetBuffer = profile.budgetMax - room.rent;
+  const verdict =
+    room.regretProbability != null && room.regretProbability >= 55
+      ? "Hidden friction risk"
+      : room.regretProbability != null && room.regretProbability >= 35
+        ? "Fragile fit"
+        : "High fit";
 
-  const futureWeek = [
+  const habitCards = [
     {
-      day: "Monday",
-      events: [
-        { time: "8:15 AM", label: `Leave ${room.area}` },
-        { time: formatArrival(room.commuteMinutes), label: `Arrive at ${destination}` },
-        { time: "6:15 PM", label: "Gym nearby" },
-        { time: "7:30 PM", label: "Dinner nearby" }
-      ]
+      label: "Commute survival",
+      metric: `${room.commuteMinutes} min`,
+      status: room.commuteMinutes <= 25 ? "Low friction" : room.commuteMinutes <= 40 ? "Manageable" : "High friction",
+      insight:
+        room.commuteMinutes <= 25
+          ? `${destination} stays close enough that commute should not dominate your weekday.`
+          : `${weeklyCommuteHours} hrs/week in transit means the room must win strongly on rent or lifestyle.`,
     },
     {
-      day: "Wednesday",
-      events: [
-        { time: "Campus day", label: "Work/study from campus" },
-        { time: "12:30 PM", label: "Lunch nearby" },
-        { time: "6:30 PM", label: "Grocery run near MRT" }
-      ]
+      label: "Gym consistency",
+      metric: `${gymMinutes} min`,
+      status: gymMinutes <= 10 ? "Habit protected" : gymMinutes <= 18 ? "Needs discipline" : "Likely drop-off",
+      insight:
+        gymMinutes <= 10
+          ? "Gym remains a low-effort after-work stop, so the habit is likely to survive."
+          : "Gym becomes a second trip; this is where good intentions usually decay.",
     },
     {
-      day: "Friday",
-      events: [
-        { time: "After class/work", label: "Short commute home" },
-        { time: "Evening", label: "Dinner with friends nearby" }
-      ]
-    }
+      label: "Food routine",
+      metric: `${foodScore}/10`,
+      status: foodScore >= 7 ? "Easy meals" : foodScore >= 5 ? "Workable" : "Meal friction",
+      insight:
+        foodScore >= 7
+          ? "Affordable meals are nearby enough to reduce delivery dependence."
+          : "Food convenience is not a major strength; plan groceries or cooking rules carefully.",
+    },
+    {
+      label: "Recovery & quiet",
+      metric: `${quietScore}/10`,
+      status: quietScore >= 7 ? "Good recovery" : quietScore >= 5 ? "Neutral" : "Noise risk",
+      insight:
+        quietScore >= 7
+          ? "The area supports downtime after campus/work days."
+          : "If quietness matters to you, verify road noise and household rules during viewing.",
+    },
+    {
+      label: "Budget pressure",
+      metric: `${formatMoney(Math.max(0, budgetBuffer))}`,
+      status: budgetBuffer >= 250 ? "Healthy buffer" : budgetBuffer >= 0 ? "Thin buffer" : "Over cap",
+      insight:
+        budgetBuffer >= 250
+          ? "There is enough headroom for utilities, deposit surprises, and small lifestyle choices."
+          : "The rent may fit on paper but leaves little room for utilities or lifestyle drift.",
+    },
   ];
 
   return (
     <section className="glass-card rounded-[2.75rem] p-7 sm:p-10 lg:p-12">
       <SectionHeading
-        eyebrow="Future life simulator"
-        text="A lightweight week forecast based on the selected room, commute, and routine fit."
-        title="Your life in this room"
+        eyebrow="Future lifestyle fit"
+        text="Dolphine stress-tests whether this room protects your habits after the novelty wears off."
+        title="Will this room protect your routine?"
       />
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="grid gap-6 lg:grid-cols-3">
-          {futureWeek.map((day) => (
-            <article className="rounded-[2rem] bg-white/78 p-6 shadow-card" key={day.day}>
-              <h3 className="text-2xl font-extrabold text-sea-deep">{day.day}</h3>
-              <div className="mt-6 grid gap-4">
-                {day.events.map((event, index) => (
-                  <div className="relative grid grid-cols-[auto_1fr] gap-3" key={`${day.day}-${event.time}-${event.label}`}>
-                    <div className="flex flex-col items-center">
-                      <span className="h-3 w-3 rounded-full bg-sea-teal" />
-                      {index < day.events.length - 1 && <span className="mt-2 h-full min-h-8 w-px bg-sea-teal/18" />}
-                    </div>
-                    <div className="pb-2">
-                      <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">{event.time}</span>
-                      <p className="mt-1 font-bold text-sea-ink">{event.label}</p>
-                    </div>
-                  </div>
-                ))}
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid gap-4 md:grid-cols-2">
+          {habitCards.map((habit) => (
+            <article className="rounded-[2rem] bg-white/78 p-5 shadow-card" key={habit.label}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-sea-teal">{habit.label}</p>
+                  <h3 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
+                    {habit.metric}
+                  </h3>
+                </div>
+                <span className="rounded-full bg-sea-mist px-3 py-1 text-xs font-extrabold text-sea-deep">
+                  {habit.status}
+                </span>
               </div>
+              <p className="mt-4 text-sm font-bold leading-6 text-slate-600">{habit.insight}</p>
             </article>
           ))}
         </div>
 
         <aside className="rounded-[2rem] bg-sea-ink p-6 text-white shadow-card">
-          <h3 className="font-display text-3xl font-extrabold tracking-[-0.04em]">Weekly summary</h3>
+          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-sea-glass/70">Lifestyle verdict</p>
+          <h3 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]">{verdict}</h3>
+          <p className="mt-4 text-sm font-bold leading-6 text-white/68">{room.twelveMonthForecast || room.agentInsight}</p>
           <div className="mt-6 grid gap-3">
             <SummaryMetric label="Weekly commute time" value={`${weeklyCommuteHours} hrs`} />
             <SummaryMetric label="Annual commute hours" value={`${room.annualCommuteHours} hrs`} />
-            <SummaryMetric label="Monthly transport estimate" value={formatMoney(room.monthlyTransport)} />
-            <SummaryMetric label="Routine stability" value={room.commuteMinutes <= 20 ? "High" : "Low"} />
-            <SummaryMetric label="Likely regret" value={room.likelyRegret} />
+            <SummaryMetric label="Life cost / month" value={formatMoney(room.totalMonthlyCost ?? room.rent)} />
+            <SummaryMetric label="Most likely regret" value={room.likelyRegret} />
           </div>
         </aside>
       </div>
@@ -1655,53 +2050,40 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function AlternativePicks() {
-  const alternatives = [
-    {
-      title: "Best Budget Pick",
-      room: demoRooms.find((listing) => listing.id === "jurong-east-common")!,
-      text: "Lower rent, but much longer commute."
-    },
-    {
-      title: "Best Comfort Pick",
-      room: demoRooms.find((listing) => listing.id === "dover-master")!,
-      text: "Private bathroom, but higher rent."
-    },
-    {
-      title: "Best Convenience Pick",
-      room: demoRooms.find((listing) => listing.id === "clementi-common")!,
-      text: "Strong food access and student-friendly area."
-    },
-    {
-      title: "Best Quiet Pick",
-      room: demoRooms.find((listing) => listing.id === "dover-master")!,
-      text: "Calmer surroundings, fewer late-night food options."
-    }
-  ];
+function AlternativePicks({ rooms }: { rooms: RoomListing[] }) {
+  const alternatives = rooms
+    .slice(1)
+    .filter((room, index, list) => list.findIndex((candidate) => candidate.id === room.id) === index);
+
+  if (alternatives.length === 0) return null;
 
   return (
     <section>
       <SectionHeading
         eyebrow="Alternative picks"
-        text="Different priorities lead to different rooms. Each card opens the mocked listing URL."
+        text="Different priorities lead to different rooms. Each card opens the listing URL."
         title="Other rooms worth considering"
       />
       <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        {alternatives.map((alternative) => (
+        {alternatives.map((room, index) => {
+          const rankDetail = room.rankLabel.replace(/^#\d+\s*/, "").trim();
+          const tag = rankDetail ? `Alternative #${index + 2} · ${rankDetail}` : `Alternative #${index + 2}`;
+          return (
           <a
             className="rounded-[2rem] border border-white/75 bg-white/72 p-6 shadow-card backdrop-blur transition hover:-translate-y-1 hover:border-sea-teal/35"
-            href={alternative.room.listedUrl}
-            key={`${alternative.title}-${alternative.room.id}`}
+            href={room.listedUrl}
+            key={room.id}
             rel="noreferrer"
             target="_blank"
           >
-            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-sea-teal">{alternative.title}</p>
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-sea-teal">{tag}</p>
             <h3 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-sea-ink">
-              {alternative.room.title}
+              {room.title}
             </h3>
-            <p className="mt-4 text-base leading-7 text-slate-600">{alternative.text}</p>
+            <p className="mt-4 text-base leading-7 text-slate-600">{room.shortReason}</p>
           </a>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -1748,8 +2130,12 @@ function DolphineReport({
   profile: Profile;
   room: RoomListing;
 }) {
-  const rentDelta = topRoom.rent - budgetRoom.rent;
-  const hoursSaved = budgetRoom.annualCommuteHours - topRoom.annualCommuteHours;
+  const cookingText = room.amenities.some((amenity) => /cooking/i.test(amenity))
+    ? "cooking appears allowed"
+    : "cooking still needs landlord verification";
+  const ownerText = room.hiddenRisks.some((risk) => /owner/i.test(risk))
+    ? "owner-staying rules need verification"
+    : "owner-staying constraints are not flagged";
 
   return (
     <section className="mb-10 rounded-[2.75rem] border border-sea-teal/20 bg-gradient-to-br from-white via-sea-mist to-sand p-7 shadow-soft sm:p-10 lg:p-12">
@@ -1760,9 +2146,7 @@ function DolphineReport({
           <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
             Dolphine recommends {room.title} as your best overall fit. It is within your{" "}
             {formatMoney(profile.budgetMax)} budget, has a short {room.commuteMinutes}-minute commute to{" "}
-            {getDestinationLabel(profile)}, allows cooking, and avoids owner-staying constraints. The main tradeoff is
-            that it costs {formatMoney(rentDelta)}/month more than the Jurong East room, but it saves around {hoursSaved}
-            hours of commuting per year.
+            {getDestinationLabel(profile)}, {cookingText}, and {ownerText}. {room.shortReason}
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
@@ -1798,13 +2182,26 @@ function SectionHeading({ eyebrow, text, title }: { eyebrow: string; text: strin
   );
 }
 
-function RoomPhotoPlaceholder({ tone }: { tone: RoomListing["photoTone"] }) {
+function RoomPhoto({ room }: { room: RoomListing }) {
+  const imageUrl = room.imageUrl || room.image;
   const toneClass =
-    tone === "aqua"
+    room.photoTone === "aqua"
       ? "from-sea-glass via-white to-sea-foam"
-      : tone === "sand"
+      : room.photoTone === "sand"
         ? "from-sand via-white to-sea-glass"
         : "from-coral/20 via-white to-sand";
+
+  if (imageUrl) {
+    return (
+      <div className="relative h-48 overflow-hidden rounded-[1.5rem] bg-sea-mist">
+        <img alt={`${room.title} room photo`} className="h-full w-full object-cover" loading="lazy" src={imageUrl} />
+        <div className="absolute inset-0 bg-gradient-to-t from-sea-ink/35 via-transparent to-transparent" />
+        <span className="absolute right-5 top-5 rounded-full bg-white/82 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em] text-slate-500 shadow-sm">
+          Room photo
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative h-48 overflow-hidden rounded-[1.5rem] bg-gradient-to-br ${toneClass}`}>
@@ -1881,6 +2278,75 @@ function LandlordMessageModal({
         </div>
       </div>
     </div>
+  );
+}
+
+function DolphineChatRefinement({
+  input,
+  isLoading,
+  onInput,
+  onSubmit,
+}: {
+  input: string;
+  isLoading: boolean;
+  onInput: (value: string) => void;
+  onSubmit: (msg: string) => void;
+}) {
+  function handleKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      onSubmit(input);
+    }
+  }
+
+  const quickPrompts = ["More quiet", "Lower budget", "Closer to MRT"];
+
+  return (
+    <section className="rounded-[2rem] border border-white/75 bg-white/76 p-5 shadow-soft backdrop-blur-xl sm:p-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-sea-teal">Refine with Dolphine</p>
+          <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-sea-ink">
+            Want to tweak the ranking?
+          </h2>
+        </div>
+        <p className="text-sm font-bold text-slate-500">Tell me what matters more — I’ll re-rank it.</p>
+      </div>
+
+      <div className="mt-5">
+        <textarea
+          className="min-h-16 w-full rounded-[1.5rem] border border-sea-deep/10 bg-sea-mist/50 p-4 text-base leading-7 text-sea-ink shadow-sm focus:outline-none focus:ring-2 focus:ring-sea-teal/40"
+          disabled={isLoading}
+          onChange={(e) => onInput(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder='Try: "I care more about quietness"'
+          value={input}
+        />
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {quickPrompts.map((prompt) => (
+              <button
+                className="rounded-full bg-sea-mist px-3 py-1.5 text-xs font-extrabold text-sea-deep transition hover:bg-sea-foam disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isLoading}
+                key={prompt}
+                onClick={() => onSubmit(prompt)}
+                type="button"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+          <button
+            className="rounded-full bg-sea-deep px-6 py-3 text-sm font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-sea-ink disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isLoading || !input.trim()}
+            onClick={() => onSubmit(input)}
+            type="button"
+          >
+            {isLoading ? "Re-ranking…" : "Ask Dolphine"}
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 

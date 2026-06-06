@@ -40,7 +40,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 12,
         "distance_to_mrt_km": 0.931,
@@ -104,11 +104,13 @@
         "wifi_included",
         "utilities_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/gul-circle. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -146,7 +148,7 @@
       "is_direct_landlord": true,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 12,
         "distance_to_mrt_km": 0.931,
@@ -206,11 +208,13 @@
         "wifi_included",
         "utilities_included",
         "agent_name",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/gul-circle. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     }
   ]
 }

@@ -40,7 +40,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.104,
@@ -110,11 +110,13 @@
         "wifi_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -152,7 +154,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 3,
         "distance_to_mrt_km": 0.161,
@@ -224,11 +226,13 @@
         "wifi_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -266,7 +270,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.257,
@@ -337,11 +341,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -379,7 +385,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-06.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.257,
@@ -450,11 +456,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-06.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -492,7 +500,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 1,
         "distance_to_mrt_km": 0.061,
@@ -564,11 +572,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -606,7 +616,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.11,
@@ -676,11 +686,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -718,7 +730,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-10.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.11,
@@ -788,11 +800,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-10.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -830,7 +844,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-11.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.396,
@@ -900,11 +914,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-11.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -942,7 +958,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-12.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.312,
@@ -1011,11 +1027,13 @@
         "bathrooms",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-12.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -1053,7 +1071,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.085,
@@ -1120,11 +1138,13 @@
         "bedrooms",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from the public 99.co room-rental search page https://www.99.co/singapore/rent/rooms/sengkang; individual URL/source id came from page JSON-LD and listing details from rendered card text. Excludes sale listings and whole-unit rentals; studio cards were not imported.",
-      "confidence": 0.88
+      "confidence": 0.88,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     }
   ]
 }

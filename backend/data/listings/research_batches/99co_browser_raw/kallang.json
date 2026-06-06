@@ -40,7 +40,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-03.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 2,
         "distance_to_mrt_km": 0.092,
@@ -101,11 +101,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-03.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -143,7 +145,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.323,
@@ -204,11 +206,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -246,7 +250,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 8,
         "distance_to_mrt_km": 0.568,
@@ -307,11 +311,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -349,7 +355,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 5,
         "distance_to_mrt_km": 0.323,
@@ -413,11 +419,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -455,7 +463,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-08.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 3,
         "distance_to_mrt_km": 0.182,
@@ -517,11 +525,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-08.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -559,7 +569,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-09.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.718,
@@ -621,11 +631,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-09.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -663,7 +675,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-02.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 9,
         "distance_to_mrt_km": 0.692,
@@ -727,11 +739,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-02.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -769,7 +783,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-13.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.241,
@@ -833,11 +847,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-13.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -875,7 +891,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-04.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.295,
@@ -938,11 +954,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-04.jpg"
+      }
     },
     {
       "source_platform": "99.co",
@@ -980,7 +998,7 @@
       "is_direct_landlord": null,
       "listing_posted_at": null,
       "scraped_at": "2026-06-06T00:00:00+08:00",
-      "image_url": null,
+      "image_url": "/listing-images/pg-room-05.jpg",
       "location_metrics": {
         "walking_to_mrt_minutes": 4,
         "distance_to_mrt_km": 0.274,
@@ -1044,11 +1062,13 @@
         "utilities_included",
         "agent_name",
         "is_direct_landlord",
-        "listing_posted_at",
-        "image_url"
+        "listing_posted_at"
       ],
       "research_notes": "Extracted from 99.co browser-rendered room search page https://www.99.co/singapore/rent/rooms/kallang. Individual listing URL and source id are from JSON-LD; price/details are from rendered listing card text.",
-      "confidence": 0.86
+      "confidence": 0.86,
+      "media": {
+        "image_url": "/listing-images/pg-room-05.jpg"
+      }
     }
   ]
 }
