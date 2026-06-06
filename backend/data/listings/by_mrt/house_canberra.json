@@ -15,8 +15,13 @@
     "search_radius_km": 1,
     "sources_used": [],
     "known_limitations": [
-      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
-      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+      "99.co browser research found 0 usable room listings for this station page; continue with other portals if 10 are required.",
+      "99.co browser extraction error: page.waitForFunction: Timeout 30000ms exceeded.",
+      "Primary source page researched: https://www.99.co/singapore/rent/rooms/canberra",
+      "99.co browser extraction error: 99.co page not found; switch immediately to fallback listing websites.",
+      "Fallback source queued: https://www.propertyguru.com.sg/property-for-rent?search=true&property_type=R&freetext=Canberra%20MRT%20room%20rental",
+      "Fallback source queued: https://www.carousell.sg/search/Canberra%20MRT%20room%20rental?addRecent=false&canChangeKeyword=false&includeSuggestions=false",
+      "Fallback source queued: https://www.edgeprop.sg/listings?listing_type=rental&keyword=Canberra%20MRT%20room"
     ],
     "fallback_search_areas": [
       "Canberra estate",

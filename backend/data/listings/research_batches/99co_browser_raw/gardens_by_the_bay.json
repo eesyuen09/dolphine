@@ -1,0 +1,13 @@
+{
+  "station_slug": "gardens_by_the_bay",
+  "station_name": "Gardens by the Bay",
+  "source_url": "https://www.99.co/singapore/rent/rooms/gardens-by-the-bay",
+  "extracted_at": "2026-06-06T00:00:00+08:00",
+  "listings": [],
+  "error": "99.co page not found; switch immediately to fallback listing websites.",
+  "fallback_source_urls": [
+    "https://www.propertyguru.com.sg/property-for-rent?search=true&property_type=R&freetext=Gardens%20by%20the%20Bay%20MRT%20room%20rental",
+    "https://www.carousell.sg/search/Gardens%20by%20the%20Bay%20MRT%20room%20rental?addRecent=false&canChangeKeyword=false&includeSuggestions=false",
+    "https://www.edgeprop.sg/listings?listing_type=rental&keyword=Gardens%20by%20the%20Bay%20MRT%20room"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "station_slug": "farrer_road",
+  "station_name": "Farrer Road",
+  "source_url": "https://www.99.co/singapore/rent/rooms/farrer-road",
+  "extracted_at": "2026-06-06T00:00:00+08:00",
+  "listings": [],
+  "error": "99.co page not found; switch immediately to fallback listing websites.",
+  "fallback_source_urls": [
+    "https://www.propertyguru.com.sg/property-for-rent?search=true&property_type=R&freetext=Farrer%20Road%20MRT%20room%20rental",
+    "https://www.carousell.sg/search/Farrer%20Road%20MRT%20room%20rental?addRecent=false&canChangeKeyword=false&includeSuggestions=false",
+    "https://www.edgeprop.sg/listings?listing_type=rental&keyword=Farrer%20Road%20MRT%20room"
+  ]
+}
