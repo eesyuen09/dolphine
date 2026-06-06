@@ -5,6 +5,9 @@
   "scripts": {
     "install:backend": "npm --prefix backend install",
     "start": "npm --prefix backend start",
-    "dev": "npm --prefix backend run dev"
+    "dev": "npm --prefix backend run dev",
+    "generate:listings": "npm --prefix backend run generate:listings",
+    "merge:listings": "npm --prefix backend run merge:listings",
+    "validate:listings": "npm --prefix backend run validate:listings"
   }
 }
