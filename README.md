@@ -18,4 +18,12 @@ npm run install:backend
 npm start
 ```
 
-Open `http://localhost:3000`. From there, users can choose interactive mode or metric mode.
+Open the URL printed in the terminal, usually `http://localhost:3000`. If port `3000` is already in use, the app automatically tries the next available ports.
+
+You can choose a port explicitly:
+
+```bash
+PORT=4000 npm start
+```
+
+Set `PORT_RETRIES` to control automatic fallback attempts, or `HOST` to bind to a specific host.
