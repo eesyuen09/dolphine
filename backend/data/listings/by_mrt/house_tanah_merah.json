@@ -15,8 +15,15 @@
     "search_radius_km": 1,
     "sources_used": [],
     "known_limitations": [
-      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
-      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+      "99.co direct station page researched but did not expose usable room listings: https://www.99.co/singapore/rent/rooms/tanah-merah",
+      "99.co direct station extraction error: page.waitForFunction: Timeout 30000ms exceeded.",
+      "Promoted 6 unique source-backed room listings from nearby 99.co room search pages where nearest_mrt parsed as Tanah Merah.",
+      "Only 6 unique Tanah Merah-nearest room listings were found in available source-backed extracts; continue with other portals if 10 are required.",
+      "Supporting source page researched: https://www.99.co/singapore/rent/rooms/bedok",
+      "Supporting source page researched: https://www.99.co/singapore/rent/rooms/bedok-north",
+      "99.co browser research found 0 usable room listings for this station page; continue with other portals if 10 are required.",
+      "99.co browser extraction error: page.waitForFunction: Timeout 30000ms exceeded.",
+      "Primary source page researched: https://www.99.co/singapore/rent/rooms/tanah-merah"
     ],
     "fallback_search_areas": [
       "Tanah Merah estate",

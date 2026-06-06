@@ -7,7 +7,9 @@
     "start": "npm --prefix backend start",
     "dev": "npm --prefix backend run dev",
     "generate:listings": "npm --prefix backend run generate:listings",
+    "import:99co-browser": "npm --prefix backend run import:99co-browser",
     "merge:listings": "npm --prefix backend run merge:listings",
+    "receive:research": "npm --prefix backend run receive:research",
     "validate:listings": "npm --prefix backend run validate:listings"
   }
 }

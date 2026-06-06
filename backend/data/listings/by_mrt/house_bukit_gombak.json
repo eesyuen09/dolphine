@@ -15,8 +15,17 @@
     "search_radius_km": 1,
     "sources_used": [],
     "known_limitations": [
-      "Only 0 source-backed candidate listings have been captured so far; continue live portal research before production import.",
-      "Station output scaffolded for agent assignment, but no verified public rental listings have been collected yet."
+      "Only 5 source-backed active 99.co room listings were available for Bukit Gombak in the captured public research data; kept below the requested cap of 10 rather than padding.",
+      "Direct public 99.co listing pages were accessible during spot-checking on 2026-06-06, but not every field is exposed consistently by the source pages.",
+      "Primary source pages researched: https://www.99.co/singapore/rent/rooms/bukit-batok",
+      "No sale listings were included; all imported records are room-rental URLs under /singapore/rooms/.",
+      "99.co browser research found 0 usable room listings for this station page; continue with other portals if 10 are required.",
+      "99.co browser extraction error: page.waitForFunction: Timeout 30000ms exceeded.",
+      "Primary source page researched: https://www.99.co/singapore/rent/rooms/bukit-gombak",
+      "99.co browser extraction error: 99.co page not found; switch immediately to fallback listing websites.",
+      "Fallback source queued: https://www.propertyguru.com.sg/property-for-rent?search=true&property_type=R&freetext=Bukit%20Gombak%20MRT%20room%20rental",
+      "Fallback source queued: https://www.carousell.sg/search/Bukit%20Gombak%20MRT%20room%20rental?addRecent=false&canChangeKeyword=false&includeSuggestions=false",
+      "Fallback source queued: https://www.edgeprop.sg/listings?listing_type=rental&keyword=Bukit%20Gombak%20MRT%20room"
     ],
     "fallback_search_areas": [
       "Bukit Gombak estate",
